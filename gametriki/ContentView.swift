@@ -2,23 +2,19 @@
 //  ContentView.swift
 //  gametriki
 //
-//  Created by Przemysław Sikora on 27/05/2026.
-//
 
 import SwiftUI
+import TrikiMotionKit
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
+  var body: some View {
+    RootView()
+  }
 }
 
 #Preview {
-    ContentView()
+  let tuning = GameTuning()
+  ContentView()
+    .environmentObject(tuning)
+    .environmentObject(MotionInputProvider())
 }
