@@ -18,7 +18,7 @@ description: Clone veltokit, run on device, explore sample games
 ## 1. Clone and open
 
 ```bash
-git clone https://github.com/koderteam/veltokit.git
+git clone https://github.com/przemyslawsikora/veltokit.git
 cd veltokit
 cd app && open gametriki.xcodeproj
 ```

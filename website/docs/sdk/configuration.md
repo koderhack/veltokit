@@ -69,6 +69,6 @@ Use **`debug`** in DEV overlays only — do not ship gameplay logic on debug fie
 
 ## Full field reference
 
-Every property is documented inline in [`MotionConfig.swift`](https://github.com/koderteam/veltokit/blob/main/VeltoKit/MotionConfig.swift). Legacy paddle fields remain for DEV UI compatibility but are unused in the current paddle model.
+Every property is documented inline in [`MotionConfig.swift`](https://github.com/przemyslawsikora/veltokit/blob/main/VeltoKit/MotionConfig.swift). Legacy paddle fields remain for DEV UI compatibility but are unused in the current paddle model.
 
 [Gestures](./gestures) · [MotionSDK](./motion-sdk)

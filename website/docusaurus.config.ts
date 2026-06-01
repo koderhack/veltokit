@@ -8,9 +8,9 @@ const config: Config = {
   tagline: 'Swift BLE motion SDK for iOS — GameInput every frame',
   favicon: 'img/favicon.svg',
 
-  url: 'https://koderteam.github.io',
+  url: 'https://przemyslawsikora.github.io',
   baseUrl: '/veltokit/',
-  organizationName: 'koderteam',
+  organizationName: 'przemyslawsikora',
   projectName: 'veltokit',
   trailingSlash: false,
 
@@ -40,7 +40,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           routeBasePath: 'docs',
-          editUrl: 'https://github.com/koderteam/veltokit/tree/main/website/',
+          editUrl: 'https://github.com/przemyslawsikora/veltokit/tree/main/website/',
         },
         sitemap: {
           lastmod: 'date',

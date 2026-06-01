@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://koderteam.github.io/veltokit/sitemap.xml
+Sitemap: https://przemyslawsikora.github.io/veltokit/sitemap.xml

@@ -1,6 +1,6 @@
 # VeltoKit
 
-[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-0ea5e9)](https://koderteam.github.io/veltokit/)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-0ea5e9)](https://przemyslawsikora.github.io/veltokit/)
 [![iOS 16+](https://img.shields.io/badge/iOS-16%2B-black)](./VeltoKit/)
 [![Swift](https://img.shields.io/badge/Swift-5.9%2B-orange)](./VeltoKit/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
@@ -21,7 +21,7 @@
 
 ## Install VeltoKit
 
-**Swift Package Manager** — in Xcode: *Add Package Dependencies* → `https://github.com/koderteam/veltokit` → product **VeltoKit**.
+**Swift Package Manager** — in Xcode: *Add Package Dependencies* → `https://github.com/przemyslawsikora/veltokit` → product **VeltoKit**.
 
 **CocoaPods** — `pod 'VeltoKit', '~> 0.1.0'`
 
@@ -72,8 +72,8 @@ Presets and per-game tuning: [`app/Engine/GameManager.swift`](./app/Engine/GameM
 
 | | |
 |---|---|
-| **Site** | https://koderteam.github.io/veltokit/ |
-| **Docs** | https://koderteam.github.io/veltokit/docs/intro |
+| **Site** | https://przemyslawsikora.github.io/veltokit/ |
+| **Docs** | https://przemyslawsikora.github.io/veltokit/docs/intro |
 
 English source docs; use **Translate** in the navbar for other languages (Google Translate).
 
@@ -106,7 +106,7 @@ See also [VeltoKit/README.md](./VeltoKit/README.md) and [.github/PUBLISHING.md](
 ## Clone and run
 
 ```bash
-git clone https://github.com/koderteam/veltokit.git
+git clone https://github.com/przemyslawsikora/veltokit.git
 cd veltokit/app
 open gametriki.xcodeproj
 ```

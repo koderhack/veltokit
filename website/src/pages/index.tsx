@@ -8,7 +8,7 @@ import DeviceCapVisual from '@site/src/components/DeviceCapVisual';
 import GameExamplesSection from '@site/src/components/GameExamplesSection';
 import styles from './index.module.css';
 
-const GITHUB = 'https://github.com/koderteam/veltokit';
+const GITHUB = 'https://github.com/przemyslawsikora/veltokit';
 
 const swiftIntegration = `import VeltoKit
 

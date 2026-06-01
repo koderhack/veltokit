@@ -4,7 +4,7 @@ title: Module map
 
 # VeltoKit module map
 
-Source lives in [`VeltoKit/`](https://github.com/koderteam/veltokit/tree/main/VeltoKit). All public APIs are `public` unless noted.
+Source lives in [`VeltoKit/`](https://github.com/przemyslawsikora/veltokit/tree/main/VeltoKit). All public APIs are `public` unless noted.
 
 ## Core
 
@@ -50,5 +50,5 @@ Source lives in [`VeltoKit/`](https://github.com/koderteam/veltokit/tree/main/Ve
 
 ## Related repo docs
 
-- [`docs/ARCHITECTURE.md`](https://github.com/koderteam/veltokit/blob/main/docs/ARCHITECTURE.md) — full-app architecture (PL)
-- [`VeltoKit/README.md`](https://github.com/koderteam/veltokit/blob/main/VeltoKit/README.md) — short developer readme
+- [`docs/ARCHITECTURE.md`](https://github.com/przemyslawsikora/veltokit/blob/main/docs/ARCHITECTURE.md) — full-app architecture (PL)
+- [`VeltoKit/README.md`](https://github.com/przemyslawsikora/veltokit/blob/main/VeltoKit/README.md) — short developer readme
