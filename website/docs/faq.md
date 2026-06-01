@@ -58,10 +58,10 @@ More detail: [Demo](demo) · [Dart](examples/dart) · [Bowling](examples/bowling
 
 ### Can I use VeltoKit in my own app?
 
-**Yes** — MIT license, free for personal and commercial use. Plain-language guide: **[Can I use this?](can-i-use-this)**.
+**Yes.** Use the setup docs to integrate the SDK into your own iOS project.
 
 ### Documentation in other languages
 
 Docs are written in **English**. On the live site, use the **Translate** dropdown in the navbar (powered by Google Translate) — e.g. choose **Polish** for a machine-translated view. Code blocks and API names stay in English.
 
-[Getting started](getting-started) · [Can I use this?](can-i-use-this) · [Introduction](intro)
+[Getting started](getting-started) · [Introduction](intro)

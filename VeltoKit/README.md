@@ -32,4 +32,3 @@ Docs: https://koderhack.github.io/veltokit/docs/installation
 
 Optional **Platform** in the sample app (`app/Platform`): `TrikiInputAdapter` forwards to `MotionSDK` and adds calibration prompts.
 
-MIT — see [LICENSE](../LICENSE).
