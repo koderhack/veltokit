@@ -24,11 +24,11 @@ let input = motion.pollInput(deltaTime: dt)
 
 ## Install
 
-**SPM (Xcode):** Add package `https://github.com/przemyslawsikora/veltokit` → product **VeltoKit**.
+**SPM (Xcode):** Add package `https://github.com/koderhack/veltokit` → product **VeltoKit**.
 
 **CocoaPods:** `pod 'VeltoKit', '~> 0.1.0'`
 
-Docs: https://przemyslawsikora.github.io/veltokit/docs/installation
+Docs: https://koderhack.github.io/veltokit/docs/installation
 
 Optional **Platform** in the sample app (`app/Platform`): `TrikiInputAdapter` forwards to `MotionSDK` and adds calibration prompts.
 

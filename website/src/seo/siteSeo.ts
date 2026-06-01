@@ -39,7 +39,7 @@ export function webSiteJsonLd(siteUrl: string) {
     publisher: {
       '@type': 'Organization',
       name: 'Koderteam',
-      url: 'https://github.com/przemyslawsikora',
+      url: 'https://github.com/koderhack',
     },
   };
 }
@@ -59,7 +59,7 @@ export function softwareApplicationJsonLd(siteUrl: string) {
     description: SITE_TAGLINE,
     url: siteUrl,
     softwareHelp: `${siteUrl}/docs/intro`,
-    downloadUrl: 'https://github.com/przemyslawsikora/veltokit',
+    downloadUrl: 'https://github.com/koderhack/veltokit',
     programmingLanguage: 'Swift',
   };
 }

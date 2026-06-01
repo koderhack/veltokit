@@ -76,7 +76,7 @@ export const navbarItems = [
     ],
   },
   {
-    href: 'https://github.com/przemyslawsikora/veltokit',
+    href: 'https://github.com/koderhack/veltokit',
     label: 'GitHub',
     position: 'right' as const,
   },
@@ -119,11 +119,11 @@ export const footerLinks = [
     items: [
       {
         label: 'GitHub',
-        href: 'https://github.com/przemyslawsikora/veltokit',
+        href: 'https://github.com/koderhack/veltokit',
       },
       {
         label: 'Sitemap',
-        href: 'https://przemyslawsikora.github.io/veltokit/sitemap.xml',
+        href: 'https://koderhack.github.io/veltokit/sitemap.xml',
       },
     ],
   },

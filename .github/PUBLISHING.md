@@ -48,7 +48,7 @@ gh repo edit \
 2. **Settings → Pages → Build and deployment**: Source = **GitHub Actions**.
 3. After the workflow succeeds, open the **homepage** (not only `/docs/intro`):
 
-`https://przemyslawsikora.github.io/veltokit/`
+`https://koderhack.github.io/veltokit/`
 
 Manual fallback:
 
@@ -70,7 +70,7 @@ git push origin v0.1.0
 
 Bump `s.version` in `VeltoKit.podspec` and the `from:` version in docs when releasing `v0.2.0`, etc.
 
-Draft release notes: link to [docs intro](https://przemyslawsikora.github.io/veltokit/docs/intro), install via SPM/CocoaPods, list `VeltoKit/` + sample app, disclaimer (unofficial BLE).
+Draft release notes: link to [docs intro](https://koderhack.github.io/veltokit/docs/intro), install via SPM/CocoaPods, list `VeltoKit/` + sample app, disclaimer (unofficial BLE).
 
 ## 4. What *not* to ship
 

@@ -13,7 +13,7 @@ VeltoKit ships as a **Swift package** and **CocoaPod** (includes **CoreBluetooth
 **Xcode:** File → Add Package Dependencies… →
 
 ```text
-https://github.com/przemyslawsikora/veltokit
+https://github.com/koderhack/veltokit
 ```
 
 Select product **VeltoKit** → add to your app target.
@@ -22,7 +22,7 @@ Select product **VeltoKit** → add to your app target.
 
 ```swift
 dependencies: [
-  .package(url: "https://github.com/przemyslawsikora/veltokit", from: "0.1.0"),
+  .package(url: "https://github.com/koderhack/veltokit", from: "0.1.0"),
 ],
 targets: [
   .target(
@@ -49,7 +49,7 @@ end
 
 Then `pod install` and open the `.xcworkspace`.
 
-Podspec: [`VeltoKit.podspec`](https://github.com/przemyslawsikora/veltokit/blob/main/VeltoKit.podspec) in the repo root.
+Podspec: [`VeltoKit.podspec`](https://github.com/koderhack/veltokit/blob/main/VeltoKit.podspec) in the repo root.
 
 ## Xcode project (monorepo / fork)
 

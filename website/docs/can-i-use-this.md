@@ -36,7 +36,7 @@ If that sounds like you — **go ahead and build.**
 
 ## Full legal text
 
-The official license text lives in the repo: [LICENSE on GitHub](https://github.com/przemyslawsikora/veltokit/blob/main/LICENSE).
+The official license text lives in the repo: [LICENSE on GitHub](https://github.com/koderhack/veltokit/blob/main/LICENSE).
 
 For API and integration details, see [Getting started](getting-started) and [SDK overview](sdk/overview).
 
