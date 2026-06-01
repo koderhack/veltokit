@@ -7,7 +7,6 @@ export const DOC_PATHS = {
   gettingStarted: '/docs/getting-started',
   installation: '/docs/installation',
   faq: '/docs/faq',
-  canIUse: '/docs/can-i-use-this',
   sdkOverview: '/docs/sdk/overview',
   sdkArchitecture: '/docs/sdk/architecture',
   sdkModules: '/docs/sdk/modules',
@@ -92,7 +91,6 @@ export const footerLinks = [
       {label: 'SDK Overview', to: d.sdkOverview},
       {label: 'Demo', to: d.demo},
       {label: 'Help', to: d.faq},
-      {label: 'Can I use this?', to: d.canIUse},
     ],
   },
   {

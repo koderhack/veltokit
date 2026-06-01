@@ -3,7 +3,6 @@
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-0ea5e9)](https://koderhack.github.io/veltokit/)
 [![iOS 16+](https://img.shields.io/badge/iOS-16%2B-black)](./VeltoKit/)
 [![Swift](https://img.shields.io/badge/Swift-5.9%2B-orange)](./VeltoKit/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 [![BLE unofficial](https://img.shields.io/badge/BLE-unofficial-lightgrey)](./website/docs/intro.mdx)
 
 **VeltoKit** is an experimental Swift framework that maps **BLE cap IMU + button packets** into a single [`GameInput`](./VeltoKit/GameInput.swift) struct each frame. **gametriki** is the reference iOS sample (Pong, Dart, Bowling, Quiz) that exercises the SDK without importing CoreBluetooth in game code.
@@ -95,7 +94,7 @@ app/            Sample iOS app (open app/gametriki.xcodeproj)
 website/        Docusaurus docs (EN + Google Translate)
 ```
 
-See also [VeltoKit/README.md](./VeltoKit/README.md) and [.github/PUBLISHING.md](./.github/PUBLISHING.md) for release tags and GitHub metadata.
+See also [VeltoKit/README.md](./VeltoKit/README.md).
 
 ## Requirements
 
@@ -113,9 +112,4 @@ open gametriki.xcodeproj
 
 Scheme **gametriki** → your iPhone → Connect BLE → pick a game from the menu.
 
-## License
-
-### 🔥 MIT License
-
-Full text: [LICENSE](./LICENSE)
 

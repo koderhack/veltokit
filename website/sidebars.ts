@@ -7,7 +7,6 @@ const sidebars: SidebarsConfig = {
     'quick-start',
     'getting-started',
     'installation',
-    'can-i-use-this',
     'faq',
     {
       type: 'category',
