@@ -1,0 +1,67 @@
+---
+sidebar_position: 1
+title: Introduction
+slug: /intro
+description: VeltoKit — unofficial BLE motion SDK for iOS games
+---
+
+import Link from '@docusaurus/Link';
+
+# VeltoKit
+
+Experimental Swift layer: **reverse-engineered BLE cap controller → `GameInput`**. Learn how tilt, throw gestures, and button edges become game-ready fields every frame.
+
+:::caution Independent project
+Unofficial implementation for **education and development**. Not affiliated with any hardware manufacturer or brand.
+:::
+
+## Test hardware
+
+We developed against a **generic BLE motion cap** (IMU + button). Any source that exposes similar gyro bytes + a button packet works — or use the sample **Platform** adapter as-is.
+
+![Generic BLE motion cap — top view](/img/device/cap-hero.png)
+
+## Pipeline
+
+```text
+BLE notify  →  enqueueBLE / parse  →  MotionSDK.updateFrame()  →  GameInput  →  your game
+```
+
+## Sample games
+
+Each demo documents **VeltoKit mode**, **GameInput** fields, and **source files** in the repo.
+
+| Game | `MotionMode` (sample) | Main `GameInput` |
+|------|------------------------|------------------|
+| [Pong](examples/pong) | `.paddle` | `posX` |
+| [Dart](examples/dart) | `.pointer` + throw FSM | `posX`, `posY`, `sensors` |
+| [Bowling](examples/bowling) | `.gesture` | `posX`, `shotTriggered`, `throwPower` |
+| [Quiz](examples/quiz) | `.paddle` | `posX`, `primaryAction` |
+
+## Documentation map
+
+| I want to… | Start here |
+|------------|------------|
+| Run the sample app on iPhone | [Getting started](getting-started) |
+| Copy SDK into my project | [Installation](installation) → [SDK overview](sdk/overview) |
+| Minimal Swift loop | [Quick start](quick-start) |
+| See games + videos | [Demo](demo) |
+| API reference | [VeltoKit SDK](sdk/overview) |
+| Fix jitter / weak throws | [Configuration](sdk/configuration) |
+| Connect controller in one call | [Quick start](quick-start) (`connect()` + `pollInput()`) |
+| Wire my own BLE stack | [BLE integration](sdk/ble-integration) |
+| Help — app, controller, TV | [Help](faq) |
+| Can I use this in my app? | [Can I use this?](can-i-use-this) |
+
+## Repo layout
+
+```text
+VeltoKit/     MotionSDK.connect(), BLEManager, GameInput
+app/          Sample iOS app (open app/gametriki.xcodeproj)
+  Platform/   TrikiInputAdapter (optional calibration UI)
+  Engine/     Game loop
+  Games/      Pong, Dart, Bowling, Quiz
+website/      This documentation (Docusaurus)
+```
+
+[Quick start](quick-start) · [SDK overview](sdk/overview) · [Demo](demo)

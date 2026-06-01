@@ -1,0 +1,164 @@
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0.5rem 0 2.5rem;
+  min-height: 340px;
+}
+
+.stage::before {
+  content: '';
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  width: min(320px, 92vw);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 45%,
+    rgba(99, 102, 241, 0.35) 0%,
+    rgba(168, 85, 247, 0.12) 42%,
+    transparent 68%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.controller {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+.capSpin {
+  width: min(320px, 92vw);
+  height: min(320px, 92vw);
+  display: grid;
+  place-items: center;
+}
+
+.capRotor {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  transition: transform 0.08s ease-out;
+}
+
+.capFrame {
+  width: 100%;
+  height: 100%;
+  display: grid !important;
+  place-items: center;
+  max-width: none !important;
+}
+
+.capImg {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  object-position: center center;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 0 48px rgba(99, 102, 241, 0.25));
+}
+
+.inputHud {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 0.25rem;
+  font-size: 0.72rem;
+  font-family: var(--ifm-font-family-monospace);
+  color: var(--ifm-color-emphasis-600);
+}
+
+.bar {
+  position: relative;
+  flex: 1;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  touch-action: none;
+  outline: none;
+  border-radius: 4px;
+}
+
+.bar:focus-visible {
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.55);
+}
+
+.barTrack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.barFill {
+  position: absolute;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #22d3ee, #6366f1);
+  pointer-events: none;
+  transition: none;
+}
+
+.barCenter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  height: 14px;
+  margin-left: -1px;
+  margin-top: -7px;
+  background: #f472b6;
+  box-shadow: 0 0 8px rgba(244, 114, 182, 0.6);
+  pointer-events: none;
+}
+
+.barThumb {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: #a855f7;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.85);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capRotor {
+    transform: none !important;
+    transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .stage {
+    max-width: 360px;
+    min-height: 300px;
+    padding-bottom: 2rem;
+  }
+
+  .capSpin {
+    width: min(280px, 88vw);
+    height: min(280px, 88vw);
+  }
+}

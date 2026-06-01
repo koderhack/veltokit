@@ -1,0 +1,1250 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		113614322FC6EB2E00CDBB83 /* NeonTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1136141B2FC6EB2E00CDBB83 /* NeonTheme.swift */; };
+		113614332FC6EB2E00CDBB83 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1136142C2FC6EB2E00CDBB83 /* GameView.swift */; };
+		113614362FC6EB2E00CDBB83 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614192FC6EB2E00CDBB83 /* BLEManager.swift */; };
+		113614382FC6EB2E00CDBB83 /* DevModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1136142B2FC6EB2E00CDBB83 /* DevModeView.swift */; };
+		113614392FC6EB2E00CDBB83 /* ConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1136142A2FC6EB2E00CDBB83 /* ConnectView.swift */; };
+		1136143B2FC6EB2E00CDBB83 /* GameModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614262FC6EB2E00CDBB83 /* GameModels.swift */; };
+		1136143C2FC6EB2E00CDBB83 /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1136142D2FC6EB2E00CDBB83 /* MainMenu.swift */; };
+		1136143F2FC6EB2E00CDBB83 /* GameEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614252FC6EB2E00CDBB83 /* GameEngine.swift */; };
+		113614402FC6EB2E00CDBB83 /* MotionParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614282FC6EB2E00CDBB83 /* MotionParser.swift */; };
+		113614512FC6EB3000CDBB83 /* TrikiMotionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614502FC6EB3000CDBB84 /* TrikiMotionProtocol.swift */; };
+		113614762FC6EB3000CDBB89 /* PixelCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614772FC6EB3000CDBB89 /* PixelCanvas.swift */; };
+		113614782FC6EB3000CDBB8A /* GameTuning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614792FC6EB3000CDBB8A /* GameTuning.swift */; };
+		11361D081FC6EBB000CDBB77 /* TrikiTurnStartGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361D081FC6EBB000CDBB78 /* TrikiTurnStartGate.swift */; };
+		113614802FC6EB3000CDBB8B /* MotionControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614812FC6EB3000CDBB8B /* MotionControls.swift */; };
+		113614822FC6EB3000CDBB8C /* TrikiSensors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614832FC6EB3000CDBB8C /* TrikiSensors.swift */; };
+		113614902FC6EB3000CDBB90 /* MotionMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614912FC6EB3000CDBB91 /* MotionMath.swift */; };
+		113614A02FC6EB3000CDBB92 /* GameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614A12FC6EB3000CDBB93 /* GameObject.swift */; };
+		113614B12FC6EB3000CDBB94 /* GameCalibrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614B02FC6EB3000CDBB94 /* GameCalibrationView.swift */; };
+		113614C12FC6EB3000CDBB95 /* GameLoop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614C02FC6EB3000CDBB95 /* GameLoop.swift */; };
+		113614D22FC6EB3000CDBB97 /* PongGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614D32FC6EB3000CDBB97 /* PongGame.swift */; };
+		113614D62FC6EB3000CDBB99 /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614D72FC6EB3000CDBB99 /* GameManager.swift */; };
+		113615A12FC6EB4000CDBB01 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113615B12FC6EB4000CDBB01 /* Question.swift */; };
+		113615A22FC6EB4000CDBB02 /* QuizCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113615B22FC6EB4000CDBB02 /* QuizCache.swift */; };
+		113615A32FC6EB4000CDBB03 /* OpenTriviaClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113615B32FC6EB4000CDBB03 /* OpenTriviaClient.swift */; };
+		113615A42FC6EB4000CDBB04 /* QuizTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113615B42FC6EB4000CDBB04 /* QuizTranslator.swift */; };
+		113615A52FC6EB4000CDBB05 /* QuizLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113615B52FC6EB4000CDBB05 /* QuizLoader.swift */; };
+		113615A62FC6EB4000CDBB06 /* QuizGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113615B62FC6EB4000CDBB06 /* QuizGame.swift */; };
+		113615A82FC6EB4000CDBB08 /* QuizGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113615B82FC6EB4000CDBB08 /* QuizGameView.swift */; };
+		113615D12FC6EB4000CDBB09 /* ArcadeUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113615D22FC6EB4000CDBB09 /* ArcadeUI.swift */; };
+		113616E12FC6EB5000CDBB10 /* BLEByteProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113616E02FC6EB5000CDBB10 /* BLEByteProbe.swift */; };
+		113617011FC6EB6000CDBB20 /* QuizRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113617001FC6EB6000CDBB20 /* QuizRules.swift */; };
+		113617031FC6EB6000CDBB20 /* QuizCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113617021FC6EB6000CDBB20 /* QuizCategory.swift */; };
+		113617051FC6EB6000CDBB20 /* QuizRoundCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113617041FC6EB6000CDBB20 /* QuizRoundCache.swift */; };
+		113617071FC6EB6000CDBB20 /* QuizSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113617061FC6EB6000CDBB20 /* QuizSession.swift */; };
+		113617091FC6EB6000CDBB20 /* Quiz/QuizFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113617081FC6EB6000CDBB20 /* Quiz/QuizFlowView.swift */; };
+		1136170B1FC6EB6000CDBB20 /* AirPlayRoutePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1136170A1FC6EB6000CDBB20 /* AirPlayRoutePicker.swift */; };
+		113617111FC6EB6000CDBB21 /* TrikiUIMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113617101FC6EB6000CDBB21 /* TrikiUIMath.swift */; };
+		113617131FC6EB6000CDBB21 /* TrikiHoldTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113617121FC6EB6000CDBB21 /* TrikiHoldTracker.swift */; };
+		113617151FC6EB6000CDBB21 /* TrikiUINavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113617141FC6EB6000CDBB21 /* TrikiUINavigator.swift */; };
+		113617171FC6EB6000CDBB21 /* TrikiUIComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113617161FC6EB6000CDBB21 /* TrikiUIComponents.swift */; };
+		1136171B1FC6EB6000CDBB21 /* TrikiUIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1136171A1FC6EB6000CDBB21 /* TrikiUIConfig.swift */; };
+		1136171D1FC6EB6000CDBB21 /* Quiz/QuizExternalDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1136171C1FC6EB6000CDBB21 /* Quiz/QuizExternalDisplay.swift */; };
+		1136171F1FC6EB6000CDBB21 /* TrikiCalibrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1136171E1FC6EB6000CDBB21 /* TrikiCalibrationView.swift */; };
+		113617221FC6EB6000CDBB21 /* QuizSFX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113617211FC6EB6000CDBB21 /* QuizSFX.swift */; };
+		113617241FC6EB6000CDBB21 /* TrikiFocusGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113617251FC6EB6000CDBB21 /* TrikiFocusGate.swift */; };
+		113617271FC6EB6000CDBB21 /* DartGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113617281FC6EB6000CDBB21 /* DartGame.swift */; };
+		113618A12FC6EB7000CDBB30 /* DartGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113618B12FC6EB7000CDBB30 /* DartGameView.swift */; };
+		113618C12FC6EB7000CDBB31 /* DartUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113618D12FC6EB7000CDBB31 /* DartUI.swift */; };
+		113619A12FC6EB8000CDBB40 /* DartThrowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113619B12FC6EB8000CDBB40 /* DartThrowController.swift */; };
+		113619C12FC6EB8000CDBB41 /* DartPlayZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113619D12FC6EB8000CDBB41 /* DartPlayZone.swift */; };
+		113619F12FC6EB8000CDBB42 /* DartSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113619E12FC6EB8000CDBB42 /* DartSession.swift */; };
+		11361A011FC6EB8000CDBB43 /* DartGripMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361A021FC6EB8000CDBB43 /* DartGripMapping.swift */; };
+		11361A012FC6EB9000CDBB50 /* DartPlayers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361A002FC6EB9000CDBB50 /* DartPlayers.swift */; };
+		11361A031FC6EB8000CDBB44 /* DartPlayerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361A041FC6EB8000CDBB44 /* DartPlayerProfile.swift */; };
+		11361A051FC6EB8000CDBB44 /* DartCalibrationWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361A061FC6EB8000CDBB44 /* DartCalibrationWizard.swift */; };
+		11361A071FC6EB8000CDBB44 /* DartCalibrationFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361A081FC6EB8000CDBB44 /* DartCalibrationFlowView.swift */; };
+		11361B011FC6EB9000CDBB50 /* DartFlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361B021FC6EB9000CDBB50 /* DartFlight.swift */; };
+		11361B031FC6EB9000CDBB51 /* DartArenaScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361B041FC6EB9000CDBB51 /* DartArenaScene.swift */; };
+		11361C011FC6EBA000CDBB60 /* ArcadeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361C051FC6EBA000CDBB60 /* ArcadeSettings.swift */; };
+		11361C021FC6EBA000CDBB61 /* ScreenAwake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361C061FC6EBA000CDBB61 /* ScreenAwake.swift */; };
+		11361C031FC6EBA000CDBB62 /* ArcadeAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361C071FC6EBA000CDBB62 /* ArcadeAudio.swift */; };
+		11361C041FC6EBA000CDBB63 /* ArcadePlaySession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361C081FC6EBA000CDBB63 /* ArcadePlaySession.swift */; };
+		11361C091FC6EBA000CDBB64 /* DartTVLobby.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361C0A1FC6EBA000CDBB64 /* DartTVLobby.swift */; };
+		11361C0B1FC6EBA000CDBB64 /* DartPhoneTVCompanion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361C0C1FC6EBA000CDBB64 /* DartPhoneTVCompanion.swift */; };
+		11361C0D1FC6EBA000CDBB65 /* DartLobbySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361C0E1FC6EBA000CDBB65 /* DartLobbySettings.swift */; };
+		11361D011FC6EBB000CDBB70 /* BowlingGameLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361D111FC6EBB000CDBB70 /* BowlingGameLogic.swift */; };
+		11361D021FC6EBB000CDBB71 /* BowlingInputHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361D121FC6EBB000CDBB71 /* BowlingInputHandler.swift */; };
+		11361D031FC6EBB000CDBB72 /* BowlingPhysicsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361D131FC6EBB000CDBB72 /* BowlingPhysicsHandler.swift */; };
+		11361D0A1FC6EBB000CDBB80 /* BowlingInvisibleCalibrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361D1A1FC6EBB000CDBB80 /* BowlingInvisibleCalibrator.swift */; };
+		11361D041FC6EBB000CDBB73 /* BowlingGameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361D141FC6EBB000CDBB73 /* BowlingGameScene.swift */; };
+		11361D061FC6EBB000CDBB75 /* BowlingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361D161FC6EBB000CDBB75 /* BowlingSession.swift */; };
+		11361D071FC6EBB000CDBB76 /* BowlingGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361D171FC6EBB000CDBB76 /* BowlingGameView.swift */; };
+		11361D091FC6EBB000CDBB79 /* BowlingGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361D191FC6EBB000CDBB79 /* BowlingGame.swift */; };
+		11361D0A1FC6EBB000CDBB7A /* BowlingUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11361D1A1FC6EBB000CDBB7A /* BowlingUI.swift */; };
+		A10000112FC6EB2E00CDBB83 /* VeltoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000102FC6EB2E00CDBB83 /* VeltoKit.framework */; };
+		A10000132FC6EB2E00CDBB83 /* MotionInputProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000122FC6EB2E00CDBB83 /* MotionInputProvider.swift */; };
+		A10000152FC6EB2E00CDBB83 /* GameInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000142FC6EB2E00CDBB83 /* GameInput.swift */; };
+		A10000172FC6EB2E00CDBB83 /* TMKMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000162FC6EB2E00CDBB83 /* TMKMath.swift */; };
+		A100001B2FC6EB2E00CDBB83 /* VeltoKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A10000102FC6EB2E00CDBB83 /* VeltoKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A100001D2FC6EB2E00CDBB83 /* PointerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100001E2FC6EB2E00CDBB83 /* PointerConfig.swift */; };
+		A100002A2FC6EB2E00CDBB83 /* MotionMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100002B2FC6EB2E00CDBB83 /* MotionMode.swift */; };
+		A100002C2FC6EB2E00CDBB83 /* MotionAxisMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100002D2FC6EB2E00CDBB83 /* MotionAxisMapping.swift */; };
+		A100002E2FC6EB2E00CDBB83 /* MotionConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100002F2FC6EB2E00CDBB83 /* MotionConfig.swift */; };
+		A10000302FC6EB2E00CDBB83 /* BLEGyroParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000312FC6EB2E00CDBB83 /* BLEGyroParser.swift */; };
+		A10000322FC6EB2E00CDBB83 /* MotionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000332FC6EB2E00CDBB83 /* MotionEngine.swift */; };
+		A10000342FC6EB2E00CDBB83 /* MotionSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000352FC6EB2E00CDBB83 /* MotionSDK.swift */; };
+		A10000362FC6EB2E00CDBB83 /* MotionPaddleLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000372FC6EB2E00CDBB83 /* MotionPaddleLog.swift */; };
+		A10000382FC6EB2E00CDBB83 /* BLEButtonDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000392FC6EB2E00CDBB83 /* BLEButtonDecoder.swift */; };
+		A10000402FC6EB2E00CDBB83 /* MotionProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000412FC6EB2E00CDBB83 /* MotionProcessor.swift */; };
+		A10000422FC6EB2E00CDBB83 /* GestureDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000432FC6EB2E00CDBB83 /* GestureDetector.swift */; };
+		A10000442FC6EB2E00CDBB83 /* ButtonDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000452FC6EB2E00CDBB83 /* ButtonDetector.swift */; };
+
+		A10000612FC6EB2E00CDBB83 /* InputProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000602FC6EB2E00CDBB83 /* InputProvider.swift */; };
+		A10000632FC6EB2E00CDBB83 /* InputAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000622FC6EB2E00CDBB83 /* InputAdapter.swift */; };
+		A10000652FC6EB2E00CDBB83 /* TrikiInputAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000642FC6EB2E00CDBB83 /* TrikiInputAdapter.swift */; };
+		A10000672FC6EB2E00CDBB83 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000662FC6EB2E00CDBB83 /* Game.swift */; };
+		A10000692FC6EB2E00CDBB83 /* GameContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000682FC6EB2E00CDBB83 /* GameContext.swift */; };
+		A100006B2FC6EB2E00CDBB83 /* HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100006A2FC6EB2E00CDBB83 /* HUD.swift */; };
+		A10000522FC6EB2E00CDBB83 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614192FC6EB2E00CDBB83 /* BLEManager.swift */; };
+		A10000542FC6EB2E00CDBB83 /* BLEByteProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113616E02FC6EB5000CDBB10 /* BLEByteProbe.swift */; };
+		A10000562FC6EB2E00CDBB83 /* MotionParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614282FC6EB2E00CDBB83 /* MotionParser.swift */; };
+		A10000582FC6EB2E00CDBB83 /* TrikiMotionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614502FC6EB3000CDBB84 /* TrikiMotionProtocol.swift */; };
+		A10000702FC6EB2E00CDBB83 /* MotionSDK+Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000712FC6EB2E00CDBB83 /* MotionSDK+Connection.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		113613FD2FC6EB0900CDBB83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 113613E72FC6EB0800CDBB83 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 113613EE2FC6EB0800CDBB83;
+			remoteInfo = gametriki;
+		};
+		113614072FC6EB0900CDBB83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 113613E72FC6EB0800CDBB83 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 113613EE2FC6EB0800CDBB83;
+			remoteInfo = gametriki;
+		};
+		A10000192FC6EB2E00CDBB83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 113613E72FC6EB0800CDBB83 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A10000242FC6EB2E00CDBB83;
+			remoteInfo = VeltoKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A100001C2FC6EB2E00CDBB83 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A100001B2FC6EB2E00CDBB83 /* VeltoKit.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		113613EF2FC6EB0800CDBB83 /* gametriki.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = gametriki.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		113613FC2FC6EB0900CDBB83 /* gametrikiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gametrikiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		113614062FC6EB0900CDBB83 /* gametrikiUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gametrikiUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		113614192FC6EB2E00CDBB83 /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
+		A10000802FC6EB2E00CDBB83 /* BLE */ = {isa = PBXGroup; children = (113614192FC6EB2E00CDBB83 /* BLEManager.swift */, 113616E02FC6EB5000CDBB10 /* BLEByteProbe.swift */); path = BLE; sourceTree = "<group>"; };
+		A10000812FC6EB2E00CDBB83 /* Motion */ = {isa = PBXGroup; children = (113614282FC6EB2E00CDBB83 /* MotionParser.swift */, 113614502FC6EB3000CDBB84 /* TrikiMotionProtocol.swift */); path = Motion; sourceTree = "<group>"; };
+		1136141B2FC6EB2E00CDBB83 /* NeonTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeonTheme.swift; sourceTree = "<group>"; };
+		113614252FC6EB2E00CDBB83 /* GameEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEngine.swift; sourceTree = "<group>"; };
+		113614262FC6EB2E00CDBB83 /* GameModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModels.swift; sourceTree = "<group>"; };
+		113614282FC6EB2E00CDBB83 /* MotionParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionParser.swift; sourceTree = "<group>"; };
+		1136142A2FC6EB2E00CDBB83 /* ConnectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectView.swift; sourceTree = "<group>"; };
+		1136142B2FC6EB2E00CDBB83 /* DevModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevModeView.swift; sourceTree = "<group>"; };
+		1136142C2FC6EB2E00CDBB83 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		1136142D2FC6EB2E00CDBB83 /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
+		113614502FC6EB3000CDBB84 /* TrikiMotionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiMotionProtocol.swift; sourceTree = "<group>"; };
+		113614772FC6EB3000CDBB89 /* PixelCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelCanvas.swift; sourceTree = "<group>"; };
+		113614792FC6EB3000CDBB8A /* GameTuning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTuning.swift; sourceTree = "<group>"; };
+		11361D081FC6EBB000CDBB78 /* TrikiTurnStartGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiTurnStartGate.swift; sourceTree = "<group>"; };
+		113614812FC6EB3000CDBB8B /* MotionControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionControls.swift; sourceTree = "<group>"; };
+		113614832FC6EB3000CDBB8C /* TrikiSensors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiSensors.swift; sourceTree = "<group>"; };
+		113614912FC6EB3000CDBB91 /* MotionMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionMath.swift; sourceTree = "<group>"; };
+		113614A12FC6EB3000CDBB93 /* GameObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameObject.swift; sourceTree = "<group>"; };
+		113614B02FC6EB3000CDBB94 /* GameCalibrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCalibrationView.swift; sourceTree = "<group>"; };
+		113614C02FC6EB3000CDBB95 /* GameLoop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLoop.swift; sourceTree = "<group>"; };
+		113614D32FC6EB3000CDBB97 /* PongGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PongGame.swift; sourceTree = "<group>"; };
+		113614D72FC6EB3000CDBB99 /* GameManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameManager.swift; sourceTree = "<group>"; };
+		113615B12FC6EB4000CDBB01 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
+		113615B22FC6EB4000CDBB02 /* QuizCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizCache.swift; sourceTree = "<group>"; };
+		113615B32FC6EB4000CDBB03 /* OpenTriviaClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTriviaClient.swift; sourceTree = "<group>"; };
+		113615B42FC6EB4000CDBB04 /* QuizTranslator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizTranslator.swift; sourceTree = "<group>"; };
+		113615B52FC6EB4000CDBB05 /* QuizLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizLoader.swift; sourceTree = "<group>"; };
+		113615B62FC6EB4000CDBB06 /* QuizGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizGame.swift; sourceTree = "<group>"; };
+		113615B82FC6EB4000CDBB08 /* QuizGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizGameView.swift; sourceTree = "<group>"; };
+		113615D22FC6EB4000CDBB09 /* ArcadeUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadeUI.swift; sourceTree = "<group>"; };
+		113616E02FC6EB5000CDBB10 /* BLEByteProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEByteProbe.swift; sourceTree = "<group>"; };
+		113617001FC6EB6000CDBB20 /* QuizRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizRules.swift; sourceTree = "<group>"; };
+		113617021FC6EB6000CDBB20 /* QuizCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizCategory.swift; sourceTree = "<group>"; };
+		113617041FC6EB6000CDBB20 /* QuizRoundCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizRoundCache.swift; sourceTree = "<group>"; };
+		113617061FC6EB6000CDBB20 /* QuizSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizSession.swift; sourceTree = "<group>"; };
+		113617081FC6EB6000CDBB20 /* Quiz/QuizFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz/QuizFlowView.swift; sourceTree = "<group>"; };
+		1136170A1FC6EB6000CDBB20 /* AirPlayRoutePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayRoutePicker.swift; sourceTree = "<group>"; };
+		113617101FC6EB6000CDBB21 /* TrikiUIMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiUIMath.swift; sourceTree = "<group>"; };
+		113617121FC6EB6000CDBB21 /* TrikiHoldTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiHoldTracker.swift; sourceTree = "<group>"; };
+		113617141FC6EB6000CDBB21 /* TrikiUINavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiUINavigator.swift; sourceTree = "<group>"; };
+		113617161FC6EB6000CDBB21 /* TrikiUIComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiUIComponents.swift; sourceTree = "<group>"; };
+		1136171A1FC6EB6000CDBB21 /* TrikiUIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiUIConfig.swift; sourceTree = "<group>"; };
+		1136171C1FC6EB6000CDBB21 /* Quiz/QuizExternalDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz/QuizExternalDisplay.swift; sourceTree = "<group>"; };
+		1136171E1FC6EB6000CDBB21 /* TrikiCalibrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiCalibrationView.swift; sourceTree = "<group>"; };
+		113617211FC6EB6000CDBB21 /* QuizSFX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizSFX.swift; sourceTree = "<group>"; };
+		113617251FC6EB6000CDBB21 /* TrikiFocusGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiFocusGate.swift; sourceTree = "<group>"; };
+		113617281FC6EB6000CDBB21 /* DartGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartGame.swift; sourceTree = "<group>"; };
+		113618B12FC6EB7000CDBB30 /* DartGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartGameView.swift; sourceTree = "<group>"; };
+		113618D12FC6EB7000CDBB31 /* DartUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartUI.swift; sourceTree = "<group>"; };
+		113619B12FC6EB8000CDBB40 /* DartThrowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartThrowController.swift; sourceTree = "<group>"; };
+		113619D12FC6EB8000CDBB41 /* DartPlayZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartPlayZone.swift; sourceTree = "<group>"; };
+		113619E12FC6EB8000CDBB42 /* DartSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartSession.swift; sourceTree = "<group>"; };
+		11361A002FC6EB9000CDBB50 /* DartPlayers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartPlayers.swift; sourceTree = "<group>"; };
+		11361A021FC6EB8000CDBB43 /* DartGripMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartGripMapping.swift; sourceTree = "<group>"; };
+		11361A041FC6EB8000CDBB44 /* DartPlayerProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartPlayerProfile.swift; sourceTree = "<group>"; };
+		11361A061FC6EB8000CDBB44 /* DartCalibrationWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartCalibrationWizard.swift; sourceTree = "<group>"; };
+		11361A081FC6EB8000CDBB44 /* DartCalibrationFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartCalibrationFlowView.swift; sourceTree = "<group>"; };
+		11361B021FC6EB9000CDBB50 /* DartFlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartFlight.swift; sourceTree = "<group>"; };
+		11361B041FC6EB9000CDBB51 /* DartArenaScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartArenaScene.swift; sourceTree = "<group>"; };
+		11361C051FC6EBA000CDBB60 /* ArcadeSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadeSettings.swift; sourceTree = "<group>"; };
+		11361C061FC6EBA000CDBB61 /* ScreenAwake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenAwake.swift; sourceTree = "<group>"; };
+		11361C071FC6EBA000CDBB62 /* ArcadeAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadeAudio.swift; sourceTree = "<group>"; };
+		11361C081FC6EBA000CDBB63 /* ArcadePlaySession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadePlaySession.swift; sourceTree = "<group>"; };
+		11361C0A1FC6EBA000CDBB64 /* DartTVLobby.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartTVLobby.swift; sourceTree = "<group>"; };
+		11361C0C1FC6EBA000CDBB64 /* DartPhoneTVCompanion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartPhoneTVCompanion.swift; sourceTree = "<group>"; };
+		11361C0E1FC6EBA000CDBB65 /* DartLobbySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DartLobbySettings.swift; sourceTree = "<group>"; };
+		11361D111FC6EBB000CDBB70 /* BowlingGameLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BowlingGameLogic.swift; sourceTree = "<group>"; };
+		11361D121FC6EBB000CDBB71 /* BowlingInputHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BowlingInputHandler.swift; sourceTree = "<group>"; };
+		11361D131FC6EBB000CDBB72 /* BowlingPhysicsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BowlingPhysicsHandler.swift; sourceTree = "<group>"; };
+		11361D1A1FC6EBB000CDBB80 /* BowlingInvisibleCalibrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BowlingInvisibleCalibrator.swift; sourceTree = "<group>"; };
+		11361D141FC6EBB000CDBB73 /* BowlingGameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BowlingGameScene.swift; sourceTree = "<group>"; };
+		11361D161FC6EBB000CDBB75 /* BowlingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BowlingSession.swift; sourceTree = "<group>"; };
+		11361D171FC6EBB000CDBB76 /* BowlingGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BowlingGameView.swift; sourceTree = "<group>"; };
+		11361D191FC6EBB000CDBB79 /* BowlingGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BowlingGame.swift; sourceTree = "<group>"; };
+		11361D1A1FC6EBB000CDBB7A /* BowlingUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BowlingUI.swift; sourceTree = "<group>"; };
+		A10000102FC6EB2E00CDBB83 /* VeltoKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VeltoKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000142FC6EB2E00CDBB83 /* GameInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInput.swift; sourceTree = "<group>"; };
+		A10000162FC6EB2E00CDBB83 /* TMKMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMKMath.swift; sourceTree = "<group>"; };
+		A100001E2FC6EB2E00CDBB83 /* PointerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointerConfig.swift; sourceTree = "<group>"; };
+		A100002B2FC6EB2E00CDBB83 /* MotionMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionMode.swift; sourceTree = "<group>"; };
+		A100002D2FC6EB2E00CDBB83 /* MotionAxisMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionAxisMapping.swift; sourceTree = "<group>"; };
+		A100002F2FC6EB2E00CDBB83 /* MotionConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionConfig.swift; sourceTree = "<group>"; };
+		A10000312FC6EB2E00CDBB83 /* BLEGyroParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEGyroParser.swift; sourceTree = "<group>"; };
+		A10000332FC6EB2E00CDBB83 /* MotionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionEngine.swift; sourceTree = "<group>"; };
+		A10000352FC6EB2E00CDBB83 /* MotionSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionSDK.swift; sourceTree = "<group>"; };
+		A10000712FC6EB2E00CDBB83 /* MotionSDK+Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MotionSDK+Connection.swift"; sourceTree = "<group>"; };
+		A10000372FC6EB2E00CDBB83 /* MotionPaddleLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionPaddleLog.swift; sourceTree = "<group>"; };
+		A10000392FC6EB2E00CDBB83 /* BLEButtonDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEButtonDecoder.swift; sourceTree = "<group>"; };
+		A10000412FC6EB2E00CDBB83 /* MotionProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionProcessor.swift; sourceTree = "<group>"; };
+		A10000432FC6EB2E00CDBB83 /* GestureDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureDetector.swift; sourceTree = "<group>"; };
+		A10000452FC6EB2E00CDBB83 /* ButtonDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonDetector.swift; sourceTree = "<group>"; };
+		A10000602FC6EB2E00CDBB83 /* InputProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputProvider.swift; sourceTree = "<group>"; };
+		A10000622FC6EB2E00CDBB83 /* InputAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputAdapter.swift; sourceTree = "<group>"; };
+		A10000642FC6EB2E00CDBB83 /* TrikiInputAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiInputAdapter.swift; sourceTree = "<group>"; };
+		A10000662FC6EB2E00CDBB83 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		A10000682FC6EB2E00CDBB83 /* GameContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameContext.swift; sourceTree = "<group>"; };
+		A100006A2FC6EB2E00CDBB83 /* HUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUD.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		113614502FC6EB3000CDBB83 /* Exceptions for "gametriki" folder in "gametriki" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 113613EE2FC6EB0800CDBB83 /* gametriki */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		113613F12FC6EB0800CDBB83 /* gametriki */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				113614502FC6EB3000CDBB83 /* Exceptions for "gametriki" folder in "gametriki" target */,
+			);
+			path = gametriki;
+			sourceTree = "<group>";
+		};
+		113613FF2FC6EB0900CDBB83 /* gametrikiTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = gametrikiTests;
+			sourceTree = "<group>";
+		};
+		113614092FC6EB0900CDBB83 /* gametrikiUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = gametrikiUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		113613EC2FC6EB0800CDBB83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000112FC6EB2E00CDBB83 /* VeltoKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		113613F92FC6EB0900CDBB83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		113614032FC6EB0900CDBB83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000182FC6EB2E00CDBB83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		113613E62FC6EB0800CDBB83 = {
+			isa = PBXGroup;
+			children = (
+				113613F12FC6EB0800CDBB83 /* gametriki */,
+				113613FF2FC6EB0900CDBB83 /* gametrikiTests */,
+				113614092FC6EB0900CDBB83 /* gametrikiUITests */,
+				113613F02FC6EB0800CDBB83 /* Products */,
+				A10000202FC6EB2E00CDBB83 /* VeltoKit */,
+				113614272FC6EB2E00CDBB83 /* Engine */,
+				113614242FC6EB2E00CDBB83 /* Games */,
+				1136142E2FC6EB2E00CDBB83 /* UI */,
+				113614302FC6EB2E00CDBB83 /* Platform */,
+				1136141C2FC6EB2E00CDBB83 /* Design */,
+			);
+			sourceTree = "<group>";
+		};
+		113613F02FC6EB0800CDBB83 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				113613EF2FC6EB0800CDBB83 /* gametriki.app */,
+				113613FC2FC6EB0900CDBB83 /* gametrikiTests.xctest */,
+				113614062FC6EB0900CDBB83 /* gametrikiUITests.xctest */,
+				A10000102FC6EB2E00CDBB83 /* VeltoKit.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1136141A2FC6EB2E00CDBB83 /* BLE */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = BLE;
+			sourceTree = "<group>";
+		};
+		1136141C2FC6EB2E00CDBB83 /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				1136141B2FC6EB2E00CDBB83 /* NeonTheme.swift */,
+				113615D22FC6EB4000CDBB09 /* ArcadeUI.swift */,
+				11361C051FC6EBA000CDBB60 /* ArcadeSettings.swift */,
+				11361C061FC6EBA000CDBB61 /* ScreenAwake.swift */,
+				11361C071FC6EBA000CDBB62 /* ArcadeAudio.swift */,
+				11361C081FC6EBA000CDBB63 /* ArcadePlaySession.swift */,
+			);
+			path = Design;
+			sourceTree = "<group>";
+		};
+		113614242FC6EB2E00CDBB83 /* Games */ = {
+			isa = PBXGroup;
+			children = (
+				113614D32FC6EB3000CDBB97 /* PongGame.swift */,
+				113617281FC6EB6000CDBB21 /* DartGame.swift */,
+				11361D091FC6EBB000CDBB78 /* Bowling */,
+				11361D191FC6EBB000CDBB79 /* BowlingGame.swift */,
+				11361B021FC6EB9000CDBB50 /* DartFlight.swift */,
+				11361B041FC6EB9000CDBB51 /* DartArenaScene.swift */,
+				113619B12FC6EB8000CDBB40 /* DartThrowController.swift */,
+				11361A021FC6EB8000CDBB43 /* DartGripMapping.swift */,
+				113619D12FC6EB8000CDBB41 /* DartPlayZone.swift */,
+				113615B62FC6EB4000CDBB06 /* QuizGame.swift */,
+			);
+			path = Games;
+			sourceTree = "<group>";
+		};
+		113614272FC6EB2E00CDBB83 /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				113614252FC6EB2E00CDBB83 /* GameEngine.swift */,
+				113614C02FC6EB3000CDBB95 /* GameLoop.swift */,
+				113614A12FC6EB3000CDBB93 /* GameObject.swift */,
+				113614262FC6EB2E00CDBB83 /* GameModels.swift */,
+				A10000662FC6EB2E00CDBB83 /* Game.swift */,
+				A10000682FC6EB2E00CDBB83 /* GameContext.swift */,
+				113614792FC6EB3000CDBB8A /* GameTuning.swift */,
+				113614D72FC6EB3000CDBB99 /* GameManager.swift */,
+				11361D081FC6EBB000CDBB78 /* TrikiTurnStartGate.swift */,
+				113619E12FC6EB8000CDBB42 /* DartSession.swift */,
+				11361A002FC6EB9000CDBB50 /* DartPlayers.swift */,
+				11361D161FC6EBB000CDBB75 /* BowlingSession.swift */,
+				11361A041FC6EB8000CDBB44 /* DartPlayerProfile.swift */,
+				11361A061FC6EB8000CDBB44 /* DartCalibrationWizard.swift */,
+				11361C0A1FC6EBA000CDBB64 /* DartTVLobby.swift */,
+				11361C0E1FC6EBA000CDBB65 /* DartLobbySettings.swift */,
+				113614812FC6EB3000CDBB8B /* MotionControls.swift */,
+				113614912FC6EB3000CDBB91 /* MotionMath.swift */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		113614292FC6EB2E00CDBB83 /* Motion */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Motion;
+			sourceTree = "<group>";
+		};
+		1136142E2FC6EB2E00CDBB83 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				113617181FC6EB6000CDBB21 /* TrikiUI */,
+				1136142A2FC6EB2E00CDBB83 /* ConnectView.swift */,
+				1136171E1FC6EB6000CDBB21 /* TrikiCalibrationView.swift */,
+				1136142B2FC6EB2E00CDBB83 /* DevModeView.swift */,
+				113614B02FC6EB3000CDBB94 /* GameCalibrationView.swift */,
+				1136142C2FC6EB2E00CDBB83 /* GameView.swift */,
+				113614772FC6EB3000CDBB89 /* PixelCanvas.swift */,
+				113615B82FC6EB4000CDBB08 /* QuizGameView.swift */,
+				113618B12FC6EB7000CDBB30 /* DartGameView.swift */,
+				11361D171FC6EBB000CDBB76 /* BowlingGameView.swift */,
+				11361D1A1FC6EBB000CDBB7A /* BowlingUI.swift */,
+				11361C0C1FC6EBA000CDBB64 /* DartPhoneTVCompanion.swift */,
+				11361A081FC6EB8000CDBB44 /* DartCalibrationFlowView.swift */,
+				113618D12FC6EB7000CDBB31 /* DartUI.swift */,
+				113617081FC6EB6000CDBB20 /* Quiz/QuizFlowView.swift */,
+				1136171C1FC6EB6000CDBB21 /* Quiz/QuizExternalDisplay.swift */,
+				1136170A1FC6EB6000CDBB20 /* AirPlayRoutePicker.swift */,
+				1136142D2FC6EB2E00CDBB83 /* MainMenu.swift */,
+				A100006A2FC6EB2E00CDBB83 /* HUD.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		113614302FC6EB2E00CDBB83 /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+				1136141A2FC6EB2E00CDBB83 /* BLE */,
+				113614292FC6EB2E00CDBB83 /* Motion */,
+				113615C12FC6EB4000CDBB00 /* Quiz */,
+				A10000642FC6EB2E00CDBB83 /* TrikiInputAdapter.swift */,
+			);
+			path = Platform;
+			sourceTree = "<group>";
+		};
+		113615C12FC6EB4000CDBB00 /* Quiz */ = {
+			isa = PBXGroup;
+			children = (
+				113615B12FC6EB4000CDBB01 /* Question.swift */,
+				113615B22FC6EB4000CDBB02 /* QuizCache.swift */,
+				113615B32FC6EB4000CDBB03 /* OpenTriviaClient.swift */,
+				113615B42FC6EB4000CDBB04 /* QuizTranslator.swift */,
+				113615B52FC6EB4000CDBB05 /* QuizLoader.swift */,
+				113617001FC6EB6000CDBB20 /* QuizRules.swift */,
+				113617021FC6EB6000CDBB20 /* QuizCategory.swift */,
+				113617041FC6EB6000CDBB20 /* QuizRoundCache.swift */,
+				113617061FC6EB6000CDBB20 /* QuizSession.swift */,
+				113617211FC6EB6000CDBB21 /* QuizSFX.swift */,
+			);
+			path = Quiz;
+			sourceTree = "<group>";
+		};
+		113617181FC6EB6000CDBB21 /* TrikiUI */ = {
+			isa = PBXGroup;
+			children = (
+				113617101FC6EB6000CDBB21 /* TrikiUIMath.swift */,
+				1136171A1FC6EB6000CDBB21 /* TrikiUIConfig.swift */,
+				113617121FC6EB6000CDBB21 /* TrikiHoldTracker.swift */,
+				113617251FC6EB6000CDBB21 /* TrikiFocusGate.swift */,
+				113617141FC6EB6000CDBB21 /* TrikiUINavigator.swift */,
+				113617161FC6EB6000CDBB21 /* TrikiUIComponents.swift */,
+			);
+			path = TrikiUI;
+			sourceTree = "<group>";
+		};
+		11361D091FC6EBB000CDBB78 /* Bowling */ = {
+			isa = PBXGroup;
+			children = (
+				11361D111FC6EBB000CDBB70 /* BowlingGameLogic.swift */,
+				11361D121FC6EBB000CDBB71 /* BowlingInputHandler.swift */,
+				11361D131FC6EBB000CDBB72 /* BowlingPhysicsHandler.swift */,
+				11361D1A1FC6EBB000CDBB80 /* BowlingInvisibleCalibrator.swift */,
+				11361D141FC6EBB000CDBB73 /* BowlingGameScene.swift */,
+			);
+			path = Bowling;
+			sourceTree = "<group>";
+		};
+		A10000202FC6EB2E00CDBB83 /* VeltoKit */ = {
+			isa = PBXGroup;
+			children = (
+				A10000622FC6EB2E00CDBB83 /* InputAdapter.swift */,
+				A10000602FC6EB2E00CDBB83 /* InputProvider.swift */,
+				113614832FC6EB3000CDBB8C /* TrikiSensors.swift */,
+				A10000142FC6EB2E00CDBB83 /* GameInput.swift */,
+				A10000162FC6EB2E00CDBB83 /* TMKMath.swift */,
+				A100001E2FC6EB2E00CDBB83 /* PointerConfig.swift */,
+				A100002B2FC6EB2E00CDBB83 /* MotionMode.swift */,
+				A100002D2FC6EB2E00CDBB83 /* MotionAxisMapping.swift */,
+				A100002F2FC6EB2E00CDBB83 /* MotionConfig.swift */,
+				A10000312FC6EB2E00CDBB83 /* BLEGyroParser.swift */,
+				A10000392FC6EB2E00CDBB83 /* BLEButtonDecoder.swift */,
+				A10000332FC6EB2E00CDBB83 /* MotionEngine.swift */,
+				A10000412FC6EB2E00CDBB83 /* MotionProcessor.swift */,
+				A10000432FC6EB2E00CDBB83 /* GestureDetector.swift */,
+				A10000452FC6EB2E00CDBB83 /* ButtonDetector.swift */,
+				A10000352FC6EB2E00CDBB83 /* MotionSDK.swift */,
+				A10000712FC6EB2E00CDBB83 /* MotionSDK+Connection.swift */,
+				A10000372FC6EB2E00CDBB83 /* MotionPaddleLog.swift */,
+				A10000802FC6EB2E00CDBB83 /* BLE */,
+				A10000812FC6EB2E00CDBB83 /* Motion */,
+			);
+			name = VeltoKit;
+			path = ../VeltoKit;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		113613EE2FC6EB0800CDBB83 /* gametriki */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 113614102FC6EB0900CDBB83 /* Build configuration list for PBXNativeTarget "gametriki" */;
+			buildPhases = (
+				113613EB2FC6EB0800CDBB83 /* Sources */,
+				113613EC2FC6EB0800CDBB83 /* Frameworks */,
+				A100001C2FC6EB2E00CDBB83 /* CopyFiles */,
+				113613ED2FC6EB0800CDBB83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A100001A2FC6EB2E00CDBB83 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				113613F12FC6EB0800CDBB83 /* gametriki */,
+			);
+			name = gametriki;
+			packageProductDependencies = (
+			);
+			productName = gametriki;
+			productReference = 113613EF2FC6EB0800CDBB83 /* gametriki.app */;
+			productType = "com.apple.product-type.application";
+		};
+		113613FB2FC6EB0900CDBB83 /* gametrikiTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 113614132FC6EB0900CDBB83 /* Build configuration list for PBXNativeTarget "gametrikiTests" */;
+			buildPhases = (
+				113613F82FC6EB0900CDBB83 /* Sources */,
+				113613F92FC6EB0900CDBB83 /* Frameworks */,
+				113613FA2FC6EB0900CDBB83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				113613FE2FC6EB0900CDBB83 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				113613FF2FC6EB0900CDBB83 /* gametrikiTests */,
+			);
+			name = gametrikiTests;
+			packageProductDependencies = (
+			);
+			productName = gametrikiTests;
+			productReference = 113613FC2FC6EB0900CDBB83 /* gametrikiTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		113614052FC6EB0900CDBB83 /* gametrikiUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 113614162FC6EB0900CDBB83 /* Build configuration list for PBXNativeTarget "gametrikiUITests" */;
+			buildPhases = (
+				113614022FC6EB0900CDBB83 /* Sources */,
+				113614032FC6EB0900CDBB83 /* Frameworks */,
+				113614042FC6EB0900CDBB83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				113614082FC6EB0900CDBB83 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				113614092FC6EB0900CDBB83 /* gametrikiUITests */,
+			);
+			name = gametrikiUITests;
+			packageProductDependencies = (
+			);
+			productName = gametrikiUITests;
+			productReference = 113614062FC6EB0900CDBB83 /* gametrikiUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		A10000242FC6EB2E00CDBB83 /* VeltoKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A10000282FC6EB2E00CDBB83 /* Build configuration list for PBXNativeTarget "VeltoKit" */;
+			buildPhases = (
+				A10000212FC6EB2E00CDBB83 /* Sources */,
+				A10000182FC6EB2E00CDBB83 /* Frameworks */,
+				A10000222FC6EB2E00CDBB83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VeltoKit;
+			packageProductDependencies = (
+			);
+			productName = VeltoKit;
+			productReference = A10000102FC6EB2E00CDBB83 /* VeltoKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		113613E72FC6EB0800CDBB83 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2620;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					113613EE2FC6EB0800CDBB83 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					113613FB2FC6EB0900CDBB83 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 113613EE2FC6EB0800CDBB83;
+					};
+					113614052FC6EB0900CDBB83 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 113613EE2FC6EB0800CDBB83;
+					};
+					A10000242FC6EB2E00CDBB83 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+				};
+			};
+			buildConfigurationList = 113613EA2FC6EB0800CDBB83 /* Build configuration list for PBXProject "gametriki" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 113613E62FC6EB0800CDBB83;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 113613F02FC6EB0800CDBB83 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				113613EE2FC6EB0800CDBB83 /* gametriki */,
+				A10000242FC6EB2E00CDBB83 /* VeltoKit */,
+				113613FB2FC6EB0900CDBB83 /* gametrikiTests */,
+				113614052FC6EB0900CDBB83 /* gametrikiUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		113613ED2FC6EB0800CDBB83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		113613FA2FC6EB0900CDBB83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		113614042FC6EB0900CDBB83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000222FC6EB2E00CDBB83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		113613EB2FC6EB0800CDBB83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000652FC6EB2E00CDBB83 /* TrikiInputAdapter.swift in Sources */,
+				A10000672FC6EB2E00CDBB83 /* Game.swift in Sources */,
+				A10000692FC6EB2E00CDBB83 /* GameContext.swift in Sources */,
+				A100006B2FC6EB2E00CDBB83 /* HUD.swift in Sources */,
+				113614322FC6EB2E00CDBB83 /* NeonTheme.swift in Sources */,
+				113615D12FC6EB4000CDBB09 /* ArcadeUI.swift in Sources */,
+				11361C011FC6EBA000CDBB60 /* ArcadeSettings.swift in Sources */,
+				11361C021FC6EBA000CDBB61 /* ScreenAwake.swift in Sources */,
+				11361C031FC6EBA000CDBB62 /* ArcadeAudio.swift in Sources */,
+				11361C041FC6EBA000CDBB63 /* ArcadePlaySession.swift in Sources */,
+				11361C091FC6EBA000CDBB64 /* DartTVLobby.swift in Sources */,
+				11361C0D1FC6EBA000CDBB65 /* DartLobbySettings.swift in Sources */,
+				11361C0B1FC6EBA000CDBB64 /* DartPhoneTVCompanion.swift in Sources */,
+				113614332FC6EB2E00CDBB83 /* GameView.swift in Sources */,
+				113614B12FC6EB3000CDBB94 /* GameCalibrationView.swift in Sources */,
+				113614D22FC6EB3000CDBB97 /* PongGame.swift in Sources */,
+				113617271FC6EB6000CDBB21 /* DartGame.swift in Sources */,
+				11361B011FC6EB9000CDBB50 /* DartFlight.swift in Sources */,
+				11361B031FC6EB9000CDBB51 /* DartArenaScene.swift in Sources */,
+				113619A12FC6EB8000CDBB40 /* DartThrowController.swift in Sources */,
+				113619C12FC6EB8000CDBB41 /* DartPlayZone.swift in Sources */,
+				113619F12FC6EB8000CDBB42 /* DartSession.swift in Sources */,
+				11361A012FC6EB9000CDBB50 /* DartPlayers.swift in Sources */,
+				11361A011FC6EB8000CDBB43 /* DartGripMapping.swift in Sources */,
+				113615A62FC6EB4000CDBB06 /* QuizGame.swift in Sources */,
+				113615A12FC6EB4000CDBB01 /* Question.swift in Sources */,
+				113615A22FC6EB4000CDBB02 /* QuizCache.swift in Sources */,
+				113615A32FC6EB4000CDBB03 /* OpenTriviaClient.swift in Sources */,
+				113615A42FC6EB4000CDBB04 /* QuizTranslator.swift in Sources */,
+				113615A52FC6EB4000CDBB05 /* QuizLoader.swift in Sources */,
+				113617011FC6EB6000CDBB20 /* QuizRules.swift in Sources */,
+				113617031FC6EB6000CDBB20 /* QuizCategory.swift in Sources */,
+				113617051FC6EB6000CDBB20 /* QuizRoundCache.swift in Sources */,
+				113617071FC6EB6000CDBB20 /* QuizSession.swift in Sources */,
+				113617221FC6EB6000CDBB21 /* QuizSFX.swift in Sources */,
+				113617091FC6EB6000CDBB20 /* Quiz/QuizFlowView.swift in Sources */,
+				1136170B1FC6EB6000CDBB20 /* AirPlayRoutePicker.swift in Sources */,
+				113617111FC6EB6000CDBB21 /* TrikiUIMath.swift in Sources */,
+				1136171B1FC6EB6000CDBB21 /* TrikiUIConfig.swift in Sources */,
+				1136171D1FC6EB6000CDBB21 /* Quiz/QuizExternalDisplay.swift in Sources */,
+				1136171F1FC6EB6000CDBB21 /* TrikiCalibrationView.swift in Sources */,
+				113617131FC6EB6000CDBB21 /* TrikiHoldTracker.swift in Sources */,
+				113617241FC6EB6000CDBB21 /* TrikiFocusGate.swift in Sources */,
+				113617151FC6EB6000CDBB21 /* TrikiUINavigator.swift in Sources */,
+				113617171FC6EB6000CDBB21 /* TrikiUIComponents.swift in Sources */,
+				113615A82FC6EB4000CDBB08 /* QuizGameView.swift in Sources */,
+				113618A12FC6EB7000CDBB30 /* DartGameView.swift in Sources */,
+				11361D011FC6EBB000CDBB70 /* BowlingGameLogic.swift in Sources */,
+				11361D021FC6EBB000CDBB71 /* BowlingInputHandler.swift in Sources */,
+				11361D031FC6EBB000CDBB72 /* BowlingPhysicsHandler.swift in Sources */,
+				11361D0A1FC6EBB000CDBB80 /* BowlingInvisibleCalibrator.swift in Sources */,
+				11361D041FC6EBB000CDBB73 /* BowlingGameScene.swift in Sources */,
+				11361D061FC6EBB000CDBB75 /* BowlingSession.swift in Sources */,
+				11361D071FC6EBB000CDBB76 /* BowlingGameView.swift in Sources */,
+				11361D091FC6EBB000CDBB79 /* BowlingGame.swift in Sources */,
+				11361D0A1FC6EBB000CDBB7A /* BowlingUI.swift in Sources */,
+				11361A071FC6EB8000CDBB44 /* DartCalibrationFlowView.swift in Sources */,
+				11361A031FC6EB8000CDBB44 /* DartPlayerProfile.swift in Sources */,
+				11361A051FC6EB8000CDBB44 /* DartCalibrationWizard.swift in Sources */,
+				113618C12FC6EB7000CDBB31 /* DartUI.swift in Sources */,
+				113614D62FC6EB3000CDBB99 /* GameManager.swift in Sources */,
+				11361D081FC6EBB000CDBB77 /* TrikiTurnStartGate.swift in Sources */,
+				113614392FC6EB2E00CDBB83 /* ConnectView.swift in Sources */,
+				1136143B2FC6EB2E00CDBB83 /* GameModels.swift in Sources */,
+				113614782FC6EB3000CDBB8A /* GameTuning.swift in Sources */,
+				1136143C2FC6EB2E00CDBB83 /* MainMenu.swift in Sources */,
+				1136143F2FC6EB2E00CDBB83 /* GameEngine.swift in Sources */,
+				113614C12FC6EB3000CDBB95 /* GameLoop.swift in Sources */,
+				113614A02FC6EB3000CDBB92 /* GameObject.swift in Sources */,
+				113614762FC6EB3000CDBB89 /* PixelCanvas.swift in Sources */,
+				113614382FC6EB2E00CDBB83 /* DevModeView.swift in Sources */,
+				113614802FC6EB3000CDBB8B /* MotionControls.swift in Sources */,
+				113614902FC6EB3000CDBB90 /* MotionMath.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		113613F82FC6EB0900CDBB83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		113614022FC6EB0900CDBB83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000212FC6EB2E00CDBB83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000152FC6EB2E00CDBB83 /* GameInput.swift in Sources */,
+				A10000612FC6EB2E00CDBB83 /* InputProvider.swift in Sources */,
+				A10000632FC6EB2E00CDBB83 /* InputAdapter.swift in Sources */,
+				113614822FC6EB3000CDBB8C /* TrikiSensors.swift in Sources */,
+				A10000172FC6EB2E00CDBB83 /* TMKMath.swift in Sources */,
+				A100001D2FC6EB2E00CDBB83 /* PointerConfig.swift in Sources */,
+				A100002A2FC6EB2E00CDBB83 /* MotionMode.swift in Sources */,
+				A100002C2FC6EB2E00CDBB83 /* MotionAxisMapping.swift in Sources */,
+				A100002E2FC6EB2E00CDBB83 /* MotionConfig.swift in Sources */,
+				A10000302FC6EB2E00CDBB83 /* BLEGyroParser.swift in Sources */,
+				A10000382FC6EB2E00CDBB83 /* BLEButtonDecoder.swift in Sources */,
+				A10000322FC6EB2E00CDBB83 /* MotionEngine.swift in Sources */,
+				A10000402FC6EB2E00CDBB83 /* MotionProcessor.swift in Sources */,
+				A10000422FC6EB2E00CDBB83 /* GestureDetector.swift in Sources */,
+				A10000442FC6EB2E00CDBB83 /* ButtonDetector.swift in Sources */,
+				A10000342FC6EB2E00CDBB83 /* MotionSDK.swift in Sources */,
+				A10000362FC6EB2E00CDBB83 /* MotionPaddleLog.swift in Sources */,
+				A10000702FC6EB2E00CDBB83 /* MotionSDK+Connection.swift in Sources */,
+				A10000522FC6EB2E00CDBB83 /* BLEManager.swift in Sources */,
+				A10000542FC6EB2E00CDBB83 /* BLEByteProbe.swift in Sources */,
+				A10000562FC6EB2E00CDBB83 /* MotionParser.swift in Sources */,
+				A10000582FC6EB2E00CDBB83 /* TrikiMotionProtocol.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		113613FE2FC6EB0900CDBB83 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 113613EE2FC6EB0800CDBB83 /* gametriki */;
+			targetProxy = 113613FD2FC6EB0900CDBB83 /* PBXContainerItemProxy */;
+		};
+		113614082FC6EB0900CDBB83 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 113613EE2FC6EB0800CDBB83 /* gametriki */;
+			targetProxy = 113614072FC6EB0900CDBB83 /* PBXContainerItemProxy */;
+		};
+		A100001A2FC6EB2E00CDBB83 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A10000242FC6EB2E00CDBB83 /* VeltoKit */;
+			targetProxy = A10000192FC6EB2E00CDBB83 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1136140E2FC6EB0900CDBB83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5JT3JLN6L4;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1136140F2FC6EB0900CDBB83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5JT3JLN6L4;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		113614112FC6EB0900CDBB83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5JT3JLN6L4;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = gametriki/Info.plist;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.koderteam.gametriki;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		113614122FC6EB0900CDBB83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5JT3JLN6L4;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = gametriki/Info.plist;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.koderteam.gametriki;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		113614142FC6EB0900CDBB83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5JT3JLN6L4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.koderteam.gametrikiTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/gametriki.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/gametriki";
+				XROS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		113614152FC6EB0900CDBB83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5JT3JLN6L4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.koderteam.gametrikiTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/gametriki.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/gametriki";
+				XROS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		113614172FC6EB0900CDBB83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5JT3JLN6L4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.koderteam.gametrikiUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = gametriki;
+				XROS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		113614182FC6EB0900CDBB83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5JT3JLN6L4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.koderteam.gametrikiUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = gametriki;
+				XROS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		A10000262FC6EB2E00CDBB83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 5JT3JLN6L4;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_DYLIB_INSTALL_NAME = "@rpath/VeltoKit.framework/VeltoKit";
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.koderteam.VeltoKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		A10000272FC6EB2E00CDBB83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 5JT3JLN6L4;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_DYLIB_INSTALL_NAME = "@rpath/VeltoKit.framework/VeltoKit";
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.koderteam.VeltoKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		113613EA2FC6EB0800CDBB83 /* Build configuration list for PBXProject "gametriki" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1136140E2FC6EB0900CDBB83 /* Debug */,
+				1136140F2FC6EB0900CDBB83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		113614102FC6EB0900CDBB83 /* Build configuration list for PBXNativeTarget "gametriki" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				113614112FC6EB0900CDBB83 /* Debug */,
+				113614122FC6EB0900CDBB83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		113614132FC6EB0900CDBB83 /* Build configuration list for PBXNativeTarget "gametrikiTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				113614142FC6EB0900CDBB83 /* Debug */,
+				113614152FC6EB0900CDBB83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		113614162FC6EB0900CDBB83 /* Build configuration list for PBXNativeTarget "gametrikiUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				113614172FC6EB0900CDBB83 /* Debug */,
+				113614182FC6EB0900CDBB83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A10000282FC6EB2E00CDBB83 /* Build configuration list for PBXNativeTarget "VeltoKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000262FC6EB2E00CDBB83 /* Debug */,
+				A10000272FC6EB2E00CDBB83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 113613E72FC6EB0800CDBB83 /* Project object */;
+}

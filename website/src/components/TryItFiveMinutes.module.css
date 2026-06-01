@@ -1,0 +1,219 @@
+.section {
+  margin: 2rem 0 3rem;
+  padding: 2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  background: linear-gradient(
+    145deg,
+    rgba(99, 102, 241, 0.08) 0%,
+    rgba(15, 15, 22, 0.6) 45%,
+    rgba(9, 9, 11, 0.9) 100%
+  );
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+}
+
+.header {
+  margin-bottom: 1.75rem;
+  max-width: 36rem;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a5b4fc;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.65rem, 4vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  background: linear-gradient(90deg, #f4f4f5 0%, #c7d2fe 55%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 1.05fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .section {
+    padding: 1.35rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.step {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.step:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  background: rgba(99, 102, 241, 0.06);
+}
+
+.stepIcon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.15);
+  color: #c7d2fe;
+}
+
+.stepIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.stepNum {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #818cf8;
+  font-family: var(--ifm-font-family-monospace);
+  margin-bottom: 0.2rem;
+}
+
+.stepTitle {
+  margin: 0 0 0.2rem;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+}
+
+.stepDesc {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.codePanel {
+  position: sticky;
+  top: 5.5rem;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.codeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.85rem;
+  background: rgba(0, 0, 0, 0.45);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.codeDots {
+  display: flex;
+  gap: 6px;
+}
+
+.codeDots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.codeDots span:first-child {
+  background: #f87171;
+}
+
+.codeDots span:nth-child(2) {
+  background: #fbbf24;
+}
+
+.codeDots span:nth-child(3) {
+  background: #4ade80;
+}
+
+.codeLang {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ifm-color-emphasis-600);
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.codePanel :global(pre) {
+  margin: 0 !important;
+  border-radius: 0 !important;
+  font-size: 0.8rem !important;
+  line-height: 1.55 !important;
+}
+
+.codePanel :global(.theme-code-block) {
+  margin: 0;
+}
+
+.codeCaption {
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--ifm-color-emphasis-600);
+  background: rgba(0, 0, 0, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.codeCaption a {
+  color: #a5b4fc;
+  font-weight: 600;
+}
+
+.footerCta {
+  margin-top: 1.25rem;
+  font-size: 0.88rem;
+}
+
+.footerCta a {
+  font-weight: 600;
+}

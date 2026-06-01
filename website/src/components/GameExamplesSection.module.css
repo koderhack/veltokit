@@ -1,0 +1,123 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cardLink {
+  display: block;
+  text-decoration: none !important;
+  color: inherit !important;
+  border-radius: 14px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cardLink:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(99, 102, 241, 0.18);
+}
+
+.cardLink:hover .titleRow .title {
+  color: var(--ifm-color-primary-light);
+}
+
+.cardLink:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 3px;
+}
+
+.card {
+  height: 100%;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.cardLink:hover .card {
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+.preview {
+  height: 160px;
+  background: #000;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.preview :global(.previewWrap) {
+  height: 100%;
+  aspect-ratio: unset;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.65rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.05rem;
+  transition: color 0.15s ease;
+}
+
+.fallback {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.8rem;
+}
+
+.body {
+  padding: 1.1rem 1.2rem 1.25rem;
+}
+
+.movement,
+.inGame {
+  margin: 0 0 0.5rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.movement strong,
+.inGame strong {
+  color: var(--ifm-font-color-base);
+  font-weight: 600;
+}
+
+.mode {
+  margin: 0.5rem 0 0;
+  font-size: 0.78rem;
+}
+
+.mode code {
+  padding: 0.12em 0.4em;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.12);
+}
+
+.cta {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary-light);
+}
+
+.cardLink:hover .cta {
+  color: #a5b4fc;
+}

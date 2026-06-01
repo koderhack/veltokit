@@ -1,0 +1,80 @@
+---
+sidebar_position: 2
+title: Demo
+description: Sample games and lab recordings — unofficial BLE experiment
+slug: /demo
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly';
+import ProjectDisclaimer from '@site/src/components/ProjectDisclaimer';
+import TryItFiveMinutes from '@site/src/components/TryItFiveMinutes';
+import DeviceCapVisual from '@site/src/components/DeviceCapVisual';
+import DeviceControlGuide from '@site/src/components/DeviceControlGuide';
+import {GamePreviewGrid} from '@site/src/components/GamePreview';
+import DemoVideos from '@site/src/components/DemoVideos';
+import BowlingScene3D from '@site/src/components/BowlingScene3D';
+
+# Demo
+
+Lab builds for the **gametriki** sample app + **VeltoKit** mapping layer.
+
+<BrowserOnly fallback={<div style={{minHeight: 120}} />}>
+  {() => <TryItFiveMinutes />}
+</BrowserOnly>
+
+<ProjectDisclaimer prominent />
+
+## Test unit
+
+Generic BLE cap controller (AI-generated product render, cut-out; not affiliated with any retail brand).
+
+<BrowserOnly fallback={<div style={{minHeight: 280}} />}>
+  {() => (
+    <div style={{display: 'flex', justifyContent: 'center', margin: '2rem 0'}}>
+      <DeviceCapVisual />
+    </div>
+  )}
+</BrowserOnly>
+
+## Input mapping walkthrough
+
+From **GATT notify bytes** to **`GameInput`** — games never parse BLE. **`MotionSDK.connect()`** handles scan/link inside VeltoKit; the sample app uses **`TrikiInputAdapter`** for calibration prompts. Each game calls `pollInput()` and reads the same struct.
+
+| Layer | Responsibility |
+|-------|----------------|
+| **VeltoKit** | `connect()` → `BLEManager` → `pollInput()` → `GameInput` |
+| **Platform** (sample app) | `TrikiInputAdapter` — calibration UI |
+| **Games** | `update(input:)` — Pong, Dart, Bowling, Quiz |
+
+<BrowserOnly fallback={<div style={{minHeight: 360}}>Loading…</div>}>
+  {() => <DeviceControlGuide />}
+</BrowserOnly>
+
+## Reference game previews
+
+<BrowserOnly fallback={<div style={{minHeight: 200}}>Loading games…</div>}>
+  {() => <GamePreviewGrid />}
+</BrowserOnly>
+
+## Bowling — SceneKit
+
+<BrowserOnly fallback={<div style={{padding: 40, textAlign: 'center'}}>Loading 3D…</div>}>
+  {() => (
+    <div style={{height: 300, borderRadius: 16, overflow: 'hidden', margin: '1.5rem 0'}}>
+      <BowlingScene3D />
+    </div>
+  )}
+</BrowserOnly>
+
+## Recordings
+
+<DemoVideos />
+
+## Run locally
+
+```bash
+git clone https://github.com/koderteam/veltokit.git
+cd app && open gametriki.xcodeproj
+```
+
+Connect screen → scan for your BLE peripheral → open a sample game.

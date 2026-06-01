@@ -1,0 +1,38 @@
+.wrap {
+  position: relative;
+}
+
+.video {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+  background: #0a0c14;
+}
+
+.badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  padding: 0.25rem 0.45rem;
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(9, 9, 11, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.title {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 1rem;
+}
+
+.desc {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.5;
+}

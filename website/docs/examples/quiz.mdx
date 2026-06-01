@@ -1,0 +1,76 @@
+---
+title: Quiz
+description: Tilt to highlight answers, press or hold to confirm — .paddle mode
+---
+
+import GameDocHeader from '@site/src/components/GameDocHeader';
+
+<GameDocHeader id="quiz" title="Quiz" mode=".paddle" fields="posX, primaryAction" />
+
+**Quiz** is a **trivia** game: four answers **A–D**, Open Trivia DB questions (with caching), solo or two-player rounds. The phone is the **remote**; questions can display on **TV via AirPlay**.
+
+## How you play
+
+1. Connect + calibrate.
+2. Open **Quiz** — pick category, language, solo/duo in the flow.
+3. **Rotate / tilt** the cap left or right to move the highlight across answers (`posX` → slot 0…3).
+4. **Confirm** an answer either by:
+   - **Pressing** the cap button (`primaryAction` / click edge), or
+   - **Holding steady** on a choice until the hold bar fills (`TrikiHoldTracker` in sample).
+5. Feedback shows correct/wrong; next question after a short pause.
+6. Touch still works on the phone if you disable Triki input in settings.
+
+:::info Focus gate
+The sample uses **`TrikiFocusGate`** so the highlight does not jump instantly when `posX` crosses slots — it settles briefly before hold/press counts.
+:::
+
+## VeltoKit mapping
+
+| Setting | Value |
+|---------|--------|
+| `MotionMode` | `.paddle` |
+| Navigation | `posX` mapped to 4 slots via `TrikiUIMath.focusedSlot` |
+| Confirm | `primaryAction` (BLE click) or hold timer |
+| Not used | `shotTriggered`, `throwPower` |
+
+Same mode as Pong, different **game logic** — good example of reusing `.paddle` for menus.
+
+## Integrate in your app
+
+```swift
+let motion = MotionSDK()
+motion.setMode(.paddle)
+motion.connect()
+
+func tick(dt: TimeInterval) {
+  let input = motion.pollInput(deltaTime: dt)
+  let slot = slotIndex(for: input.posX, slots: 4) ?? selected
+
+  if slot != selected { selected = slot; playFocusSound() }
+
+  if input.primaryAction {
+    submit(answer: selected)
+  }
+}
+```
+
+Map `posX` to discrete slots with dead zones — copy `TrikiUIMath` from `app/UI/TrikiUI/` or use your own thresholds.
+
+## Sample app source
+
+| File | Role |
+|------|------|
+| `app/Games/QuizGame.swift` | Rounds, focus, hold, scoring |
+| `app/UI/QuizGameView.swift` | Question UI |
+| `app/UI/Quiz/QuizExternalDisplay.swift` | TV / second screen |
+| `app/Quiz/QuizSession.swift` | Loader, categories, cache |
+
+**TV:** Enable AirPlay in the quiz flow; external display shows the question card, phone shows controls only.
+
+## Tips
+
+- Tune `lateralDeadzone` if the highlight jitters between A and B — [Configuration](../sdk/configuration).
+- Test **hold vs press** — some players prefer one confirmation style; the sample supports both.
+- Questions require network on first load; see `QuizCache` for offline rounds.
+
+[← Bowling](bowling) · [Configuration](../sdk/configuration) · [Demo](../demo) · [Help](../faq)

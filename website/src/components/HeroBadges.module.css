@@ -1,0 +1,28 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.badge,
+.badgeAccent {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+}
+
+.badge {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--ifm-color-emphasis-600);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.badgeAccent {
+  border: 1px solid rgba(99, 102, 241, 0.45);
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.12);
+}

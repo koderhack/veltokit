@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="sc-bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#09090b"/>
+      <stop offset="1" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="sc-mark-bg" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4338ca"/>
+      <stop offset="0.55" stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#9333ea"/>
+    </linearGradient>
+    <linearGradient id="sc-arc" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f5f3ff"/>
+      <stop offset="1" stop-color="#ddd6fe"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#sc-bg)"/>
+  <g transform="translate(540 255) scale(3.2)">
+    <rect width="32" height="32" rx="9" fill="url(#sc-mark-bg)"/>
+    <circle cx="16" cy="16" r="10.5" stroke="url(#sc-arc)" stroke-width="1.25" opacity="0.35"/>
+    <g stroke="url(#sc-arc)" stroke-width="2.15" stroke-linecap="round" fill="none">
+      <path d="M16 6.5a9.5 9.5 0 0 1 8.2 14"/>
+      <path d="M24.2 20.5a9.5 9.5 0 0 1-16.4 0"/>
+      <path d="M7.8 20.5a9.5 9.5 0 0 1 8.2-14"/>
+    </g>
+    <circle cx="16" cy="16" r="3.25" fill="url(#sc-arc)"/>
+    <circle cx="24.5" cy="9.5" r="1.35" fill="#22d3ee"/>
+  </g>
+  <text x="600" y="340" text-anchor="middle" fill="#f4f4f5" font-family="Inter,system-ui,sans-serif" font-size="64" font-weight="700" letter-spacing="-0.02em">VeltoKit</text>
+  <text x="600" y="400" text-anchor="middle" fill="#a1a1aa" font-family="Inter,system-ui,sans-serif" font-size="26">Motion SDK · BLE · Gestures · Games</text>
+</svg>

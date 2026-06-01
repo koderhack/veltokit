@@ -1,0 +1,10 @@
+{
+  "label": "Game examples",
+  "position": 8,
+  "link": {
+    "type": "generated-index",
+    "slug": "/category/examples",
+    "title": "Game examples",
+    "description": "Play guides and integration notes for Pong, Dart, Bowling, and Quiz — MotionMode, GameInput fields, and source files in the sample app."
+  }
+}

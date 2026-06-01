@@ -1,0 +1,80 @@
+---
+title: Pong
+description: Tilt left/right to move the paddle — .paddle mode, posX
+---
+
+import GameDocHeader from '@site/src/components/GameDocHeader';
+
+<GameDocHeader id="pong" title="Pong" mode=".paddle" fields="posX, lateral" />
+
+**Pong** in the sample app is a **Breakout-style** arcade game: colored brick rows at the top, a paddle at the bottom, and a bouncing pixel ball. You steer only with **cap tilt** — no touch required during play.
+
+## How you play
+
+1. From the main menu, open **Connect** and pair your BLE controller (physical iPhone).
+2. **Calibrate** when prompted — hold the cap level, centered.
+3. Launch **Pong** from the menu.
+4. **Tilt left** → paddle moves left; **tilt right** → paddle moves right.
+5. Keep the ball in play and break bricks. Bricks have 1–3 hit points (cyan → yellow → red).
+6. You start with **5 lives**. Missing the ball costs one life; clearing all bricks wins the round.
+
+The homepage and [Demo](../demo) page show a live pixel preview of the same `posX` mapping.
+
+## VeltoKit mapping
+
+| Setting | Value |
+|---------|--------|
+| `MotionMode` | `.paddle` |
+| Primary field | `posX` (normalized steering, center ≈ 0) |
+| Also useful | `lateral` / `lateralSmooth` (HUD in sample app) |
+| Button | Optional — not required for core Pong loop |
+
+In the sample, paddle X is derived from center + scaled `posX`:
+
+```text
+targetX = courtCenter + input.posX × paddleScreenScale
+```
+
+`GameManager` applies the `.paddle` preset when Pong starts (`GameInputProfile.pong` in `app/Engine/Game.swift`).
+
+## Integrate in your app
+
+```swift
+import VeltoKit
+
+let motion = MotionSDK()
+motion.setMode(.paddle)
+motion.connect()
+
+// Game loop (~60 Hz):
+func tick(dt: TimeInterval) {
+  let input = motion.pollInput(deltaTime: dt)
+  let center = courtWidth / 2
+  let scale: CGFloat = 66   // tune to your court
+  paddle.center.x = center + CGFloat(input.posX) * scale
+}
+```
+
+**Manual BLE** (your own central):
+
+```swift
+motion.enqueueBLE(bytes)
+motion.updateFrame(deltaTime: dt)
+let input = motion.input
+```
+
+## Sample app source
+
+| File | Role |
+|------|------|
+| `app/Games/PongGame.swift` | Physics, bricks, lives, `update(input:)` |
+| `app/Engine/GameManager.swift` | Applies `.paddle` + `MotionConfig.preset` |
+| `app/UI/GameView.swift` | Hosts game loop + HUD |
+
+## Tips
+
+- Calibrate on a **flat, neutral** pose so `posX` rests near zero when you aim straight.
+- If the paddle feels sluggish, raise `MotionConfig.paddlePositionFollow` or lower smoothing — see [Configuration](../sdk/configuration).
+- Pong is the simplest reference for **one-axis tilt** before Dart or Bowling.
+
+[← Game examples](../category/examples) · [Dart →](dart) · [GameInput](../sdk/game-input) · [Gestures](../sdk/gestures)

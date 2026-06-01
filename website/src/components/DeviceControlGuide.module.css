@@ -1,0 +1,331 @@
+.root {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.lead {
+  text-align: center;
+  max-width: 42rem;
+  margin: 0 auto 1.25rem;
+  line-height: 1.6;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.95rem;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.tab {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ifm-color-emphasis-700);
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.tab:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  color: var(--ifm-font-color-base);
+}
+
+.tabActive {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: rgba(99, 102, 241, 0.55);
+  color: #fff;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .stage {
+    grid-template-columns: 1fr;
+  }
+}
+
+.photoWrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: radial-gradient(ellipse at 50% 55%, #1a1f35 0%, #0a0c14 70%);
+  aspect-ratio: 4 / 3;
+  transform-origin: center center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photoSafe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.photo {
+  max-width: 88%;
+  max-height: 92%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.55));
+}
+
+.gamePreview {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Animacje nakrętki per krok */
+.anim_pong {
+  animation: tiltLR 2.5s ease-in-out infinite;
+}
+
+.anim_dart,
+.anim_bowling {
+  animation: throwPull 2.8s ease-in-out infinite;
+}
+
+.anim_quiz {
+  animation: tiltSubtle 3s ease-in-out infinite;
+}
+
+.anim_connect {
+  animation: none;
+}
+
+@keyframes tiltLR {
+  0%,
+  100% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(12deg);
+  }
+}
+
+@keyframes throwPull {
+  0%,
+  35% {
+    transform: rotate(-18deg) translateY(4px);
+  }
+  50% {
+    transform: rotate(14deg) translateY(-6px);
+  }
+  100% {
+    transform: rotate(4deg) translateY(0);
+  }
+}
+
+@keyframes tiltSubtle {
+  0%,
+  100% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+
+.arrowLeft,
+.arrowRight {
+  position: absolute;
+  top: 50%;
+  font-size: 0.75rem;
+  font-weight: 800;
+  font-family: var(--ifm-font-family-monospace);
+  color: #22d3ee;
+  text-shadow: 0 0 12px rgba(34, 211, 238, 0.8);
+}
+
+.arrowLeft {
+  left: 8%;
+  transform: translateY(-50%);
+}
+
+.arrowRight {
+  right: 8%;
+  transform: translateY(-50%);
+}
+
+.phaseBack {
+  position: absolute;
+  left: 12%;
+  bottom: 18%;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #a5b4fc;
+  animation: flashBack 2.8s ease-in-out infinite;
+}
+
+.phaseThrow {
+  position: absolute;
+  right: 10%;
+  top: 22%;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #f472b6;
+  animation: flashThrow 2.8s ease-in-out infinite;
+}
+
+@keyframes flashBack {
+  0%,
+  38% {
+    opacity: 1;
+  }
+  45%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes flashThrow {
+  0%,
+  48% {
+    opacity: 0;
+  }
+  55%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.throwArc {
+  position: absolute;
+  inset: 10% 15%;
+  width: 70%;
+  height: auto;
+}
+
+.aimBar {
+  position: absolute;
+  bottom: 22%;
+  left: 20%;
+  right: 20%;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #6366f1, transparent);
+  animation: aimSlide 3s ease-in-out infinite;
+}
+
+@keyframes aimSlide {
+  0%,
+  100% {
+    transform: translateX(-25%);
+  }
+  50% {
+    transform: translateX(25%);
+  }
+}
+
+.blePulse {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: blePing 1.5s ease-out infinite;
+}
+
+@keyframes blePing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(34, 197, 94, 0);
+  }
+}
+
+.copy {
+  text-align: left;
+}
+
+.layerLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ifm-color-emphasis-600);
+  margin: 0 0 0.35rem;
+}
+
+.gameLabel {
+  font-size: 0.8rem;
+  font-family: var(--ifm-font-family-monospace);
+  color: var(--ifm-color-primary-light);
+  margin: 0 0 0.5rem;
+}
+
+.stepTitle {
+  font-size: 1.35rem;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.pipeline {
+  margin: 0 0 0.65rem;
+  font-size: 0.8rem;
+  font-family: var(--ifm-font-family-monospace);
+  color: var(--ifm-color-emphasis-600);
+  line-height: 1.5;
+}
+
+.signal {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+}
+
+.bullets {
+  margin: 0 0 1rem;
+  padding-left: 1.15rem;
+  line-height: 1.55;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.9rem;
+}
+
+.bullets li {
+  margin-bottom: 0.45rem;
+}
+
+.bullets li:last-child {
+  margin-bottom: 0;
+}
+
+.bullets strong {
+  color: var(--ifm-font-color-base);
+  font-weight: 600;
+}
+
+.docLink {
+  font-size: 0.85rem;
+  font-weight: 600;
+}

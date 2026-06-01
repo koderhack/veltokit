@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', ui-monospace, monospace;
+  --ifm-color-primary: #6366f1;
+  --ifm-color-primary-dark: #4f46e5;
+  --ifm-color-primary-darker: #4338ca;
+  --ifm-color-primary-darkest: #3730a3;
+  --ifm-color-primary-light: #818cf8;
+  --ifm-color-primary-lighter: #a5b4fc;
+  --ifm-color-primary-lightest: #c7d2fe;
+  --ifm-background-color: #09090b;
+  --ifm-navbar-background-color: rgba(9, 9, 11, 0.85);
+  --ifm-footer-background-color: #09090b;
+  --ifm-navbar-height: 4rem;
+  --ifm-global-radius: 10px;
+  --docusaurus-highlighted-code-line-bg: rgba(99, 102, 241, 0.12);
+}
+
+[data-theme='light'] {
+  --ifm-background-color: #fafafa;
+  --ifm-navbar-background-color: rgba(250, 250, 250, 0.9);
+  --ifm-footer-background-color: #fafafa;
+}
+
+.navbar {
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.menu__link {
+  font-size: 0.9rem;
+}
+
+.theme-doc-markdown h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+/* Google Translate widget — hide top banner, keep navbar dropdown */
+body {
+  top: 0 !important;
+}
+
+.skiptranslate,
+.goog-te-banner-frame,
+#goog-gt-tt {
+  display: none !important;
+}
+
+iframe.goog-te-banner-frame {
+  display: none !important;
+  visibility: hidden;
+}
+
+.navbar-google-translate {
+  position: fixed;
+  top: 0.55rem;
+  right: 5.5rem;
+  z-index: calc(var(--ifm-z-index-fixed) + 1);
+  display: flex;
+  align-items: center;
+  pointer-events: auto;
+}
+
+@media (max-width: 996px) {
+  .navbar-google-translate {
+    right: 3.25rem;
+    top: 0.5rem;
+  }
+}
+
+.theme-doc-markdown h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-top: 2.5rem;
+}
+
+.theme-doc-markdown p,
+.theme-doc-markdown li {
+  line-height: 1.7;
+  color: var(--ifm-font-color-base);
+}
+
+table {
+  display: table;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+/* Brand-safe image utilities (see SafeImage.tsx) */
+.safe-image {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.safe-image img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.doc-safe-cap {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem auto;
+  max-width: 360px;
+}
+
+.blur-center img {
+  mask-image: radial-gradient(circle at 50% 36%, transparent 0%, transparent 24%, black 54%);
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 36%,
+    transparent 0%,
+    transparent 24%,
+    black 54%
+  );
+}
+
+.safe-video {
+  position: relative;
+}

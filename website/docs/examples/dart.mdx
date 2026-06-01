@@ -1,0 +1,80 @@
+---
+title: Dart
+description: Aim with tilt, throw with pull-back gesture — .pointer mode
+---
+
+import GameDocHeader from '@site/src/components/GameDocHeader';
+
+<GameDocHeader id="dart" title="Dart" mode=".pointer" fields="posX, posY, shotTriggered, throwPower" />
+
+**Dart** is a **501-style** board game on a 160×90 pixel canvas (phone + optional TV crop). You **aim** with continuous tilt and **throw** with a pull-back → forward motion (same gesture family as Bowling).
+
+## How you play
+
+1. Connect and calibrate from the sample app menu.
+2. Open **Dart** — optional **lobby** lets you pick solo/duo, names, and TV (AirPlay) before the match.
+3. Wait for the **5…1 countdown**, then play.
+4. **Tilt** to move the crosshair on the board (`posX` / `posY` via pointer mapping + play zone).
+5. **Pull the cap back** (BACK phase), then **flick forward** (FORWARD) to release a dart.
+6. **Three darts per turn**; scores subtract from 501 (or bust rules in logic).
+7. In **multiplayer**, press the cap button when prompted to **start your turn**.
+
+:::tip Play zone
+The sample shows a **green / yellow / red** band (`DartPlayZone`) — staying in the good band improves aim sensitivity. Calibrate per player profile when offered.
+:::
+
+## VeltoKit mapping
+
+| Setting | Value |
+|---------|--------|
+| `MotionMode` | `.pointer` (aim) + gesture FSM inside game |
+| Aim | `posX`, `posY`, enriched `sensors` (tilt/gyro) |
+| Throw | `shotTriggered` + `throwPower` (0…1) from gesture detector |
+| UI hint | `gesturePrimed` while pulled back |
+| Turn gate (multi) | `sensors.click` / button edge |
+
+`GameManager` tightens pointer smoothing for Dart (`referenceDriftEnabled`, lower deadzone) when the game loads.
+
+The game also uses **`DartThrowController`** and **`DartGripMapping`** — port of the throw FSM described in [Gestures](../sdk/gestures).
+
+## Integrate in your app
+
+```swift
+let motion = MotionSDK()
+motion.setMode(.pointer)
+motion.connect()
+
+func tick(dt: TimeInterval) {
+  let input = motion.pollInput(deltaTime: dt)
+
+  aimX = centerX + input.posX * aimReach
+  aimY = centerY + input.posY * aimReach
+
+  if input.shotTriggered {
+    releaseDart(power: input.throwPower, at: aimX, aimY)
+  }
+}
+```
+
+For production feel, read **`input.sensors`** if you replicate the sample’s play-zone and per-player calibration.
+
+## Sample app source
+
+| File | Role |
+|------|------|
+| `app/Games/DartGame.swift` | Scoring, turns, aim, throw resolution |
+| `app/Games/DartArenaScene.swift` | Board rendering |
+| `app/Games/DartThrowController.swift` | Pull → throw FSM |
+| `app/Games/DartPlayZone.swift` | Aim quality bands |
+| `app/Engine/DartSession.swift` | Match state, TV lobby |
+| `app/UI/DartGameView.swift` | SwiftUI shell |
+
+**TV:** AirPlay route in lobby; TV shows the board, phone stays the controller.
+
+## Tips
+
+- Throw is **gesture-first** — practice a clear back-then-forward arc; see [Gestures](../sdk/gestures).
+- If aim drifts, run calibration again or tune `pointerSensitivity` in [Configuration](../sdk/configuration).
+- Start with **solo** before duo + turn gates.
+
+[← Pong](pong) · [Bowling →](bowling) · [Demo](../demo) · [BLE](../sdk/ble-integration)
