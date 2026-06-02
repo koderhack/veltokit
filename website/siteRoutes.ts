@@ -25,7 +25,16 @@ export const DOC_PATHS = {
   exampleQuiz: '/docs/examples/quiz',
 } as const;
 
+/** Raw GitHub URLs — static /skills/*.md are not Docusaurus doc routes. */
+export const SKILL_DOWNLOAD_URLS = {
+  cursor:
+    'https://raw.githubusercontent.com/koderhack/veltokit/main/website/static/skills/cursor-skill.md',
+  claude:
+    'https://raw.githubusercontent.com/koderhack/veltokit/main/website/static/skills/claude-skill.md',
+} as const;
+
 const d = DOC_PATHS;
+const skills = SKILL_DOWNLOAD_URLS;
 
 /** Old /pl/ URLs → English docs (machine translation via Google in navbar). */
 /** No `/pl/docs` alone — would clash with `/pl/docs/…` redirect files. */
@@ -67,9 +76,11 @@ export const navbarItems = [
     label: 'AI Skills',
     position: 'left' as const,
     items: [
-      {to: d.forCursorClaude, label: 'Hub'},
+      {to: d.forCursorClaude, label: 'Hub + downloads'},
       {to: d.forCursor, label: 'Skill for Cursor'},
       {to: d.forClaude, label: 'Skill for Claude'},
+      {href: skills.cursor, label: '↓ Download Cursor (.md)'},
+      {href: skills.claude, label: '↓ Download Claude (.md)'},
     ],
   },
   {
@@ -94,6 +105,10 @@ export const navbarItems = [
       {to: d.exampleBowling, label: 'Bowling'},
       {to: d.exampleQuiz, label: 'Quiz'},
     ],
+  },
+  {
+    type: 'search' as const,
+    position: 'right' as const,
   },
   {
     href: 'https://github.com/koderhack/veltokit',
@@ -135,6 +150,14 @@ export const footerLinks = [
       {label: 'Dart', to: d.exampleDart},
       {label: 'Bowling', to: d.exampleBowling},
       {label: 'Quiz', to: d.exampleQuiz},
+    ],
+  },
+  {
+    title: 'AI skills (download)',
+    items: [
+      {label: 'Cursor skill (.md)', href: skills.cursor},
+      {label: 'Claude skill (.md)', href: skills.claude},
+      {label: 'Skills hub (docs)', to: d.forCursorClaude},
     ],
   },
   {

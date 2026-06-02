@@ -24,6 +24,18 @@ docs/
 
 Edit content in `docs/`. Run `npm run build` before deploy (`onBrokenLinks: throw`).
 
+## Search
+
+Local full-text search is enabled via `@easyops-cn/docusaurus-search-local` (navbar search box, `⌘K` / `Ctrl+K`).
+
+## AI skills (Cursor / Claude)
+
+Downloadable prompt files and setup notes:
+
+- [Skill for Cursor](docs/for-cursor.mdx) → `static/skills/cursor-skill.md`
+- [Skill for Claude](docs/for-claude.mdx) → `static/skills/claude-skill.md`
+- Hub: [For Cursor Claude](docs/for-cursor-claude.md)
+
 ## Translation
 
 - Docs are maintained in **English**.

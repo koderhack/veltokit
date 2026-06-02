@@ -29,6 +29,17 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* Local docs search (navbar) */
+.navbar__search-input {
+  min-width: 9rem;
+}
+
+@media (min-width: 997px) {
+  .navbar__search-input {
+    min-width: 11rem;
+  }
+}
+
 .menu__link {
   font-size: 0.9rem;
 }

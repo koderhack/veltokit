@@ -8,6 +8,11 @@ description: VeltoKit — MotionSDK and GameInput
 
 **VeltoKit** maps BLE motion bytes → **`GameInput`** each frame. No UI, no CoreBluetooth in the core target.
 
+:::tip Docs search & AI skills
+Use **Search** in the top navbar (`⌘K` / `Ctrl+K`) to find any topic.  
+Download Cursor / Claude prompt files on [For Cursor Claude](../for-cursor-claude#download-ai-skills) (footer: **AI skills (download)**).
+:::
+
 ## Integrate (MotionSDK)
 
 **Simple path** — BLE scan + read each frame:

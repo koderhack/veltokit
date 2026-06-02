@@ -19,6 +19,20 @@ const config: Config = {
 
   plugins: [
     [
+      require.resolve('@easyops-cn/docusaurus-search-local'),
+      {
+        hashed: true,
+        language: ['en'],
+        docsRouteBasePath: 'docs',
+        indexBlog: false,
+        indexPages: true,
+        highlightSearchTermsOnTargetPage: true,
+        searchResultLimits: 12,
+        searchBarShortcut: true,
+        explicitSearchResultPath: true,
+      },
+    ],
+    [
       '@docusaurus/plugin-client-redirects',
       {
         redirects: [

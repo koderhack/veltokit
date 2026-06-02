@@ -2,6 +2,8 @@ import {type KeyboardEvent, useCallback, useEffect, useRef, useState} from 'reac
 import SafeImage from '@site/src/components/SafeImage';
 import styles from './DeviceCapVisual.module.css';
 
+const SPIN_MS = 12_000;
+
 function useReducedMotion(): boolean {
   const [reducedMotion, setReducedMotion] = useState(false);
   useEffect(() => {
@@ -17,10 +19,12 @@ function useReducedMotion(): boolean {
 type PosXBarProps = {
   posX: number;
   onChange: (x: number) => void;
+  onScrubStart: () => void;
+  onScrubEnd: () => void;
 };
 
-/** Pasek posX jak w aplikacji — środek + wypełnienie w lewo/prawo, klik / przeciąganie. */
-function PosXBar({posX, onChange}: PosXBarProps): JSX.Element {
+/** Pasek posX — środek + wypełnienie; klik / przeciąganie wstrzymuje auto-obrót. */
+function PosXBar({posX, onChange, onScrubStart, onScrubEnd}: PosXBarProps): JSX.Element {
   const barRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
   const signed = posX * 2 - 1;
@@ -45,7 +49,10 @@ function PosXBar({posX, onChange}: PosXBarProps): JSX.Element {
       setFromClientX(e.clientX);
     };
     const onUp = () => {
-      dragging.current = false;
+      if (dragging.current) {
+        dragging.current = false;
+        onScrubEnd();
+      }
     };
     window.addEventListener('pointermove', onMove);
     window.addEventListener('pointerup', onUp);
@@ -53,21 +60,25 @@ function PosXBar({posX, onChange}: PosXBarProps): JSX.Element {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
     };
-  }, [setFromClientX]);
+  }, [setFromClientX, onScrubEnd]);
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     const step = e.shiftKey ? 0.1 : 0.04;
     if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
       e.preventDefault();
+      onScrubStart();
       onChange(Math.max(0, posX - step));
     } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
       e.preventDefault();
+      onScrubStart();
       onChange(Math.min(1, posX + step));
     } else if (e.key === 'Home') {
       e.preventDefault();
+      onScrubStart();
       onChange(0);
     } else if (e.key === 'End') {
       e.preventDefault();
+      onScrubStart();
       onChange(1);
     }
   };
@@ -83,8 +94,10 @@ function PosXBar({posX, onChange}: PosXBarProps): JSX.Element {
       aria-valuemax={1}
       aria-valuenow={Number(signed.toFixed(2))}
       onKeyDown={onKeyDown}
+      onBlur={onScrubEnd}
       onPointerDown={(e) => {
         dragging.current = true;
+        onScrubStart();
         setFromClientX(e.clientX);
         e.currentTarget.setPointerCapture(e.pointerId);
       }}>
@@ -101,14 +114,47 @@ function PosXBar({posX, onChange}: PosXBarProps): JSX.Element {
   );
 }
 
-/** Generic BLE cap — obrót zgodny z paskiem posX */
+/** Kapsel — ciągły obrót + pasek posX zsynchronizowany (sin); pauza przy sterowaniu paskiem. */
 export default function DeviceCapVisual(): JSX.Element {
   const [posX, setPosX] = useState(0.5);
+  const [spinDeg, setSpinDeg] = useState(0);
   const reducedMotion = useReducedMotion();
-  const deg = (posX - 0.5) * 72;
+  const autoPaused = useRef(false);
+  const spinOrigin = useRef(performance.now());
+
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    let raf = 0;
+    const tick = (now: number) => {
+      if (!autoPaused.current) {
+        const elapsed = (now - spinOrigin.current) % SPIN_MS;
+        const angle = (elapsed / SPIN_MS) * 360;
+        const rad = (angle * Math.PI) / 180;
+        setSpinDeg(angle);
+        setPosX((Math.sin(rad) + 1) / 2);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [reducedMotion]);
 
   const setPosXClamped = useCallback((x: number) => {
-    setPosX(Math.min(1, Math.max(0, x)));
+    const clamped = Math.min(1, Math.max(0, x));
+    setPosX(clamped);
+    const deg = clamped * 360;
+    setSpinDeg(deg);
+    spinOrigin.current = performance.now() - (deg / 360) * SPIN_MS;
+  }, []);
+
+  const onScrubStart = useCallback(() => {
+    autoPaused.current = true;
+  }, []);
+
+  const onScrubEnd = useCallback(() => {
+    autoPaused.current = false;
   }, []);
 
   return (
@@ -117,7 +163,11 @@ export default function DeviceCapVisual(): JSX.Element {
         <div className={styles.capSpin}>
           <div
             className={styles.capRotor}
-            style={reducedMotion ? undefined : {transform: `rotate(${deg}deg)`}}>
+            style={
+              reducedMotion
+                ? undefined
+                : {transform: `rotate(${spinDeg}deg)`}
+            }>
             <SafeImage
               src="/img/device/cap-hero.png"
               alt=""
@@ -135,7 +185,12 @@ export default function DeviceCapVisual(): JSX.Element {
       </div>
       <div className={styles.inputHud}>
         <span>posX</span>
-        <PosXBar posX={posX} onChange={setPosXClamped} />
+        <PosXBar
+          posX={posX}
+          onChange={setPosXClamped}
+          onScrubStart={onScrubStart}
+          onScrubEnd={onScrubEnd}
+        />
       </div>
     </div>
   );

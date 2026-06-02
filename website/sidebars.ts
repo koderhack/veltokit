@@ -56,6 +56,11 @@ const sidebars: SidebarsConfig = {
         'for-cursor-claude',
         'for-cursor',
         'for-claude',
+        {
+          type: 'link',
+          label: '↓ Download skills',
+          href: '/docs/for-cursor-claude#download-ai-skills',
+        },
       ],
     },
     {

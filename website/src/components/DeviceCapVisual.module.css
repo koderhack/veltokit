@@ -48,7 +48,6 @@
   place-items: center;
   transform-origin: 50% 50%;
   will-change: transform;
-  transition: transform 0.08s ease-out;
 }
 
 .capFrame {
@@ -146,7 +145,10 @@
 @media (prefers-reduced-motion: reduce) {
   .capRotor {
     transform: none !important;
-    transition: none;
+  }
+
+  .barThumb {
+    left: 50% !important;
   }
 }
 

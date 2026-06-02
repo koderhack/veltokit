@@ -6,6 +6,10 @@ description: Connect and read GameInput — VeltoKit
 
 # Quick Start
 
+**Search docs:** use the **Search** box in the top navbar (`⌘K` / `Ctrl+K`).
+
+**AI skills (Cursor / Claude):** download on [For Cursor Claude](./for-cursor-claude) or [Introduction](./intro) (download cards at the top).
+
 Add VeltoKit via [SPM or CocoaPods](installation), then:
 
 ## Simple flow (BLE built in)
