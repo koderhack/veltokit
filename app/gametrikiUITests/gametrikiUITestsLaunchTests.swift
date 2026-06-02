@@ -7,6 +7,7 @@
 
 import XCTest
 
+/// Represents gametriki uitests launch tests.
 final class gametrikiUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {

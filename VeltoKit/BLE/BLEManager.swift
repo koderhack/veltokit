@@ -4,7 +4,9 @@ import Combine
 import os
 
 @MainActor
+/// Represents blemanager.
 final class BLEManager: NSObject, ObservableObject {
+  /// Represents status.
   enum Status: String {
     case idle
     case bluetoothOff
@@ -30,6 +32,7 @@ final class BLEManager: NSObject, ObservableObject {
   /// Pełny hex + diff bajtów w konsoli Xcode i w devRawLog (szukaj przycisku).
   @Published public var debugRXBytes = false
 
+  /// Stores `byteProbe` used by this scope.
   public let byteProbe = BLEByteProbe()
 
   /// Domyślnie wyłączone — flow jak w Żappce: user wybiera urządzenie z listy.
@@ -42,6 +45,7 @@ final class BLEManager: NSObject, ObservableObject {
   private var didAutoConnectThisScan = false
 
   private let rxBytesSubject = PassthroughSubject<[UInt8], Never>()
+  /// Stores `rxBytes` used by this scope.
   var rxBytes: AnyPublisher<[UInt8], Never> { rxBytesSubject.eraseToAnyPublisher() }
 
   private let log = Logger(subsystem: "com.koderteam.gametriki", category: "BLE")
@@ -51,12 +55,18 @@ final class BLEManager: NSObject, ObservableObject {
     central = CBCentralManager(delegate: self, queue: nil)
   }
 
+  /// Stores `isScanning` used by this scope.
   var isScanning: Bool { status == .scanning }
 
+  /// Stores `centralStateLabel` used by this scope.
   var centralStateLabel: String {
     "\(centralState.rawValue) (\(stateLabel(centralState)))"
   }
 
+  /// Handles `startScan`.
+  ///
+  /// - Parameters:
+  ///   - clearList: Input used by this operation.
   func startScan(clearList: Bool = true) {
     guard isBluetoothReady else {
       status = .bluetoothOff
@@ -77,12 +87,17 @@ final class BLEManager: NSObject, ObservableObject {
     log.info("BLE scan started (no service filter, allow duplicates)")
   }
 
+  /// Handles `stopScan`.
   func stopScan() {
     central.stopScan()
     if status == .scanning { status = .idle }
     addDevLog("SCAN ■ stop")
   }
 
+  /// Handles `connect`.
+  ///
+  /// - Parameters:
+  ///   - item: Input used by this operation.
   func connect(_ item: DiscoveredPeripheral) {
     stopScan()
     status = .connecting
@@ -92,11 +107,13 @@ final class BLEManager: NSObject, ObservableObject {
     addDevLog("CONN ▶ \(item.name)")
   }
 
+  /// Handles `disconnect`.
   func disconnect() {
     guard let p = activePeripheral else { return }
     central.cancelPeripheralConnection(p)
   }
 
+  /// Handles `sendInitAndStartIfReady`.
   func sendInitAndStartIfReady() {
     guard activePeripheral != nil, let rx = rxChar else { return }
     write([0x01, 0x00], to: rx, type: .withResponse)
@@ -104,6 +121,11 @@ final class BLEManager: NSObject, ObservableObject {
     addDevLog("TX ▶ INIT + START")
   }
 
+  /// Handles `writeHex`.
+  ///
+  /// - Parameters:
+  ///   - hex: Input used by this operation.
+  ///   - withResponse: Input used by this operation.
   func writeHex(_ hex: String, withResponse: Bool) {
     guard let rx = rxChar else { return }
     let bytes = Hex.parse(hex)
@@ -187,14 +209,21 @@ final class BLEManager: NSObject, ObservableObject {
   }
 }
 
+/// Represents discovered peripheral.
 struct DiscoveredPeripheral: Identifiable, Equatable {
+  /// Stores `id` used by this scope.
   let id: UUID
+  /// Stores `peripheral` used by this scope.
   let peripheral: CBPeripheral
+  /// Stores `name` used by this scope.
   var name: String
+  /// Stores `rssi` used by this scope.
   var rssi: Int
+  /// Stores `isLikelyController` used by this scope.
   var isLikelyController: Bool
 }
 
+/// Adds focused blemanager helpers.
 extension BLEManager: CBCentralManagerDelegate {
   nonisolated func centralManagerDidUpdateState(_ central: CBCentralManager) {
     Task { @MainActor in
@@ -255,6 +284,7 @@ extension BLEManager: CBCentralManagerDelegate {
   }
 }
 
+/// Adds focused blemanager helpers.
 extension BLEManager: CBPeripheralDelegate {
   nonisolated func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
     Task { @MainActor in
@@ -353,6 +383,7 @@ extension BLEManager: CBPeripheralDelegate {
   }
 }
 
+/// Represents hex.
 enum Hex {
   static func format(_ bytes: [UInt8]) -> String {
     bytes.map { String(format: "%02X", $0) }.joined(separator: " ")

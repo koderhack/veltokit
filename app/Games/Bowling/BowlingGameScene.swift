@@ -4,12 +4,14 @@ import UIKit
 
 /// Scena 3D kręgli — tor, kula, kręgle, kamera, światło.
 final class BowlingGameScene: SCNScene {
+  /// Opisuje enum `Phase` używany przez warstwę UI i logikę gry.
   enum Phase: Equatable {
     case aiming
     case rolling
     case settling
   }
 
+  /// Opisuje struct `PinState` używany przez warstwę UI i logikę gry.
   struct PinState {
     let node: SCNNode
     let restPosition: SCNVector3
@@ -18,8 +20,11 @@ final class BowlingGameScene: SCNScene {
     var hitByBall = false
   }
 
+  /// Przechowuje wartość `ballNode` wykorzystywaną przez dany komponent.
   let ballNode = SCNNode()
+  /// Przechowuje wartość `cameraNode` wykorzystywaną przez dany komponent.
   let cameraNode = SCNNode()
+  /// Przechowuje wartość `physicsHandler` wykorzystywaną przez dany komponent.
   let physicsHandler = BowlingPhysicsHandler()
 
   private(set) var phase: Phase = .aiming
@@ -287,6 +292,7 @@ final class BowlingGameScene: SCNScene {
 
   private var lastAimBallX: Float = .nan
 
+  /// Wykonuje operację `setAiming` w bieżącym kontekście gry/UI.
   func setAiming(lateralPosX: Double) {
     guard phase == .aiming else { return }
     placeBall(lateralPosX: lateralPosX, snapCamera: false)
@@ -309,6 +315,7 @@ final class BowlingGameScene: SCNScene {
     }
   }
 
+  /// Wykonuje operację `throwBall` w bieżącym kontekście gry/UI.
   func throwBall(
     power: Double,
     lateralPosX: Double,
@@ -366,6 +373,7 @@ final class BowlingGameScene: SCNScene {
     ArcadeAudio.bowlingThrow()
   }
 
+  /// Wykonuje operację `update` w bieżącym kontekście gry/UI.
   func update(deltaTime: TimeInterval) {
     if phase == .rolling || phase == .settling {
       rollElapsed += deltaTime
@@ -513,6 +521,7 @@ final class BowlingGameScene: SCNScene {
     ballBody.velocity = SCNVector3(v.x * 0.22, 0, -forward * 0.95)
   }
 
+  /// Wykonuje operację `handleBallPinContact` w bieżącym kontekście gry/UI.
   func handleBallPinContact(_ pinNode: SCNNode) {
     guard phase == .rolling || phase == .settling else { return }
     guard rollElapsed >= 0.08 else { return }
@@ -560,6 +569,7 @@ final class BowlingGameScene: SCNScene {
     return stoppedFor >= 0.45 && stopped && rollElapsed >= 1.4
   }
 
+  /// Wykonuje operację `processKnockedPinsDuringRoll` w bieżącym kontekście gry/UI.
   func processKnockedPinsDuringRoll() {
     // Punktacja tylko za bezpośredni kontakt kuli — bez łańcuchowej reakcji.
   }
@@ -643,6 +653,7 @@ final class BowlingGameScene: SCNScene {
     }
   }
 
+  /// Wykonuje operację `isReadyToScore` w bieżącym kontekście gry/UI.
   func isReadyToScore() -> Bool {
     guard rollElapsed >= 0.9 else { return false }
     guard peakBallSpeed > 0.25 else { return false }
@@ -656,10 +667,12 @@ final class BowlingGameScene: SCNScene {
     return sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
   }
 
+  /// Wykonuje operację `isBallStopped` w bieżącym kontekście gry/UI.
   func isBallStopped() -> Bool {
     currentBallSpeed() < 0.12
   }
 
+  /// Wykonuje operację `countKnockedPins` w bieżącym kontekście gry/UI.
   func countKnockedPins() -> Int {
     pinStates.filter(\.knocked).count
   }
@@ -669,6 +682,7 @@ final class BowlingGameScene: SCNScene {
     pinStates.filter(\.hitByBall).count
   }
 
+  /// Wykonuje operację `resetBall` w bieżącym kontekście gry/UI.
   func resetBall() {
     phase = .aiming
     rollElapsed = 0
@@ -693,6 +707,7 @@ final class BowlingGameScene: SCNScene {
     updateCamera(toBall: ballNode.position, immediate: true)
   }
 
+  /// Wykonuje operację `resetAllPins` w bieżącym kontekście gry/UI.
   func resetAllPins() {
     for state in pinStates {
       state.node.removeFromParentNode()
@@ -701,6 +716,7 @@ final class BowlingGameScene: SCNScene {
     buildPins()
   }
 
+  /// Wykonuje operację `removeKnockedPins` w bieżącym kontekście gry/UI.
   func removeKnockedPins() {
     for index in pinStates.indices where pinStates[index].knocked {
       pinStates[index].node.removeFromParentNode()
@@ -730,6 +746,7 @@ final class BowlingGameScene: SCNScene {
     setPinsFrozen(true)
   }
 
+  /// Wykonuje operację `prepareSecondThrow` w bieżącym kontekście gry/UI.
   func prepareSecondThrow() {
     removeKnockedPins()
     resetBall()
@@ -799,6 +816,7 @@ final class BowlingGameScene: SCNScene {
 
 // MARK: - Pixel textures
 
+/// Opisuje enum `BowlingPixelArt` używany przez warstwę UI i logikę gry.
 enum BowlingPixelArt {
   static func laneMaterial() -> SCNMaterial {
     pixelMaterial(
@@ -962,6 +980,7 @@ enum BowlingPixelArt {
 }
 
 private extension Comparable {
+  /// Wykonuje operację `clamped` w bieżącym kontekście gry/UI.
   func clamped(to range: ClosedRange<Self>) -> Self {
     min(max(self, range.lowerBound), range.upperBound)
   }

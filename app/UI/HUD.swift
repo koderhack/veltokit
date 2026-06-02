@@ -3,6 +3,12 @@ import VeltoKit
 
 /// Wspólne elementy HUD w grach (sterowanie, połączenie Triki).
 enum ArcadeHUD {
+  /// Buduje plakietkę stanu połączenia Triki dla ekranów gry.
+  ///
+  /// - Parameters:
+  ///   - connected: Czy telefon jest połączony z sesją wejścia.
+  ///   - receiving: Czy napływają aktualne próbki ruchu.
+  /// - Returns: Widok z kolorem statusu i etykietą połączenia.
   static func connectionBadge(connected: Bool, receiving: Bool) -> some View {
     HStack(spacing: 6) {
       Circle()
@@ -17,6 +23,11 @@ enum ArcadeHUD {
     .clipShape(Capsule())
   }
 
+  /// Buduje pojedynczy wiersz diagnostyczny HUD (etykieta + wartość).
+  ///
+  /// - Parameters:
+  ///   - label: Nazwa metryki.
+  ///   - value: Sformatowana wartość metryki.
   static func motionRow(label: String, value: String) -> some View {
     HStack {
       Text(label)

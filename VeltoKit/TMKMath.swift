@@ -1,10 +1,13 @@
 import Foundation
 
+/// Zestaw funkcji matematycznych używanych w potoku ruchu.
 public enum MotionMath {
+  /// Ogranicza wartość do zadanego przedziału.
   public static func clamp(_ value: Double, min lower: Double = -1, max upper: Double = 1) -> Double {
     Swift.min(upper, Swift.max(lower, value))
   }
 
+  /// Ustawia zero dla wartości wewnątrz deadzone.
   public static func threshold(_ value: Double, deadzone: Double) -> Double {
     abs(value) < deadzone ? 0 : value
   }
@@ -24,14 +27,17 @@ public enum MotionMath {
     return sign * pow(abs(value), exponent)
   }
 
+  /// Interpoluje liniowo między bieżącą i docelową wartością.
   public static func smooth(current: Double, target: Double, alpha: Double) -> Double {
     current + (target - current) * alpha
   }
 
+  /// Skaluje sygnał o zadany współczynnik.
   public static func amplify(_ value: Double, factor: Double) -> Double {
     value * factor
   }
 
+  /// Ogranicza amplitudę sygnału do `±magnitude`.
   public static func limit(_ value: Double, max magnitude: Double) -> Double {
     clamp(value, min: -magnitude, max: magnitude)
   }

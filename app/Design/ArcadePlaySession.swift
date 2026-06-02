@@ -2,11 +2,14 @@ import SwiftUI
 
 /// Włącza muzykę sesji i blokuje wygaszanie ekranu.
 struct ArcadePlaySessionModifier: ViewModifier {
+/// Przechowuje wartosc `isActive`.
   let isActive: Bool
+/// Przechowuje wartosc `music`.
   var music: ArcadePlayMusic = .dartGame
 
   @AppStorage(ArcadeSettings.backgroundMusicEnabledKey) private var backgroundMusicEnabled = false
 
+/// Reprezentuje typ `ArcadePlayMusic`.
   enum ArcadePlayMusic {
     case dartLobby
     case dartGame
@@ -15,6 +18,7 @@ struct ArcadePlaySessionModifier: ViewModifier {
     case none
   }
 
+/// Wykonuje operacje `body`.
   func body(content: Content) -> some View {
     content
       .onAppear { sync(active: isActive) }
@@ -56,7 +60,9 @@ struct ArcadePlaySessionModifier: ViewModifier {
   }
 }
 
+/// Rozszerza istniejacy typ o dodatkowe zachowanie.
 extension View {
+/// Wykonuje operacje `arcadePlaySession`.
   func arcadePlaySession(active: Bool, music: ArcadePlaySessionModifier.ArcadePlayMusic = .dartGame) -> some View {
     modifier(ArcadePlaySessionModifier(isActive: active, music: music))
   }

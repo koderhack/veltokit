@@ -2,17 +2,22 @@ import Foundation
 
 /// Rzut gestem: cofnięcie (BACK) → impuls do przodu (FORWARD).
 @MainActor
+/// Wykrywa uzbrojenie i rzut na podstawie przebiegu `relY`.
 final class GestureDetector {
   private var lastGestureRelY = 0.0
   private var gestureRelYPeak = 0.0
   private var gestureArmed = false
   private var lastShotAt: TimeInterval = 0
 
+  /// Informuje, czy gest jest uzbrojony.
   private(set) var gesturePrimed = false
+  /// Siła ostatniego rzutu w zakresie `0...1`.
   private(set) var lastThrowPower: Double = 0
 
+  /// Impuls rzutu ustawiany dla bieżącej klatki.
   var didThrow: Bool = false
 
+  /// Resetuje pełny stan detektora gestów.
   func resetBaseline() {
     gestureArmed = false
     gesturePrimed = false
@@ -23,6 +28,7 @@ final class GestureDetector {
     didThrow = false
   }
 
+  /// Resetuje stan jednoramkowy (impuls + moc).
   func resetFrame() {
     didThrow = false
     lastThrowPower = 0

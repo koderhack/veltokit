@@ -3,6 +3,7 @@ import Combine
 import VeltoKit
 
 @MainActor
+/// Reprezentuje typ `GameTuning`.
 final class GameTuning: ObservableObject {
   @Published var lateralGain: Double { didSet { save() } }
   @Published var rotationWeight: Double { didSet { save() } }
@@ -12,6 +13,7 @@ final class GameTuning: ObservableObject {
   @Published var lateralSmoothing: Double { didSet { save() } }
   @Published var movementSpeed: Double { didSet { save() } }
 
+/// Inicjalizuje nowa instancje.
   init() {
     let d = UserDefaults.standard
     lateralGain = d.object(forKey: Keys.lateralGain) as? Double ?? 3.5
@@ -23,6 +25,7 @@ final class GameTuning: ObservableObject {
     movementSpeed = d.object(forKey: Keys.movementSpeed) as? Double ?? 260
   }
 
+/// Wykonuje operacje `resetToDefaults`.
   func resetToDefaults() {
     lateralGain = 3.5
     rotationWeight = 0
@@ -34,12 +37,19 @@ final class GameTuning: ObservableObject {
   }
 
   private enum Keys {
+/// Przechowuje wartosc `lateralGain`.
     static let lateralGain = "gameTuning.lateralGain"
+/// Przechowuje wartosc `rotationWeight`.
     static let rotationWeight = "gameTuning.rotationWeight"
+/// Przechowuje wartosc `gyroWeight`.
     static let gyroWeight = "gameTuning.gyroWeight"
+/// Przechowuje wartosc `tiltWeight`.
     static let tiltWeight = "gameTuning.tiltWeight"
+/// Przechowuje wartosc `lateralDeadzone`.
     static let lateralDeadzone = "gameTuning.lateralDeadzone"
+/// Przechowuje wartosc `lateralSmoothing`.
     static let lateralSmoothing = "gameTuning.lateralSmoothing"
+/// Przechowuje wartosc `movementSpeed`.
     static let movementSpeed = "gameTuning.movementSpeed"
   }
 

@@ -1,0 +1,91 @@
+---
+title: For Cursor Claude
+description: One-page operational hub for fast SDK work in Cursor
+sidebar_position: 99
+---
+
+# For Cursor Claude
+
+This page is a practical hub for AI-assisted development in this repository.  
+Use it as a fast checklist before implementing, debugging, or documenting.
+
+## Fast orientation
+
+- SDK core: `VeltoKit/`
+- Sample app: `app/`
+- Website docs: `website/docs/`
+- Triki UI navigation layer: `app/UI/TrikiUI/`
+- Input adapter (`MotionInputProvider` alias): `app/Platform/TrikiInputAdapter.swift`
+
+## Primary integration flow
+
+```text
+BLE packet -> MotionSDK / MotionEngine -> GameInput -> game update loop -> optional Triki UI layer
+```
+
+Quick references:
+
+- SDK overview: [VeltoKit SDK](./sdk/overview)
+- Motion facade API: [MotionSDK API](./sdk/motion-sdk)
+- Output contract: [GameInput](./sdk/game-input)
+- UI navigation integration: [Triki UI navigation](./sdk/triki-ui)
+- End-to-end architecture: [Architecture](./sdk/architecture)
+
+## High-value files (read first)
+
+| Goal | File |
+|------|------|
+| Understand main SDK facade | `VeltoKit/MotionSDK.swift` |
+| Check frame processing logic | `VeltoKit/MotionEngine.swift` |
+| Validate input shape used by games | `VeltoKit/GameInput.swift` |
+| Debug BLE ingress/parsing | `VeltoKit/BLE/BLEManager.swift`, `VeltoKit/BLEGyroParser.swift` |
+| Understand Triki screen lifecycle | `app/UI/TrikiUI/TrikiUIComponents.swift` |
+| Understand focus/hold activation | `app/UI/TrikiUI/TrikiUINavigator.swift`, `TrikiFocusGate.swift`, `TrikiHoldTracker.swift` |
+
+## Recommended Cursor workflow
+
+1. **Locate scope first** (SDK core vs app integration vs docs).
+2. **Read API docs + implementation** before editing.
+3. **Keep behavior stable**: avoid renaming or logic rewrites unless requested.
+4. **When changing public/internal APIs**, update Swift `///` docs immediately.
+5. **When changing user-visible behavior**, update docs in `website/docs/`.
+6. **Validate quickly**: run lints/tests relevant to touched area.
+
+## Ready-to-use prompt snippets
+
+### Add API docs only
+
+```text
+Document all public/internal Swift APIs in the changed files using /// comments.
+Do not change logic, names, or behavior. Include parameters, returns, side effects, and concise examples where useful.
+```
+
+### Trace Triki UI issue
+
+```text
+Investigate Triki UI navigation: trikiUIScreen lifecycle, focus mapping, hold tracking, and activation callback flow.
+Identify where focus is computed and where activation is fired, then propose minimal fixes.
+```
+
+### Improve docs website after SDK changes
+
+```text
+Sync website docs with current SDK behavior. Update sdk/overview, sdk/motion-sdk, sdk/game-input, sdk/triki-ui, and affected game examples.
+Prioritize developer-facing clarity and actionable examples.
+```
+
+## Practical rules for this repo
+
+- Keep docs concise and technical; avoid marketing wording.
+- Prefer explicit field names (`posX`, `primaryAction`, `shotTriggered`) in examples.
+- In game examples, always state `MotionMode` and key `GameInput` fields.
+- For Triki UI docs, always include lifecycle and side effects (`isActive`, `itemCount`, HUD visibility).
+
+## Next useful pages
+
+- [Quick Start](./quick-start)
+- [Module map](./sdk/modules)
+- [Configuration](./sdk/configuration)
+- [Gestures](./sdk/gestures)
+- [Skill for Cursor](./for-cursor)
+- [Skill for Claude](./for-claude)

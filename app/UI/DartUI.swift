@@ -3,13 +3,20 @@ import VeltoKit
 
 /// Panel pilota — Triki steruje z telefonu (tarcza może być na TV).
 struct DartPhonePilotPanel: View {
+  /// Przechowuje wartość `isConnected` wykorzystywaną przez dany komponent.
   let isConnected: Bool
+  /// Przechowuje wartość `isReceiving` wykorzystywaną przez dany komponent.
   let isReceiving: Bool
+  /// Przechowuje wartość `motionEnergy` wykorzystywaną przez dany komponent.
   let motionEnergy: Double
+  /// Przechowuje wartość `throwState` wykorzystywaną przez dany komponent.
   let throwState: DartThrowController.ThrowState
+  /// Przechowuje wartość `playZoneBand` wykorzystywaną przez dany komponent.
   let playZoneBand: DartPlayZone.Band
+  /// Przechowuje wartość `boardOnTV` wykorzystywaną przez dany komponent.
   let boardOnTV: Bool
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(alignment: .leading, spacing: 10) {
       HStack(spacing: 8) {
@@ -92,9 +99,12 @@ struct DartPhonePilotPanel: View {
 
 /// Odliczanie 5…1 przed startem rozgrywki.
 struct DartStartCountdownOverlay: View {
+  /// Przechowuje wartość `value` wykorzystywaną przez dany komponent.
   let value: Int
+  /// Przechowuje wartość `scale` wykorzystywaną przez dany komponent.
   var scale: CGFloat = 1
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     Text("\(value)")
       .font(.system(size: 88 * scale, weight: .black, design: .rounded))
@@ -117,10 +127,14 @@ struct DartStartCountdownOverlay: View {
   }
 }
 
+/// Opisuje struct `DartTurnChangeBanner` używany przez warstwę UI i logikę gry.
 struct DartTurnChangeBanner: View {
+  /// Przechowuje wartość `playerName` wykorzystywaną przez dany komponent.
   let playerName: String
+  /// Przechowuje wartość `dartsLeft` wykorzystywaną przez dany komponent.
   let dartsLeft: Int
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(spacing: 10) {
       Text("ZMIANA GRACZA")
@@ -154,9 +168,12 @@ struct DartTurnChangeBanner: View {
   }
 }
 
+/// Opisuje struct `TrikiTurnConfirmBanner` używany przez warstwę UI i logikę gry.
 struct TrikiTurnConfirmBanner: View {
+  /// Przechowuje wartość `playerName` wykorzystywaną przez dany komponent.
   let playerName: String
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(spacing: 12) {
       Image(systemName: "button.programmable")
@@ -186,9 +203,12 @@ struct TrikiTurnConfirmBanner: View {
   }
 }
 
+/// Opisuje struct `DartSoloScoreBadge` używany przez warstwę UI i logikę gry.
 struct DartSoloScoreBadge: View {
+  /// Przechowuje wartość `score` wykorzystywaną przez dany komponent.
   let score: Int
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     Text("\(score)")
       .font(.system(size: 22, weight: .black, design: .rounded))
@@ -199,9 +219,12 @@ struct DartSoloScoreBadge: View {
   }
 }
 
+/// Opisuje struct `DartRosterScoreStrip` używany przez warstwę UI i logikę gry.
 struct DartRosterScoreStrip: View {
+  /// Przechowuje wartość `hud` wykorzystywaną przez dany komponent.
   let hud: DartGame.HUD
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(spacing: 6) {
@@ -241,11 +264,16 @@ struct DartRosterScoreStrip: View {
   }
 }
 
+/// Opisuje struct `DartDuoScoreStrip` używany przez warstwę UI i logikę gry.
 struct DartDuoScoreStrip: View {
+  /// Przechowuje wartość `hud` wykorzystywaną przez dany komponent.
   let hud: DartGame.HUD
+  /// Przechowuje wartość `player1Name` wykorzystywaną przez dany komponent.
   let player1Name: String
+  /// Przechowuje wartość `player2Name` wykorzystywaną przez dany komponent.
   let player2Name: String
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     DartRosterScoreStrip(hud: hud)
   }
@@ -262,9 +290,12 @@ private func scoreBackground(stroke: Color) -> some View {
 
 /// Wskaźnik dystansu od ekranu (5 pasków + etykieta).
 struct DartPlayZoneBadge: View {
+  /// Przechowuje wartość `band` wykorzystywaną przez dany komponent.
   let band: DartPlayZone.Band
+  /// Przechowuje wartość `level` wykorzystywaną przez dany komponent.
   let level: Int
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     HStack(spacing: 6) {
       HStack(spacing: 2) {
@@ -291,10 +322,14 @@ struct DartPlayZoneBadge: View {
 
 /// Wektorowy cel — puste kółko, po cofnięciu ręki wypełnione.
 struct DartAimCircle: View {
+  /// Przechowuje wartość `primed` wykorzystywaną przez dany komponent.
   let primed: Bool
+  /// Przechowuje wartość `feedbackLabel` wykorzystywaną przez dany komponent.
   let feedbackLabel: String?
+  /// Przechowuje wartość `diameter` wykorzystywaną przez dany komponent.
   var diameter: CGFloat = 44
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     let ringColor: Color = {
       if feedbackLabel == "MISS" { return .red }
@@ -325,11 +360,16 @@ struct DartAimCircle: View {
 
 /// Komunikat po rzucie (telefon + TV) — jak feedback w quizie.
 struct DartShotFeedbackCard: View {
+  /// Przechowuje wartość `pointsLine` wykorzystywaną przez dany komponent.
   let pointsLine: String
+  /// Przechowuje wartość `detailLine` wykorzystywaną przez dany komponent.
   let detailLine: String?
+  /// Przechowuje wartość `isMiss` wykorzystywaną przez dany komponent.
   let isMiss: Bool
+  /// Przechowuje wartość `scale` wykorzystywaną przez dany komponent.
   var scale: CGFloat = 1
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     let accent = isMiss ? Color.red : NeonTheme.neonGreen
     VStack(spacing: 10 * scale) {
@@ -368,10 +408,14 @@ struct DartShotFeedbackCard: View {
 
 // MARK: - Lotka w locie / tyczki na tarczy
 
+/// Opisuje struct `DartFlyingDartView` używany przez warstwę UI i logikę gry.
 struct DartFlyingDartView: View {
+  /// Przechowuje wartość `progress` wykorzystywaną przez dany komponent.
   let progress: Double
+  /// Przechowuje wartość `diameter` wykorzystywaną przez dany komponent.
   var diameter: CGFloat = 28
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     let scale = 0.75 + 0.35 * (1 - progress)
     ZStack {
@@ -409,9 +453,12 @@ struct DartFlyingDartView: View {
   }
 }
 
+/// Opisuje struct `DartStuckDartView` używany przez warstwę UI i logikę gry.
 struct DartStuckDartView: View {
+  /// Przechowuje wartość `diameter` wykorzystywaną przez dany komponent.
   var diameter: CGFloat = 14
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     ZStack {
       Circle()
@@ -428,11 +475,16 @@ struct DartStuckDartView: View {
   }
 }
 
+/// Opisuje struct `DartBoardMarkersOverlay` używany przez warstwę UI i logikę gry.
 struct DartBoardMarkersOverlay: View {
+  /// Przechowuje wartość `markers` wykorzystywaną przez dany komponent.
   let markers: [DartBoardMarker]
+  /// Przechowuje wartość `layout` wykorzystywaną przez dany komponent.
   let layout: PixelGridFitLayout
+  /// Przechowuje wartość `markerSize` wykorzystywaną przez dany komponent.
   var markerSize: CGFloat = 14
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     ForEach(Array(markers.enumerated()), id: \.offset) { _, marker in
       DartStuckDartView(diameter: markerSize)
@@ -443,16 +495,24 @@ struct DartBoardMarkersOverlay: View {
 
 /// Tablica wyników na TV — styl Kinect / telewizyjny dart (501, gracze, lotki).
 struct DartKinectTVScoreboard: View {
+  /// Przechowuje wartość `playerNames` wykorzystywaną przez dany komponent.
   let playerNames: [String]
+  /// Przechowuje wartość `playerScores` wykorzystywaną przez dany komponent.
   let playerScores: [Int]
+  /// Przechowuje wartość `activePlayerIndex` wykorzystywaną przez dany komponent.
   let activePlayerIndex: Int
+  /// Przechowuje wartość `dartsLeftInTurn` wykorzystywaną przez dany komponent.
   let dartsLeftInTurn: Int
+  /// Przechowuje wartość `gameOver` wykorzystywaną przez dany komponent.
   let gameOver: Bool
+  /// Przechowuje wartość `winnerName` wykorzystywaną przez dany komponent.
   let winnerName: String?
+  /// Przechowuje wartość `scale` wykorzystywaną przez dany komponent.
   var scale: CGFloat = 1
 
   private var isMultiplayer: Bool { playerNames.count > 1 }
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     Group {
       if isMultiplayer {
@@ -550,11 +610,16 @@ struct DartKinectTVScoreboard: View {
   }
 }
 
+/// Opisuje struct `DartDartsRemainingRow` używany przez warstwę UI i logikę gry.
 struct DartDartsRemainingRow: View {
+  /// Przechowuje wartość `total` wykorzystywaną przez dany komponent.
   let total: Int
+  /// Przechowuje wartość `left` wykorzystywaną przez dany komponent.
   let left: Int
+  /// Przechowuje wartość `scale` wykorzystywaną przez dany komponent.
   var scale: CGFloat = 1
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     HStack(spacing: 8 * scale) {
       Text("LOTKI")

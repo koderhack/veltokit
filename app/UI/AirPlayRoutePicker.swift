@@ -3,8 +3,10 @@ import SwiftUI
 
 /// Przycisk AirPlay (TV / głośniki) — systemowy picker Apple.
 struct AirPlayRoutePicker: UIViewRepresentable {
+  /// Przechowuje wartość `scale` wykorzystywaną przez dany komponent.
   var scale: CGFloat = 1.0
 
+  /// Wykonuje operację `makeUIView` w bieżącym kontekście gry/UI.
   func makeUIView(context: Context) -> AVRoutePickerView {
     let view = AVRoutePickerView()
     view.activeTintColor = UIColor(NeonTheme.neonYellow)
@@ -18,13 +20,16 @@ struct AirPlayRoutePicker: UIViewRepresentable {
     return view
   }
 
+  /// Wykonuje operację `updateUIView` w bieżącym kontekście gry/UI.
   func updateUIView(_ uiView: AVRoutePickerView, context: Context) {
     uiView.prioritizesVideoDevices = true
     uiView.activeTintColor = UIColor(NeonTheme.neonYellow)
   }
 }
 
+/// Opisuje extension `AirPlayRoutePicker` używany przez warstwę UI i logikę gry.
 extension AirPlayRoutePicker {
+  /// Wykonuje operację `airPlayHitTarget` w bieżącym kontekście gry/UI.
   func airPlayHitTarget(size: CGFloat = 52) -> some View {
     frame(width: size, height: size)
       .contentShape(Rectangle())
@@ -34,8 +39,10 @@ extension AirPlayRoutePicker {
 /// Panel podłączenia TV (quiz, dart).
 struct TVConnectPanel: View {
   @EnvironmentObject private var quizDisplay: QuizExternalDisplay
+  /// Przechowuje wartość `hint` wykorzystywaną przez dany komponent.
   var hint: String = "Centrum sterowania → Odbicie ekranu też działa · na TV widać grę w trybie teleturnieju"
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(alignment: .leading, spacing: 16) {
       HStack(spacing: 14) {
@@ -115,4 +122,5 @@ struct TVConnectPanel: View {
   }
 }
 
+/// Definiuje alias typu `QuizTVConnectPanel` dla czytelniejszego API.
 typealias QuizTVConnectPanel = TVConnectPanel

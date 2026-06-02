@@ -2,20 +2,29 @@ import Combine
 import SwiftUI
 import VeltoKit
 
+/// Game lobby and calibration orchestration for all playable modes.
+///
+/// Use this screen as the entry point before gameplay to configure players, toggle TV options,
+/// and run Triki-driven lobby navigation (`.trikiUIScreen`) where available.
+
 private let calibrationRefreshInterval = 0.15
 
 /// Tworzy sesje tylko dla gry, która ich potrzebuje (Pong nie inicjuje DartSession).
 @MainActor
 private final class GameLobbySessions: ObservableObject {
+  /// Przechowuje wartość `dart` wykorzystywaną przez dany komponent.
   let dart: DartSession?
+  /// Przechowuje wartość `bowling` wykorzystywaną przez dany komponent.
   let bowling: BowlingSession?
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init(gameType: GameType) {
     dart = gameType == .dart ? DartSession() : nil
     bowling = gameType == .bowling ? BowlingSession() : nil
   }
 }
 
+/// Pre-game container that selects and renders mode-specific calibration/lobby UI.
 struct GameCalibrationView: View {
   @Environment(\.dismiss) private var dismiss
   @EnvironmentObject private var inputProvider: MotionInputProvider
@@ -23,8 +32,11 @@ struct GameCalibrationView: View {
   @EnvironmentObject private var trikiUI: TrikiUINavigator
   @EnvironmentObject private var quizDisplay: QuizExternalDisplay
 
+  /// Active game type that determines lobby and calibration behavior.
   let gameType: GameType
+  /// Optional preloaded quiz question set forwarded to quiz flow.
   var quizQuestions: [Question] = []
+  /// Optional quiz session used when returning from gameplay.
   var quizSession: QuizSession?
 
   @StateObject private var sessions: GameLobbySessions
@@ -36,6 +48,7 @@ struct GameCalibrationView: View {
   @AppStorage(ArcadeSettings.backgroundMusicEnabledKey) private var backgroundMusicEnabled = false
   @State private var dartMenuPage = 0
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init(gameType: GameType, quizQuestions: [Question] = [], quizSession: QuizSession? = nil) {
     self.gameType = gameType
     self.quizQuestions = quizQuestions
@@ -87,6 +100,7 @@ struct GameCalibrationView: View {
     !quizDisplay.isExternalScreenConnected
   }
 
+  /// Renders the proper lobby/calibration screen and transition covers for the selected mode.
   var body: some View {
     Group {
       if gameType == .dart {
@@ -939,8 +953,10 @@ struct GameCalibrationView: View {
 
 private struct BowlingLobbySectionView: View {
   @ObservedObject var session: BowlingSession
+  /// Przechowuje wartość `nextModeLabel` wykorzystywaną przez dany komponent.
   let nextModeLabel: String
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(spacing: 10) {
       ArcadeUI.panel {

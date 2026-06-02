@@ -1,6 +1,11 @@
 import SwiftUI
 import VeltoKit
 
+/// Dart calibration flow screen with Triki-driven confirmation and TV synchronization.
+///
+/// This file hosts the dedicated pre-game calibration wizard used to capture per-player
+/// throw posture and publish mirrored UI state to external display.
+
 /// Kreator kalibracji Triki — instrukcje i menu na TV, Triki = wybór + przycisk.
 struct DartCalibrationFlowView: View {
   @EnvironmentObject private var quizDisplay: QuizExternalDisplay
@@ -12,18 +17,28 @@ struct DartCalibrationFlowView: View {
   @AppStorage(ArcadeTVSettings.dartBoardOnTVKey) private var dartBoardOnTV = false
   @AppStorage(ArcadeSettings.keepScreenOnDuringPlayKey) private var keepScreenOnDuringPlay = true
 
+  /// Przechowuje wartość `onFinished` wykorzystywaną przez dany komponent.
   let onFinished: () -> Void
 
   @StateObject private var wizard: DartCalibrationWizard
 
+  /// Number of Triki menu slots currently visible in the calibration flow.
   private var trikiSlotCount: Int {
     wizard.isComplete ? 2 : 1
   }
 
+  /// Whether phone HUD should be visible when navigation is delegated to TV.
   private var trikiPhoneHUD: Bool {
     !quizDisplay.isExternalScreenConnected
   }
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
+  /// Creates calibration flow with injected session and motion provider.
+  ///
+  /// - Parameters:
+  ///   - session: Active dart session used to persist calibration outcomes.
+  ///   - inputProvider: Motion input adapter that provides live sensor stream.
+  ///   - onFinished: Callback fired after user chooses to start the game.
   init(
     session: DartSession,
     inputProvider: MotionInputProvider,
@@ -35,6 +50,8 @@ struct DartCalibrationFlowView: View {
     _wizard = StateObject(wrappedValue: DartCalibrationWizard(session: session))
   }
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
+  /// Renders calibration instructions, Triki controls, and TV mirroring hooks.
   var body: some View {
     ZStack {
       ArcadeUI.screenBackground
@@ -98,12 +115,17 @@ struct DartCalibrationFlowView: View {
     }
   }
 
+  /// Enables calibration payload on TV when TV output is expected.
   private func activateCalibrationTV() {
     if dartBoardOnTV || quizDisplay.isExternalScreenConnected {
       quizDisplay.setDartCalibrationActive(true)
     }
   }
 
+  /// Handles Triki activation in wizard and completion menu states.
+  ///
+  /// - Parameter index: Selected menu slot index.
+  /// - Side Effects: May dismiss the view or finish calibration flow.
   private func handleTrikiActivate(_ index: Int) {
     if wizard.isComplete {
       if index == 0 {
@@ -118,6 +140,7 @@ struct DartCalibrationFlowView: View {
     wizard.confirmCurrentStep(sensors: inputProvider.liveInput.sensors)
   }
 
+  /// Pushes latest wizard and focus state to external TV payload.
   private func syncTV() {
     guard quizDisplay.dartCalibrationPayload.isActive else { return }
     quizDisplay.updateDartCalibration(
@@ -133,6 +156,7 @@ struct DartCalibrationFlowView: View {
     )
   }
 
+  /// Returns menu choices for TV overlay depending on wizard completion.
   private func calibrationMenuChoices() -> [TVMenuChoice] {
     if wizard.isComplete {
       return [

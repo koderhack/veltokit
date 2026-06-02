@@ -2,7 +2,9 @@ import Foundation
 
 /// Surowy BLE → pozycja (offset, wygładzanie, posX).
 @MainActor
+/// Przetwarza surowe wejście ruchu do postaci używanej przez `MotionEngine`.
 final class MotionProcessor {
+  /// Konfiguracja filtrów i mapowania ruchu.
   var config = MotionConfig.default
 
   private var rawX = 0.0
@@ -24,8 +26,10 @@ final class MotionProcessor {
   private var refX = 0.0
   private var refY = 0.0
 
+  /// Informuje, czy offset paletki został zainicjalizowany.
   var isPaddleOffsetSet: Bool { offsetBootstrapped }
 
+  /// Ustawia surową próbkę osi X.
   func setRawX(_ value: Double) {
     rawX = value
     let blend = min(1, max(0, config.paddleRawSmoothing))
@@ -36,6 +40,7 @@ final class MotionProcessor {
     }
   }
 
+  /// Kalibruje bieżącą pozycję jako neutralną.
   func calibrateCenter() {
     offsetX = filteredRawX
     paddleOffsetRaw = filteredRawX
@@ -45,6 +50,7 @@ final class MotionProcessor {
     relX = 0
   }
 
+  /// Czyści offset i stan centrujący paletki.
   func resetCenter() {
     offsetBootstrapped = false
     offsetX = 0
@@ -53,18 +59,21 @@ final class MotionProcessor {
     posX = 0
   }
 
+  /// Odwraca znak aktualnego offsetu paletki.
   func flipPaddleOffsetSign() {
     guard offsetBootstrapped else { return }
     offsetX = -offsetX
     paddleOffsetRaw = offsetX
   }
 
+  /// Resetuje tylko stan dynamiczny paletki.
   func resetPaddleMotion() {
     smoothX = 0
     posX = 0
     relX = 0
   }
 
+  /// Resetuje bazę referencyjną dla trybu gestu.
   func resetGestureBaseline() {
     refX = rotX
     refY = rotY
@@ -74,6 +83,7 @@ final class MotionProcessor {
     posY = 0
   }
 
+  /// Resetuje kompletny stan procesora.
   func resetAll() {
     rawX = 0
     filteredRawX = 0
@@ -94,12 +104,14 @@ final class MotionProcessor {
     paddleOffsetRaw = 0
   }
 
+  /// Aktualizuje wejście osi X/Y po wstępnym wygładzeniu.
   func updateRaw(x: Double, y: Double) {
     let blend = min(1, max(0, config.inputSmoothing))
     smoothInputX = smoothInputX * (1 - blend) + x * blend
     smoothInputY = smoothInputY * (1 - blend) + y * blend
   }
 
+  /// Aktualizuje wyjście w trybie paletki.
   func updatePaddle(frameScale: Double) {
     bootstrapOffsetIfNeeded()
 
@@ -142,6 +154,7 @@ final class MotionProcessor {
     relY = 0
   }
 
+  /// Integruje ruch i referencję dla trybu pointer/gesture.
   func updateRotationPointer(frameScale: Double) {
     let cfg = config
     rotX += smoothInputX * cfg.pointerSensitivity * frameScale
@@ -161,6 +174,7 @@ final class MotionProcessor {
     posX = relX
   }
 
+  /// Nakłada wygładzanie wyjścia pointer z uwzględnieniem stanu gestu.
   func applyPointerOutput(gestureArmed: Bool) {
     let cfg = config
     var out = min(1, max(0, cfg.pointerOutputSmoothing))
@@ -173,24 +187,37 @@ final class MotionProcessor {
     posY = MotionMath.clamp(posY)
   }
 
+  /// Przygotowuje stan klatki wskaźnika przed finalnym outputem.
   func preparePointerFrame() {
     posY = 0
   }
 
   // MARK: - Debug samples
 
+  /// Stores `debugRawX` used by this scope.
   var debugRawX: Double { rawX }
+  /// Stores `debugRawY` used by this scope.
   var debugRawY: Double { smoothInputY }
+  /// Stores `debugSmoothX` used by this scope.
   var debugSmoothX: Double { smoothX }
+  /// Stores `debugSmoothY` used by this scope.
   var debugSmoothY: Double { smoothInputY }
+  /// Stores `debugBiasX` used by this scope.
   var debugBiasX: Double { offsetX }
+  /// Stores `debugPaddleInput` used by this scope.
   var debugPaddleInput: Double { rawX - offsetX }
+  /// Stores `debugPaddleRawDelta` used by this scope.
   var debugPaddleRawDelta: Double { rawX - offsetX }
+  /// Stores `debugPaddleSteer` used by this scope.
   var debugPaddleSteer: Double { smoothX }
+  /// Stores `debugPaddleOffsetLocked` used by this scope.
   var debugPaddleOffsetLocked: Bool { offsetBootstrapped }
+  /// Stores `debugRotX` used by this scope.
   var debugRotX: Double { rotX }
+  /// Stores `debugRotY` used by this scope.
   var debugRotY: Double { rotY }
 
+  /// Zwraca etykietę kierunku paletki dla debug UI.
   func paddleDirectionLabel() -> String {
     if abs(smoothX) < 0.06 { return "ŚRODEK" }
     return smoothX < 0 ? "LEWO" : "PRAWO"

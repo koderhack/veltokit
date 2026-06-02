@@ -61,9 +61,12 @@ enum DartBoardLayout {
 
 /// Dart — logika rzutu; UI w `DartGameView`.
 final class DartGame: Game {
+  /// Przechowuje wartość `name` wykorzystywaną przez dany komponent.
   let name = "Dart"
+  /// Przechowuje wartość `inputProfile` wykorzystywaną przez dany komponent.
   let inputProfile: GameInputProfile = .dart
 
+  /// Opisuje struct `HUD` używany przez warstwę UI i logikę gry.
   struct HUD: Equatable {
     var score: Int
     var playerCount: Int
@@ -130,6 +133,7 @@ final class DartGame: Game {
 
   private let restoredMatch: DartMatchState?
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init(
     playerCount: Int = 1,
     playerNames: [String] = ["Gracz 1"],
@@ -160,6 +164,7 @@ final class DartGame: Game {
     )
   }
 
+  /// Wykonuje operację `snapshot` w bieżącym kontekście gry/UI.
   func snapshot() -> DartMatchState {
     DartMatchState(
       playerCount: playerCount,
@@ -173,6 +178,7 @@ final class DartGame: Game {
     )
   }
 
+  /// Wykonuje operację `applyGrip` w bieżącym kontekście gry/UI.
   func applyGrip(from axisMapping: MotionAxisMapping) {
     grip = DartGripMapping.from(axisMapping: axisMapping)
   }
@@ -244,6 +250,7 @@ final class DartGame: Game {
   private var doubleInnerR: Double { boardRadius * 40 / 45 }
   private var doubleOuterR: Double { boardRadius }
 
+  /// Wykonuje operację `start` w bieżącym kontekście gry/UI.
   func start(context: GameContext) {
     centerX = DartBoardLayout.centerX
     centerY = DartBoardLayout.centerY
@@ -288,6 +295,7 @@ final class DartGame: Game {
     publishHUD()
   }
 
+  /// Wykonuje operację `applyPlayerProfile` w bieżącym kontekście gry/UI.
   func applyPlayerProfile(index: Int) {
     guard let profile = DartPlayerProfileStore.profile(for: index) else {
       playZone.applySessionCalibration()
@@ -309,11 +317,13 @@ final class DartGame: Game {
     throwController.reset(tiltAxis: 0)
   }
 
+  /// Wykonuje operację `calibratePlayZone` w bieżącym kontekście gry/UI.
   func calibratePlayZone(sensors: TrikiSensors) {
     playZone.calibrate(with: sensors)
     calibrateAimNeutral(sensors: sensors)
   }
 
+  /// Wykonuje operację `calibrateAimNeutral` w bieżącym kontekście gry/UI.
   func calibrateAimNeutral(sensors: TrikiSensors) {
     let neutral = grip.calibrateNeutrals(from: sensors)
     aimNeutralX = neutral.aimX
@@ -324,6 +334,7 @@ final class DartGame: Game {
     gyroBaselineZ = sensors.gyroZ
   }
 
+  /// Wykonuje operację `update` w bieżącym kontekście gry/UI.
   func update(input: GameInput, deltaTime: TimeInterval) {
     arenaAnimTick &+= 1
 
@@ -649,6 +660,7 @@ final class DartGame: Game {
     )
   }
 
+  /// Wykonuje operację `render` w bieżącym kontekście gry/UI.
   func render(context: GameContext) {
     DartArenaScene.render(
       context: context,

@@ -3,12 +3,14 @@ import VeltoKit
 
 /// Uniwersalne funkcje wejścia — każda gra może z nich korzystać.
 enum MotionControls {
+/// Reprezentuje typ `TurnDirection`.
   enum TurnDirection: String {
     case left
     case right
     case neutral
   }
 
+/// Reprezentuje typ `MotionGesture`.
   enum MotionGesture: String {
     case shake
     case flick
@@ -86,6 +88,7 @@ enum MotionControls {
     deltaTime: TimeInterval,
     rate: Double = 16
   ) -> Double {
+/// Przechowuje wartosc `step`.
     let step = min(1, max(0, rate * deltaTime))
     return current + (target - current) * step
   }
@@ -105,6 +108,7 @@ enum MotionControls {
     deltaTime: TimeInterval,
     rate: Double = 48
   ) -> Double {
+/// Przechowuje wartosc `target`.
     let target = min(maxX, max(minX, screenX(posX: posX, width: width)))
     return followHorizontal(current: current, target: target, deltaTime: deltaTime, rate: rate)
   }
@@ -114,6 +118,7 @@ enum MotionControls {
     height / 2 - posY * height / 2
   }
 
+/// Wykonuje operacje `pointerScreenPosition`.
   static func pointerScreenPosition(
     input: GameInput,
     width: Double,
@@ -125,12 +130,15 @@ enum MotionControls {
     )
   }
 
+/// Wykonuje operacje `pointerDirectionLabel`.
   static func pointerDirectionLabel(
     posX: Double,
     posY: Double,
     threshold: Double = 0.08
   ) -> String {
+/// Przechowuje wartosc `absX`.
     let absX = abs(posX)
+/// Przechowuje wartosc `absY`.
     let absY = abs(posY)
     if absX < threshold, absY < threshold { return PointerDirection.center.rawValue }
     if absX >= absY {
@@ -147,12 +155,15 @@ enum MotionControls {
     maxX: Double,
     smooth: Double = 0.2
   ) -> Double {
+/// Przechowuje wartosc `normalized`.
     let normalized = (rotation + 1) / 2.0
+/// Przechowuje wartosc `target`.
     let target = minX + normalized * (maxX - minX)
     guard smooth > 0 else { return target }
     return current + (target - current) * smooth
   }
 
+/// Wykonuje operacje `turnDirection`.
   static func turnDirection(_ input: GameInput, threshold: Double = 0.08) -> TurnDirection {
     let r = rotation(input)
     if r < -threshold { return .left }
@@ -165,22 +176,27 @@ enum MotionControls {
     motionLevel(input) >= threshold
   }
 
+/// Wykonuje operacje `isFlicking`.
   static func isFlicking(_ input: GameInput) -> Bool {
     input.flick
   }
 
+/// Wykonuje operacje `isSpinning`.
   static func isSpinning(_ input: GameInput) -> Bool {
     input.spin
   }
 
+/// Wykonuje operacje `isTiltingLeft`.
   static func isTiltingLeft(_ input: GameInput) -> Bool {
     input.tiltLeft
   }
 
+/// Wykonuje operacje `isTiltingRight`.
   static func isTiltingRight(_ input: GameInput) -> Bool {
     input.tiltRight
   }
 
+/// Wykonuje operacje `dominantGesture`.
   static func dominantGesture(_ input: GameInput) -> MotionGesture {
     if input.shake { return .shake }
     if input.spin { return .spin }
@@ -206,10 +222,12 @@ enum MotionControls {
     }
   }
 
+/// Wykonuje operacje `isShaking`.
   static func isShaking(_ input: GameInput) -> Bool {
     input.shake || input.sensors.motion > 0.55
   }
 
+/// Wykonuje operacje `primaryAction`.
   static func primaryAction(_ input: GameInput) -> Bool {
     input.primaryAction
   }
@@ -220,11 +238,13 @@ struct LateralSmoother {
   private var smoothed = 0.0
   private var velocity = 0.0
 
+/// Wykonuje operacje `reset`.
   mutating func reset() {
     smoothed = 0
     velocity = 0
   }
 
+/// Wykonuje operacje `step`.
   mutating func step(target: Double, tuning: GameTuning, deltaTime: TimeInterval) -> Double {
     step(
       target: target,
@@ -234,6 +254,7 @@ struct LateralSmoother {
     )
   }
 
+/// Wykonuje operacje `step`.
   mutating func step(
     target: Double,
     tuning: GameTuning,
@@ -242,6 +263,7 @@ struct LateralSmoother {
   ) -> Double {
     smoothed = smoothed * 0.7 + target * 0.3
 
+/// Przechowuje wartosc `targetVel`.
     let targetVel = smoothed * (profile.movementSpeed ?? tuning.movementSpeed)
     velocity = targetVel
     return velocity

@@ -1,9 +1,13 @@
 import Foundation
 
 private struct QuizCachePayload: Codable {
+/// Przechowuje wartosc `schemaVersion`.
   static let schemaVersion = 1
+/// Przechowuje wartosc `version`.
   var version: Int
+/// Przechowuje wartosc `savedAt`.
   var savedAt: Date
+/// Przechowuje wartosc `questions`.
   var questions: [Question]
 }
 
@@ -12,6 +16,7 @@ enum QuizCache {
   private static let fileName = "quiz_translated_pl.json"
   private static let expectedCount = 100
 
+/// Wykonuje operacje `load`.
   static func load() -> [Question]? {
     let url = cacheFileURL()
     guard let data = try? Data(contentsOf: url) else { return nil }
@@ -23,6 +28,7 @@ enum QuizCache {
     return Array(payload.questions.prefix(expectedCount))
   }
 
+/// Wykonuje operacje `save`.
   static func save(_ questions: [Question]) throws {
     guard questions.count >= expectedCount else { return }
     let url = cacheFileURL()
@@ -39,6 +45,7 @@ enum QuizCache {
     try encoder.encode(payload).write(to: url, options: .atomic)
   }
 
+/// Wykonuje operacje `clear`.
   static func clear() {
     try? FileManager.default.removeItem(at: cacheFileURL())
   }

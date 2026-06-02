@@ -1,3 +1,5 @@
+/// Punkt startowy aplikacji gametriki.
+
 //
 //  gametrikiApp.swift
 //  gametriki
@@ -7,6 +9,7 @@ import SwiftUI
 import VeltoKit
 
 @main
+/// Reprezentuje typ `gametrikiApp`.
 struct gametrikiApp: App {
   @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
   @StateObject private var tuning: GameTuning
@@ -14,6 +17,7 @@ struct gametrikiApp: App {
   @StateObject private var trikiUI: TrikiUINavigator
   @StateObject private var quizDisplay: QuizExternalDisplay
 
+/// Inicjalizuje nowa instancje.
   init() {
     ArcadeTVSettings.registerDefaults()
     let tuning = GameTuning()
@@ -24,6 +28,7 @@ struct gametrikiApp: App {
     _quizDisplay = StateObject(wrappedValue: QuizExternalDisplay())
   }
 
+/// Przechowuje wartosc `body`.
   var body: some Scene {
     WindowGroup {
       MainMenu()

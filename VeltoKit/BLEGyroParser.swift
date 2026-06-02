@@ -3,15 +3,24 @@ import Foundation
 /// Parser BLE: bloki 0x22 0x00, 3× int16 LE, normalizacja / 2000.
 /// Drugi blok w pakiecie = żyroskop (pierwszy = akcelerometr, ignorowany).
 public enum BLEGyroParser {
+  /// Sygnatura nagłówka bloku BLE Triki.
   public static let header: [UInt8] = [0x22, 0x00]
+  /// Rozmiar pojedynczego bloku osi w bajtach.
   public static let blockByteCount = 8
+  /// Domyślny dzielnik normalizacji danych gyro.
   public static let gyroDivisor = 2000.0
+  /// Dzielnik dla danych tilt.
   public static let tiltDivisor = 80.0
+  /// Alias dzielnika używanego do normalizacji.
   public static let normalizeDivisor = gyroDivisor
 
+  /// Znormalizowana próbka osi 3D.
   public struct GyroTriple: Equatable, Sendable {
+    /// Oś X.
     public var x: Double
+    /// Oś Y.
     public var y: Double
+    /// Oś Z.
     public var z: Double
   }
 
@@ -24,6 +33,7 @@ public enum BLEGyroParser {
     return Double(value)
   }
 
+  /// Alias kompatybilności do odczytu surowej osi Y.
   public static func gyroRawYFromPacket(_ data: [UInt8]) -> Double? {
     gyroRawFromPacket(data)
   }
@@ -148,10 +158,12 @@ public enum BLEGyroParser {
     return Int16(bitPattern: lo | (hi << 8))
   }
 
+  /// Normalizuje surową wartość int16 do zakresu roboczego.
   public static func normalize(_ v: Int16, divisor: Double = gyroDivisor) -> Double {
     MotionMath.clamp(Double(v) / divisor)
   }
 
+  /// Skaluje blok tilt do jednostek używanych przez żyroskop.
   public static func scaledTiltBlock(_ block: GyroTriple) -> GyroTriple {
     let scale = gyroDivisor / tiltDivisor
     return GyroTriple(x: block.x * scale, y: block.y * scale, z: block.z * scale)

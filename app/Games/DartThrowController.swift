@@ -2,6 +2,7 @@ import Foundation
 
 /// Rzut od góry: podnieś rękę → gotowość → mocny ruch w dół (bez samostrzałów z szumu).
 final class DartThrowController {
+  /// Reprezentuje etapy gestu rzutu: od neutralnej postawy do finalnego zwolnienia.
   enum ThrowState: Equatable {
     case idle
     case pullingBack
@@ -56,8 +57,10 @@ final class DartThrowController {
   private var throwConfirmFramesRequired = 3
   private var gyroNoiseFloor = 0.14
 
+  /// Informuje, czy gracz wszedł w fazę gotowości i może zwolnić rzut.
   var isPrimed: Bool { state == .ready }
 
+  /// Informuje UI, czy celowanie powinno być spowolnione (podczas naciągu/gotowości).
   var isAimSlowed: Bool {
     state == .pullingBack || state == .ready
   }
@@ -72,6 +75,7 @@ final class DartThrowController {
     strongThrowGyroImpulse = max(0.85, gyro * 1.02)
   }
 
+  /// Ustawia domyślne progi kalibracji dla standardowego rzutu w darta.
   func applyDefaultCalibration() {
     applyCalibration(pullDepth: 0.052, throwGyroPeak: 0.78)
   }
@@ -84,6 +88,7 @@ final class DartThrowController {
     applyCalibration(pullDepth: 0.042, throwGyroPeak: 0.52)
   }
 
+  /// Czyści stan automatu rzutu i synchronizuje neutralne położenie z bieżącym tiltem.
   func reset(tiltAxis: Double = 0) {
     state = .idle
     lastTiltAxis = tiltAxis
@@ -103,6 +108,14 @@ final class DartThrowController {
   }
 
   @discardableResult
+  /// Przetwarza próbkę ruchu i zwraca moc rzutu, gdy gest został poprawnie zakończony.
+  ///
+  /// - Parameters:
+  ///   - tiltAxis: Oś pochylenia telefonu używana do detekcji naciągu i wypchnięcia.
+  ///   - gyroForward: Sygnał żyroskopu w kierunku rzutu.
+  ///   - deltaTime: Czas trwania aktualnej klatki.
+  ///   - distanceFactor: Modyfikator czułości zależny od odległości/warunków gry.
+  /// - Returns: Siłę rzutu gotową do przeliczenia na punkt trafienia lub `nil`.
   func update(
     tiltAxis: Double,
     gyroForward: Double,

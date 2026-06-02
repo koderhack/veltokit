@@ -3,7 +3,9 @@ import VeltoKit
 
 /// Pong: żyro, klocki wielopoziomowe, punkty, dźwięk.
 final class PongGame: Game {
+  /// Przechowuje wartość `name` wykorzystywaną przez dany komponent.
   let name = "Pong"
+  /// Przechowuje wartość `inputProfile` wykorzystywaną przez dany komponent.
   let inputProfile: GameInputProfile = .pong
 
   private struct Brick {
@@ -48,6 +50,7 @@ final class PongGame: Game {
   private let brickW = 17
   private let brickH = 5
 
+  /// Wykonuje operację `start` w bieżącym kontekście gry/UI.
   func start(context: GameContext) {
     score = 0
     lives = startingLives
@@ -75,6 +78,7 @@ final class PongGame: Game {
     }
   }
 
+  /// Wykonuje operację `update` w bieżącym kontekście gry/UI.
   func update(input: GameInput, deltaTime: TimeInterval) {
     guard !gameOver, !win else { return }
     let dt = min(deltaTime, 0.05)
@@ -189,6 +193,7 @@ final class PongGame: Game {
     ballVY = -ballSpeed
   }
 
+  /// Wykonuje operację `render` w bieżącym kontekście gry/UI.
   func render(context: GameContext) {
     let top = GameContext.pixelTopInset
     context.rect(x: 0, y: 0, width: GameContext.width, height: GameContext.height, color: .black)

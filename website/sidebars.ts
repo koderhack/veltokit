@@ -2,12 +2,18 @@ import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
 
 const sidebars: SidebarsConfig = {
   docs: [
-    'intro',
-    'demo',
-    'quick-start',
-    'getting-started',
-    'installation',
-    'faq',
+    {
+      type: 'category',
+      label: 'Start here',
+      collapsed: false,
+      items: [
+        'intro',
+        'quick-start',
+        'getting-started',
+        'installation',
+        'demo',
+      ],
+    },
     {
       type: 'category',
       label: 'VeltoKit SDK',
@@ -19,6 +25,7 @@ const sidebars: SidebarsConfig = {
         'sdk/modules',
         'sdk/motion-sdk',
         'sdk/game-input',
+        'sdk/triki-ui',
         'sdk/configuration',
         'sdk/gestures',
         'sdk/ble-integration',
@@ -40,6 +47,22 @@ const sidebars: SidebarsConfig = {
         'examples/bowling',
         'examples/quiz',
       ],
+    },
+    {
+      type: 'category',
+      label: 'Developer workflow',
+      collapsed: false,
+      items: [
+        'for-cursor-claude',
+        'for-cursor',
+        'for-claude',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Support',
+      collapsed: false,
+      items: ['faq'],
     },
   ],
 };

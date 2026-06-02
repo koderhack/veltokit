@@ -10,6 +10,7 @@ final class BowlingPhysicsHandler: NSObject, SCNPhysicsContactDelegate {
   static let wallCategory: Int = 1 << 4
   static let bumperCategory: Int = 1 << 5
 
+  /// Opisuje enum `StaticCategory` używany przez warstwę UI i logikę gry.
   enum StaticCategory {
     case lane
     case gutter
@@ -17,13 +18,16 @@ final class BowlingPhysicsHandler: NSObject, SCNPhysicsContactDelegate {
     case bumper
   }
 
+  /// Przechowuje wartość `onCollision` wykorzystywaną przez dany komponent.
   var onCollision: (() -> Void)?
+  /// Przechowuje wartość `onPinContact` wykorzystywaną przez dany komponent.
   var onPinContact: ((SCNNode) -> Void)?
 
   private var lastCollisionAt: TimeInterval = 0
   private var lastPinContactAt: [ObjectIdentifier: TimeInterval] = [:]
   private let collisionCooldown: TimeInterval = 0.08
 
+  /// Wykonuje operację `configureWorld` w bieżącym kontekście gry/UI.
   func configureWorld(_ world: SCNPhysicsWorld) {
     world.gravity = SCNVector3(0, -9.8, 0)
     world.speed = 1.2
@@ -106,6 +110,7 @@ final class BowlingPhysicsHandler: NSObject, SCNPhysicsContactDelegate {
     return body
   }
 
+  /// Wykonuje operację `physicsWorld` w bieżącym kontekście gry/UI.
   func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
     let a = contact.nodeA.physicsBody?.categoryBitMask ?? 0
     let b = contact.nodeB.physicsBody?.categoryBitMask ?? 0

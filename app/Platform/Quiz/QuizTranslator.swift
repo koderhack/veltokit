@@ -6,6 +6,7 @@ enum QuizTranslator {
   private static let batchPause: UInt64 = 80_000_000
   private static let stringsPerQuestion = 5
 
+/// Wykonuje operacje `translateAll`.
   static func translateAll(
     _ questions: [Question],
     session: TranslationSession,
@@ -13,15 +14,20 @@ enum QuizTranslator {
   ) async throws -> [Question] {
     try await session.prepareTranslation()
 
+/// Przechowuje wartosc `translated`.
     var translated: [Question] = []
     translated.reserveCapacity(questions.count)
+/// Przechowuje wartosc `totalStrings`.
     let totalStrings = max(1, questions.count * stringsPerQuestion)
+/// Przechowuje wartosc `doneStrings`.
     var doneStrings = 0
 
     for (index, item) in questions.enumerated() {
+/// Przechowuje wartosc `pl`.
       let pl = try await translateQuestion(item, session: session)
       translated.append(pl)
       doneStrings += stringsPerQuestion
+/// Przechowuje wartosc `percent`.
       let percent = 10 + Int(Double(doneStrings) / Double(totalStrings) * 90)
       await onProgress(min(99, percent))
 
@@ -38,7 +44,9 @@ enum QuizTranslator {
     _ item: Question,
     session: TranslationSession
   ) async throws -> Question {
+/// Przechowuje wartosc `questionPL`.
     let questionPL = try await translateText(item.question, session: session)
+/// Przechowuje wartosc `answersPL`.
     var answersPL: [String] = []
     answersPL.reserveCapacity(item.answers.count)
     for answer in item.answers {

@@ -7,6 +7,7 @@
 
 import XCTest
 
+/// Represents gametriki uitests.
 final class gametrikiUITests: XCTestCase {
 
     override func setUpWithError() throws {

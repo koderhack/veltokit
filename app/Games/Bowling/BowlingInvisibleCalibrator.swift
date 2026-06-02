@@ -3,6 +3,7 @@ import VeltoKit
 
 /// Cicha kalibracja Triki w tle — podczas odliczania „Ustaw się” przed rzutem.
 struct BowlingInvisibleCalibrator {
+  /// Opisuje struct `Result` używany przez warstwę UI i logikę gry.
   struct Result: Equatable {
     var lateralNeutral: Double
     var neutralTilt: Double

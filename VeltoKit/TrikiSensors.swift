@@ -12,10 +12,15 @@ import Foundation
 /// | 12–13  | Obrót / prędkościomierz (skręt Snake lewo/prawo) |
 /// | 14     | Flagi: bit0 klik, bit1 shake |
 public struct TrikiSensors: Equatable {
+  /// Stores `tiltX` used by this scope.
   public var tiltX: Double = 0
+  /// Stores `tiltY` used by this scope.
   public var tiltY: Double = 0
+  /// Stores `gyroX` used by this scope.
   public var gyroX: Double = 0
+  /// Stores `gyroY` used by this scope.
   public var gyroY: Double = 0
+  /// Stores `gyroZ` used by this scope.
   public var gyroZ: Double = 0
   /// Obrót wokół osi Z — skręt lewo/prawo (Snake, Box).
   public var rotation: Double = 0
@@ -23,7 +28,9 @@ public struct TrikiSensors: Equatable {
   public var speed: Double = 0
   /// Detektor ruchu — norma żyroskopu.
   public var motion: Double = 0
+  /// Stores `click` used by this scope.
   public var click: Bool = false
+  /// Stores `shake` used by this scope.
   public var shake: Bool = false
 
   public init(

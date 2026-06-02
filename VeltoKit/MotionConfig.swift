@@ -6,32 +6,45 @@ public enum MotionSensorInput: String, Sendable, Equatable {
   case gyro
 }
 
+/// Represents motion config.
 public struct MotionConfig: Equatable, Sendable {
+  /// Aktywny tryb pracy silnika.
   public var mode: MotionMode = .paddle
+  /// Mapowanie źródeł osi na wyjście X/Y.
   public var axisMapping = MotionAxisMapping()
+  /// Źródło danych sensorowych preferowane przez runtime.
   public var sensorInput: MotionSensorInput = .gyro
 
   // Core pipeline
+  /// Stores `inputSmoothing` used by this scope.
   public var inputSmoothing: Double = 0.15
+  /// Stores `deadzone` used by this scope.
   public var deadzone: Double = 0.01
+  /// Stores `referenceBlend` used by this scope.
   public var referenceBlend: Double = 0.005
+  /// Stores `referenceRetain` used by this scope.
   public var referenceRetain: Double = 0.995
   /// Wyłączone w `.paddle` — inaczej ref „goni” tilt i relX pojawia się z opóźnieniem.
   public var referenceDriftEnabled: Bool = true
 
   // Paddle — delta×gain → smooth 0.8/0.2 → posX (absolutna, bez +=)
+  /// Stores `paddleInputGain` used by this scope.
   public var paddleInputGain: Double = 0.3
   /// Po gain: |input| poniżej progu → 0 (filtr mikro-szumu IMU, typ. 0.3–0.7).
   public var paddleMicroDeadzone: Double = 0.5
   /// Auto-kalibracja: |raw−offset| poniżej progu = „spokój” (surowe jednostki BLE).
   public var paddleStillThreshold: Double = 3
+  /// Stores `paddleAutoCalibRetain` used by this scope.
   public var paddleAutoCalibRetain: Double = 0.98
+  /// Stores `paddleAutoCalibBlend` used by this scope.
   public var paddleAutoCalibBlend: Double = 0.02
+  /// Stores `paddleAutoCalibEnabled` used by this scope.
   public var paddleAutoCalibEnabled: Bool = true
   /// Auto-offset tylko gdy |smoothX| poniżej (unika „walki” ze sterowaniem).
   public var paddleAutoCalibMaxSteer: Double = 0.06
   /// smooth = smooth * retain + input * blend (ruch — szybciej).
   public var paddleSmoothRetain: Double = 0.72
+  /// Stores `paddleSmoothBlend` used by this scope.
   public var paddleSmoothBlend: Double = 0.28
   /// Powrót do środka gdy brak inputu (wolniej = mniej skoków).
   public var paddleSmoothRetainIdle: Double = 0.86
@@ -41,43 +54,71 @@ public struct MotionConfig: Equatable, Sendable {
   public var paddleRawDivisor: Double = 100
   /// Gdy |raw−offset| < deadband → powrót smooth do 0.
   public var paddleRawDeadband: Double = 8
+  /// Stores `paddleReturnDecay` used by this scope.
   public var paddleReturnDecay: Double = 0.88
+  /// Stores `paddleRawDeadbandRelease` used by this scope.
   public var paddleRawDeadbandRelease: Double = 3
   /// Filtr surowego BLE przed deltą (0.35 ≈ tłumi ±1–2 bez dużego lagu).
   public var paddleRawSmoothing: Double = 0.35
+  /// Stores `paddleIntegrateRate` used by this scope.
   public var paddleIntegrateRate: Double = 0
   /// Mnożnik smoothX → offset od środka (UI / gra).
   public var paddleScreenScale: Double = 66
   // Legacy pola zostawione dla zgodności UI DEV (nieużywane w nowym modelu).
+  /// Stores `paddlePositionGain` used by this scope.
   public var paddlePositionGain: Double = 2.5
+  /// Stores `paddlePositionFollow` used by this scope.
   public var paddlePositionFollow: Double = 0.2
+  /// Stores `paddleSpikeThreshold` used by this scope.
   public var paddleSpikeThreshold: Double = 500
+  /// Stores `paddleZeroSnap` used by this scope.
   public var paddleZeroSnap: Double = 0.02
   // Legacy pola zostawione dla zgodności UI DEV (nieużywane w nowym modelu).
+  /// Stores `paddleGyroAssist` used by this scope.
   public var paddleGyroAssist: Double = 0
+  /// Stores `paddleVelocityRetain` used by this scope.
   public var paddleVelocityRetain: Double = 0
+  /// Stores `paddleVelocityBlend` used by this scope.
   public var paddleVelocityBlend: Double = 0
+  /// Stores `paddleDamping` used by this scope.
   public var paddleDamping: Double = 0.98
+  /// Stores `paddleBiasRetain` used by this scope.
   public var paddleBiasRetain: Double = 0.995
+  /// Stores `paddleBiasBlend` used by this scope.
   public var paddleBiasBlend: Double = 0.005
+  /// Stores `paddleSnapThreshold` used by this scope.
   public var paddleSnapThreshold: Double = 0
+  /// Stores `paddleSnapBoost` used by this scope.
   public var paddleSnapBoost: Double = 0
+  /// Stores `paddleIdleVelocityDecay` used by this scope.
   public var paddleIdleVelocityDecay: Double = 0
+  /// Stores `paddleVelocityStop` used by this scope.
   public var paddleVelocityStop: Double = 0
+  /// Stores `paddleBiasLearnMax` used by this scope.
   public var paddleBiasLearnMax: Double = 0
+  /// Stores `paddleMaxVelocity` used by this scope.
   public var paddleMaxVelocity: Double = 0
+  /// Stores `paddleOutputSmoothing` used by this scope.
   public var paddleOutputSmoothing: Double = 0
+  /// Stores `paddleRestHysteresis` used by this scope.
   public var paddleRestHysteresis: Double = 0
+  /// Stores `paddleActiveThreshold` used by this scope.
   public var paddleActiveThreshold: Double = 0
 
   // Core rotation (akumulacja)
+  /// Stores `pointerSensitivity` used by this scope.
   public var pointerSensitivity: Double = 0.03
+  /// Stores `pointerRotDamping` used by this scope.
   public var pointerRotDamping: Double = 0.98
+  /// Stores `pointerOutputSmoothing` used by this scope.
   public var pointerOutputSmoothing: Double = 0.15
 
   // Gesture / shoot
+  /// Stores `gestureThreshold` used by this scope.
   public var gestureThreshold: Double = 0.35
+  /// Stores `gestureCooldown` used by this scope.
   public var gestureCooldown: TimeInterval = 0.4
+  /// Stores `gestureMinRelY` used by this scope.
   public var gestureMinRelY: Double = 0.08
   /// Minimalna zmiana relY na klatkę (po skali 60 fps) przy rzucie do przodu.
   public var gestureMinThrustSpeed: Double = 0.12
@@ -86,8 +127,10 @@ public struct MotionConfig: Equatable, Sendable {
   /// Spadek relY od lokalnego szczytu — uzbraja (niezależnie od znaku osi).
   public var gesturePullbackDelta: Double = 0.07
 
+  /// Tworzy konfigurację z wartościami domyślnymi.
   public init() {}
 
+  /// Domyślna konfiguracja SDK.
   public static let `default` = MotionConfig.preset(for: .paddle)
 
   /// Gotowe parametry dla trybu — bez ręcznego tuningu w UI.
@@ -171,13 +214,20 @@ public struct MotionConfig: Equatable, Sendable {
   }
 }
 
+/// Represents motion output.
 public struct MotionOutput: Equatable, Sendable {
+  /// Wyjściowa pozycja X po filtrach.
   public var x: Double = 0
+  /// Wyjściowa pozycja Y po filtrach.
   public var y: Double = 0
+  /// Flaga wykrytego strzału gestem.
   public var didShoot: Bool = false
+  /// Dodatkowa metryka prędkości osi X.
   public var velocityX: Double = 0
+  /// Informuje, czy paletka jest w spoczynku.
   public var paddleAtRest: Bool = false
 
+  /// Tworzy wynik wyjściowy klatki silnika.
   public init(
     x: Double = 0,
     y: Double = 0,
@@ -193,27 +243,49 @@ public struct MotionOutput: Equatable, Sendable {
   }
 }
 
+/// Represents motion debug.
 public struct MotionDebug: Equatable, Sendable {
+  /// Surowa wartość osi X.
   public var rawX: Double = 0
+  /// Surowa wartość osi Y.
   public var rawY: Double = 0
+  /// Wygładzona wartość osi X.
   public var smoothX: Double = 0
+  /// Wygładzona wartość osi Y.
   public var smoothY: Double = 0
+  /// Delta X względem referencji.
   public var relX: Double = 0
+  /// Delta Y względem referencji.
   public var relY: Double = 0
+  /// Dodatkowa metryka prędkości X.
   public var velocityX: Double = 0
+  /// Pozycja wyjściowa X.
   public var posX: Double = 0
+  /// Pozycja wyjściowa Y.
   public var posY: Double = 0
+  /// Rotacja zintegrowana X.
   public var rotX: Double = 0
+  /// Rotacja zintegrowana Y.
   public var rotY: Double = 0
+  /// Indeks bloku żyroskopu użytego w klatce.
   public var gyroBlockIndex: Int = 0
+  /// Bieżący bias osi X.
   public var biasX: Double = 0
+  /// Odczyt rotacji dla trybu paletki.
   public var paddleRotation: Double = 0
+  /// Odczyt gyro Z dla trybu paletki.
   public var paddleGyroZ: Double = 0
+  /// Sygnał sterujący paletki po filtrach.
   public var paddleSteer: Double = 0
+  /// Sygnał wejściowy paletki przed wygładzeniem.
   public var paddleInput: Double = 0
+  /// Surowa delta względem offsetu paletki.
   public var paddleRawDelta: Double = 0
+  /// Informuje, czy offset paletki jest ustawiony.
   public var paddleOffsetLocked: Bool = false
+  /// Etykieta kierunku paletki dla debug UI.
   public var paddleDirection: String = "ŚRODEK"
 
+  /// Tworzy pustą strukturę danych debugowych.
   public init() {}
 }

@@ -2,21 +2,29 @@ import Foundation
 
 /// Orkiestracja modułów ruchu (pozycja + gest) — API zachowane dla gier i kalibracji.
 @MainActor
+/// Represents motion engine.
 public final class MotionEngine {
   private let processor: MotionProcessor
   private let gesture: GestureDetector
 
+  /// Bieżąca konfiguracja przetwarzania ruchu.
   public var config: MotionConfig {
     get { processor.config }
     set { processor.config = newValue }
   }
 
+  /// Ostatni wynik wyjściowy silnika.
   public private(set) var output = MotionOutput()
+  /// Dane debugowe z ostatniej klatki.
   public private(set) var debug = MotionDebug()
 
+  /// Informuje, czy offset paletki został już ustawiony.
   public var isPaddleOffsetSet: Bool { processor.isPaddleOffsetSet }
+  /// Aktualny surowy offset paletki.
   public var paddleOffsetRaw: Double { processor.paddleOffsetRaw }
+  /// Informuje, czy gest jest uzbrojony do rzutu.
   public var gesturePrimed: Bool { gesture.gesturePrimed }
+  /// Indeks ostatniego użytego bloku żyroskopu.
   public var lastGyroBlockIndex = 0
 
   private var paddleRotation = 0.0
@@ -27,42 +35,51 @@ public final class MotionEngine {
     self.gesture = gesture
   }
 
+  /// Ustawia tryb pracy i resetuje runtime silnika.
   public func setMode(_ mode: MotionMode) {
     guard config.mode != mode else { return }
     config.mode = mode
     resetMotionRuntime()
   }
 
+  /// Ustawia surową próbkę X dla trybu paletki.
   public func setRawX(_ value: Double) {
     processor.setRawX(value)
     debug.rawX = value
   }
 
+  /// Kalibruje neutralne położenie paletki.
   public func calibrateCenter() {
     processor.calibrateCenter()
   }
 
+  /// Czyści offset i wraca do stanu niekalibrowanego.
   public func resetCenter() {
     processor.resetCenter()
   }
 
+  /// Alias zgodności do czyszczenia offsetu paletki.
   public func clearPaddleOffset() {
     resetCenter()
   }
 
+  /// Odwraca znak offsetu paletki.
   public func flipPaddleOffsetSign() {
     processor.flipPaddleOffsetSign()
   }
 
+  /// Resetuje ruch paletki i ponownie centruje.
   public func resetPaddleToCenter() {
     resetPaddleMotion()
     resetCenter()
   }
 
+  /// Resetuje tylko dynamikę paletki.
   public func resetPaddleMotion() {
     processor.resetPaddleMotion()
   }
 
+  /// Resetuje cały stan runtime silnika.
   public func resetState() {
     resetMotionRuntime()
   }
@@ -77,11 +94,13 @@ public final class MotionEngine {
     paddleGyroZ = 0
   }
 
+  /// Resetuje referencję bazową detektora gestu.
   public func resetGestureBaseline() {
     processor.resetGestureBaseline()
     gesture.resetBaseline()
   }
 
+  /// Ustawia źródła używane przez tryb paletki.
   public func setPaddleSources(rotation: Double, gyroZ: Double) {
     paddleRotation = rotation
     paddleGyroZ = gyroZ
@@ -89,6 +108,7 @@ public final class MotionEngine {
     debug.paddleGyroZ = gyroZ
   }
 
+  /// Aktualizuje wejście paletki surową osią Y z BLE.
   public func updatePaddleGyro(yUnscaled: Double, auxiliaryY: Double = 0, gyroBlockIndex: Int = 0) {
     setRawX(yUnscaled)
     debug.rawY = auxiliaryY
@@ -96,6 +116,7 @@ public final class MotionEngine {
     debug.gyroBlockIndex = gyroBlockIndex
   }
 
+  /// Aktualizuje surowe wejście X/Y dla bieżącej klatki.
   public func updateRaw(x: Double, y: Double, gyroBlockIndex: Int = 0) {
     debug.rawX = x
     debug.rawY = y
@@ -104,6 +125,9 @@ public final class MotionEngine {
     processor.updateRaw(x: x, y: y)
   }
 
+  /// Przetwarza jedną klatkę ruchu.
+  ///
+  /// - Parameter deltaTime: Długość kroku symulacji w sekundach.
   public func updateFrame(deltaTime: TimeInterval) {
     let cfg = config
     let dt = min(0.05, max(0, deltaTime))
@@ -140,6 +164,7 @@ public final class MotionEngine {
     refreshDebug()
   }
 
+  /// Stores `lastGestureThrowPower` used by this scope.
   var lastGestureThrowPower: Double { gesture.lastThrowPower }
 
   private func refreshDebug() {

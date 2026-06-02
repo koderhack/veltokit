@@ -1,12 +1,16 @@
+/// Koordynator tworzenia i uruchamiania sesji gry.
+
 import Foundation
 import VeltoKit
 
 /// Przełączanie gier i trybów Motion SDK (presety — bez ręcznego tuningu).
 enum GameManager {
+/// Wykonuje operacje `motionMode`.
   static func motionMode(for gameType: GameType) -> MotionMode {
     gameType.inputProfile.motionMode
   }
 
+/// Wykonuje operacje `applyMode`.
   static func applyMode(_ mode: MotionMode, to motion: MotionInputProvider) {
     let savedAxes = motion.config.axisMapping
     motion.setInputMode(mode)
@@ -19,6 +23,7 @@ enum GameManager {
     motion.config = cfg
   }
 
+/// Wykonuje operacje `applyMotionMode`.
   static func applyMotionMode(gameType: GameType, to motion: MotionInputProvider) {
     let mode = motionMode(for: gameType)
     applyMode(mode, to: motion)

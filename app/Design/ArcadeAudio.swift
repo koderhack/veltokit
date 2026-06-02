@@ -4,12 +4,14 @@ import Foundation
 
 /// Muzyka arcade (generowana) + efekty dart / kalibracji / publiczność.
 @MainActor
+/// Reprezentuje typ `ArcadeAudio`.
 enum ArcadeAudio {
   private static var prepared = false
   private static var musicEngine: AVAudioEngine?
   private static var musicPlayer: AVAudioPlayerNode?
   private static var musicVolume: Float = 0.22
 
+/// Wykonuje operacje `prepare`.
   static func prepare() {
     guard !prepared else { return }
     prepared = true
@@ -20,22 +22,27 @@ enum ArcadeAudio {
 
   // MARK: - Muzyka
 
+/// Wykonuje operacje `startDartLobbyMusic`.
   static func startDartLobbyMusic() {
     startLoop(volume: 0.16, tempo: 96)
   }
 
+/// Wykonuje operacje `startDartGameMusic`.
   static func startDartGameMusic() {
     startLoop(volume: 0.24, tempo: 112)
   }
 
+/// Wykonuje operacje `startBowlingLobbyMusic`.
   static func startBowlingLobbyMusic() {
     startBowlingLoop(volume: 0.17, tempo: 88)
   }
 
+/// Wykonuje operacje `startBowlingGameMusic`.
   static func startBowlingGameMusic() {
     startBowlingLoop(volume: 0.26, tempo: 104)
   }
 
+/// Wykonuje operacje `stopMusic`.
   static func stopMusic() {
     musicPlayer?.stop()
     musicEngine?.stop()
@@ -70,19 +77,23 @@ enum ArcadeAudio {
 
   // MARK: - Efekty
 
+/// Wykonuje operacje `calibrationStep`.
   static func calibrationStep() {
     play(1104)
   }
 
+/// Wykonuje operacje `calibrationDone`.
   static func calibrationDone() {
     play(1025)
     applause(bursts: 2)
   }
 
+/// Wykonuje operacje `dartThrowWhoosh`.
   static func dartThrowWhoosh() {
     playDebounced(1057, minInterval: 0.2)
   }
 
+/// Wykonuje operacje `dartHit`.
   static func dartHit(points: Int) {
     if points >= 25 {
       play(1113)
@@ -94,38 +105,46 @@ enum ArcadeAudio {
     }
   }
 
+/// Wykonuje operacje `dartBust`.
   static func dartBust() {
     play(1053)
   }
 
+/// Wykonuje operacje `dartWin`.
   static func dartWin() {
     play(1025)
     applause(bursts: 4)
   }
 
+/// Wykonuje operacje `turnChange`.
   static func turnChange() {
     play(1016)
     applause(bursts: 1)
   }
 
+/// Wykonuje operacje `bowlingThrow`.
   static func bowlingThrow() {
     playDebounced(1057, minInterval: 0.25)
   }
 
+/// Wykonuje operacje `bowlingHit`.
   static func bowlingHit() {
     playDebounced(1105, minInterval: 0.06)
   }
 
+/// Wykonuje operacje `bowlingStrike`.
   static func bowlingStrike() {
     play(1113)
     applause(bursts: 4)
   }
 
+/// Wykonuje operacje `bowlingSpare`.
   static func bowlingSpare() {
     play(1109)
     applause(bursts: 3)
   }
 
+/// Wykonuje operacje `bowlingCrowdCheer`.
   static func bowlingCrowdCheer(pinsDown: Int) {
     guard pinsDown > 0 else { return }
     if pinsDown >= 8 {
@@ -137,6 +156,7 @@ enum ArcadeAudio {
     }
   }
 
+/// Wykonuje operacje `bowlingWin`.
   static func bowlingWin() {
     play(1025)
     applause(bursts: 5)
@@ -169,6 +189,7 @@ enum ArcadeAudio {
     }
   }
 
+/// Wykonuje operacje `applause`.
   static func applause(bursts: Int = 3) {
     prepare()
     let ids: [SystemSoundID] = [1111, 1112, 1113, 1105, 1109, 1025, 1104]

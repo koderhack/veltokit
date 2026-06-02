@@ -2,12 +2,18 @@ import Foundation
 
 /// Pomocnik do znalezienia bajtu/bitów przycisku — porównuje kolejne pakiety RX.
 @MainActor
+/// Represents blebyte probe.
 public final class BLEByteProbe {
+  /// Zmiana pojedynczego bajtu między kolejnymi pakietami.
   public struct ByteChange: Equatable, Sendable {
+    /// Indeks bajtu w pakiecie.
     public let index: Int
+    /// Poprzednia wartość bajtu.
     public let from: UInt8
+    /// Nowa wartość bajtu.
     public let to: UInt8
 
+    /// Zwraca maskę, jeśli zmienił się dokładnie jeden bit.
     public var singleBitMask: UInt8? {
       let xor = from ^ to
       guard xor != 0, xor & (xor - 1) == 0 else { return nil }
@@ -15,20 +21,31 @@ public final class BLEByteProbe {
     }
   }
 
+  /// Zdarzenie zmiany stanu bajtu.
   public struct EdgeEvent: Identifiable, Sendable {
+    /// Unikalny identyfikator zdarzenia.
     public let id = UUID()
+    /// Indeks bajtu w pakiecie.
     public let index: Int
+    /// Poprzednia wartość bajtu.
     public let from: UInt8
+    /// Nowa wartość bajtu.
     public let to: UInt8
+    /// Czas wykrycia zmiany.
     public let at: Date
   }
 
+  /// Ostatnio zarejestrowany pakiet bajtów.
   private(set) public var lastBytes: [UInt8] = []
   private var lastValuesByIndex: [Int: UInt8] = [:]
 
+  /// Ostatni pakiet w formacie HEX.
   public private(set) var lastPacketHex = "—"
+  /// Lista zmian wykrytych dla ostatniego pakietu.
   public private(set) var lastChanges: [ByteChange] = []
+  /// Ostatnie zdarzenia krawędzi 0→1 i 1→0.
   public private(set) var edgeEvents: [EdgeEvent] = []
+  /// Ostatnie linie logu diagnostycznego.
   public private(set) var recentLines: [String] = []
 
   private let maxLines = 80
@@ -41,8 +58,10 @@ public final class BLEByteProbe {
     ).sorted()
   }
 
+  /// Tworzy nowy analizator zmian pakietów BLE.
   public init() {}
 
+  /// Czyści stan analizatora i historię.
   public func reset() {
     lastBytes = []
     lastValuesByIndex = [:]
@@ -52,7 +71,16 @@ public final class BLEByteProbe {
     recentLines = []
   }
 
+  /// Zasila analizator kolejnym pakietem bajtów.
+  ///
+  /// - Parameter bytes: Pakiet bajtów RX.
+  /// - Returns: Lista wykrytych zmian bajtów względem poprzedniego pakietu.
   @discardableResult
+  /// Handles `ingest`.
+  ///
+  /// - Parameters:
+  ///   - bytes: Input used by this operation.
+  /// - Returns: Result produced by this operation.
   public func ingest(_ bytes: [UInt8]) -> [ByteChange] {
     guard !bytes.isEmpty else { return [] }
 

@@ -3,9 +3,12 @@ import VeltoKit
 
 /// Koordynator gry — logika, input, scena 3D.
 final class BowlingGame: Game {
+  /// Przechowuje wartość `name` wykorzystywaną przez dany komponent.
   let name = "Bowling"
+  /// Przechowuje wartość `inputProfile` wykorzystywaną przez dany komponent.
   let inputProfile: GameInputProfile = .bowling
 
+  /// Opisuje struct `HUD` używany przez warstwę UI i logikę gry.
   struct HUD: Equatable {
     var players: [BowlingGameLogic.Player]
     var currentPlayerIndex: Int
@@ -26,6 +29,7 @@ final class BowlingGame: Game {
     var invertLateral: Bool
   }
 
+  /// Opisuje enum `RoundPhase` używany przez warstwę UI i logikę gry.
   enum RoundPhase: Equatable {
     case aiming
     case rolling
@@ -34,6 +38,7 @@ final class BowlingGame: Game {
   }
 
   private var _scene: BowlingGameScene?
+  /// Przechowuje wartość `scene` wykorzystywaną przez dany komponent.
   var scene: BowlingGameScene {
     if let existing = _scene { return existing }
     let created = BowlingGameScene()
@@ -63,6 +68,7 @@ final class BowlingGame: Game {
   private static let scoreboardSplashDuration: TimeInterval = 2.8
   private static let scoreboardSplashGameOverDuration: TimeInterval = 5.0
 
+  /// Przechowuje wartość `currentHUD` wykorzystywaną przez dany komponent.
   var currentHUD: HUD {
     HUD(
       players: logic.players,
@@ -88,11 +94,13 @@ final class BowlingGame: Game {
     logic.gameOver || roundPhase == .betweenPlayers || scoreboardSplashRemaining > 0
   }
 
+  /// Przechowuje wartość `invertLateral` wykorzystywaną przez dany komponent.
   var invertLateral: Bool {
     get { inputHandler.invertLateral }
     set { inputHandler.invertLateral = newValue }
   }
 
+  /// Wykonuje operację `applyAxisMapping` w bieżącym kontekście gry/UI.
   func applyAxisMapping(from axisMapping: MotionAxisMapping) {
     inputHandler.applyAxisMapping(axisMapping)
   }
@@ -108,10 +116,12 @@ final class BowlingGame: Game {
     return inputHandler.phase.label
   }
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init(playerNames: [String]) {
     logic = BowlingGameLogic(playerNames: playerNames)
   }
 
+  /// Wykonuje operację `confirmTurnStartFromUI` w bieżącym kontekście gry/UI.
   func confirmTurnStartFromUI() {
     guard awaitingTurnStart, roundPhase == .aiming else { return }
     confirmTurnStart()
@@ -124,12 +134,14 @@ final class BowlingGame: Game {
     return true
   }
 
+  /// Wykonuje operację `start` w bieżącym kontekście gry/UI.
   func start(context: GameContext) {
     _ = scene
     resetRound(fullPins: true)
     inputHandler.reset()
   }
 
+  /// Wykonuje operację `update` w bieżącym kontekście gry/UI.
   func update(input: GameInput, deltaTime: TimeInterval) {
     scene.update(deltaTime: deltaTime)
 
@@ -195,6 +207,7 @@ final class BowlingGame: Game {
     }
   }
 
+  /// Wykonuje operację `render` w bieżącym kontekście gry/UI.
   func render(context: GameContext) {}
 
   // MARK: - Private

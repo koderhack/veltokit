@@ -1,8 +1,11 @@
+/// Silnik wykonawczy gry: wejscie, aktualizacja i render.
+
 import Foundation
 import Combine
 import VeltoKit
 
 @MainActor
+/// Reprezentuje typ `GameEngine`.
 final class GameEngine: ObservableObject {
   @Published private(set) var drawCommands: [DrawCommand] = []
   @Published private(set) var hudInput = GameInput()
@@ -26,24 +29,31 @@ final class GameEngine: ObservableObject {
   private static let maxStep: TimeInterval = 1.0 / 60.0
   private static let hudRefreshInterval: TimeInterval = 0.12
 
+/// Inicjalizuje nowa instancje.
   init(game: any Game, inputProvider: any InputProvider) {
     self.game = game
     self.inputProvider = inputProvider
     self.publishesPixelFrame = !(game is QuizGame) && !(game is BowlingGame)
   }
 
+/// Wykonuje operacje `quizConfirmAnswer`.
   func quizConfirmAnswer() {
     (game as? QuizGame)?.confirmAnswer()
   }
 
+/// Przechowuje wartosc `quizGame`.
   var quizGame: QuizGame? { game as? QuizGame }
+/// Przechowuje wartosc `dartGame`.
   var dartGame: DartGame? { game as? DartGame }
+/// Przechowuje wartosc `bowlingGame`.
   var bowlingGame: BowlingGame? { game as? BowlingGame }
 
+/// Wykonuje operacje `calibrateDartPlayZone`.
   func calibrateDartPlayZone(sensors: TrikiSensors) {
     dartGame?.calibratePlayZone(sensors: sensors)
   }
 
+/// Wykonuje operacje `startIfNeeded`.
   func startIfNeeded() {
     guard !started else { return }
     started = true
@@ -54,6 +64,7 @@ final class GameEngine: ObservableObject {
     game.start(context: context)
   }
 
+/// Wykonuje operacje `step`.
   func step(now: TimeInterval) {
     startIfNeeded()
     let deltaTime: TimeInterval

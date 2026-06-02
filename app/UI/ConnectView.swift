@@ -1,10 +1,12 @@
 import SwiftUI
 import VeltoKit
 
+/// Opisuje struct `ConnectView` używany przez warstwę UI i logikę gry.
 struct ConnectView: View {
   @EnvironmentObject private var motion: MotionInputProvider
   @Environment(\.dismiss) private var dismiss
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(spacing: 16) {
       Text("Połączenie kontrolera")

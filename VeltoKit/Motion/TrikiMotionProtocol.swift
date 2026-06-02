@@ -1,17 +1,27 @@
 import Foundation
 
+/// Dekoder ramek protokołu Triki (pełne 14/16 B i mini 2 B).
 enum TrikiMotionProtocol {
+  /// Dwubajtowy nagłówek ramki sensorowej.
   static let header: [UInt8] = [0x22, 0x00]
+  /// Długość ramki sensorowej bez flag i stopki.
   static let sensorFrameLength = 14
+  /// Długość pełnej ramki z flagami i stopką.
   static let fullFrameLength = 16
+  /// Dozwolone znaczniki stopki ramki.
   static let footerMarkers: Set<UInt8> = [0xF7, 0xF8]
 
+  /// Zdekodowana próbka protokołu Triki.
   struct Sample {
+    /// Sensory znormalizowane do zakresu roboczego.
     var sensors: TrikiSensors
+    /// Informuje, czy próbka pochodzi z pełnej ramki.
     var hadFullFrame: Bool
+    /// Flagi impulsów z ramki.
     var flags: UInt8
   }
 
+  /// Dekoduje wszystkie kompletne ramki z bufora i usuwa je z wejścia.
   static func drainFrames(from buffer: inout [UInt8]) -> [Sample] {
     var samples: [Sample] = []
     var cursor = 0
@@ -137,18 +147,22 @@ enum TrikiMotionProtocol {
     return Int16(bitPattern: lo | (hi << 8))
   }
 
+  /// Normalizuje tilt do zakresu `[-1, 1]`.
   static func normalizeTilt(_ v: Int16) -> Double {
     clamp(Double(v) / 80.0)
   }
 
+  /// Normalizuje gyro do zakresu `[-1, 1]`.
   static func normalizeGyro(_ v: Int16) -> Double {
     clamp(Double(v) / 64.0)
   }
 
+  /// Normalizuje rotację do zakresu `[-1, 1]`.
   static func normalizeRotation(_ v: Int16) -> Double {
     clamp(Double(v) / 48.0)
   }
 
+  /// Normalizuje prędkość (wartość bezwzględna) do zakresu `[0, 1]`.
   static func normalizeSpeed(_ v: Int16) -> Double {
     clamp(abs(Double(v)) / 96.0)
   }

@@ -1,16 +1,19 @@
 import SwiftUI
 import VeltoKit
 
+/// Opisuje enum `GameType` używany przez warstwę UI i logikę gry.
 enum GameType: String, CaseIterable, Identifiable {
   case pong = "Pong"
   case dart = "Dart"
   case quiz = "Quiz"
   case bowling = "Bowling"
 
+  /// Przechowuje wartość `id` wykorzystywaną przez dany komponent.
   var id: String { rawValue }
 
   static let platformGames: [GameType] = [.pong, .dart, .quiz, .bowling]
 
+  /// Przechowuje wartość `inputProfile` wykorzystywaną przez dany komponent.
   var inputProfile: GameInputProfile {
     switch self {
     case .pong: return .pong
@@ -20,8 +23,10 @@ enum GameType: String, CaseIterable, Identifiable {
     }
   }
 
+  /// Przechowuje wartość `usesQuizLoader` wykorzystywaną przez dany komponent.
   var usesQuizLoader: Bool { self == .quiz }
 
+  /// Wykonuje operację `makeGame` w bieżącym kontekście gry/UI.
   func makeGame() -> any Game {
     switch self {
     case .pong: return PongGame()
@@ -41,10 +46,13 @@ enum GameType: String, CaseIterable, Identifiable {
   }
 }
 
+/// Opisuje struct `GameView` używany przez warstwę UI i logikę gry.
 struct GameView: View {
   @Environment(\.dismiss) private var dismiss
   @EnvironmentObject private var trikiUI: TrikiUINavigator
+  /// Przechowuje wartość `gameType` wykorzystywaną przez dany komponent.
   let gameType: GameType
+  /// Przechowuje wartość `inputProvider` wykorzystywaną przez dany komponent.
   let inputProvider: MotionInputProvider
   @ObservedObject var tuning: GameTuning
   @StateObject private var engine: GameEngine
@@ -52,6 +60,7 @@ struct GameView: View {
   @State private var showHUD = false
   @State private var uiTick = 0
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init(gameType: GameType, inputProvider: MotionInputProvider, tuning: GameTuning) {
     self.gameType = gameType
     self.inputProvider = inputProvider
@@ -64,6 +73,7 @@ struct GameView: View {
     )
   }
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     GameScreenLayout(
       commands: engine.drawCommands,

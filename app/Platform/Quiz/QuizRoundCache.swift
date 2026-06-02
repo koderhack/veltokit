@@ -7,6 +7,7 @@ enum QuizRoundCache {
     return base.appendingPathComponent("quiz_round_\(categoryID).json")
   }
 
+/// Wykonuje operacje `load`.
   static func load(categoryID: Int) -> [Question]? {
     let url = fileURL(categoryID: categoryID)
     guard let data = try? Data(contentsOf: url),
@@ -15,6 +16,7 @@ enum QuizRoundCache {
     return questions
   }
 
+/// Wykonuje operacje `save`.
   static func save(_ questions: [Question], categoryID: Int) throws {
     let url = fileURL(categoryID: categoryID)
     let dir = url.deletingLastPathComponent()

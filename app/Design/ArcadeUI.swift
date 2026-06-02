@@ -2,6 +2,7 @@ import SwiftUI
 
 /// Wspólne elementy UI (neon / pixel arcade).
 enum ArcadeUI {
+/// Przechowuje wartosc `screenBackground`.
   static var screenBackground: some View {
     LinearGradient(
       colors: [
@@ -15,6 +16,7 @@ enum ArcadeUI {
     .ignoresSafeArea()
   }
 
+/// Wykonuje operacje `sectionLabel`.
   static func sectionLabel(_ text: String) -> some View {
     Text(text)
       .font(.system(size: 10, weight: .heavy, design: .monospaced))
@@ -22,6 +24,7 @@ enum ArcadeUI {
       .frame(maxWidth: .infinity, alignment: .leading)
   }
 
+/// Wykonuje operacje `panel`.
   static func panel<Content: View>(@ViewBuilder content: () -> Content) -> some View {
     content()
       .padding(14)
@@ -39,6 +42,7 @@ enum ArcadeUI {
       )
   }
 
+/// Wykonuje operacje `primaryButton`.
   static func primaryButton(
     _ title: String,
     color: Color = NeonTheme.neonGreen,
@@ -64,6 +68,7 @@ enum ArcadeUI {
     .neonGlow(color, radius: 8)
   }
 
+/// Wykonuje operacje `secondaryButton`.
   static func secondaryButton(
     _ title: String,
     tint: Color = NeonTheme.neonCyan,
@@ -81,6 +86,7 @@ enum ArcadeUI {
     .buttonStyle(.plain)
   }
 
+/// Wykonuje operacje `gameCard`.
   static func gameCard(
     title: String,
     subtitle: String,
@@ -122,6 +128,7 @@ enum ArcadeUI {
     .contentShape(Rectangle())
   }
 
+/// Wykonuje operacje `neonProgressBar`.
   static func neonProgressBar(progress: Double, accent: Color = NeonTheme.neonCyan) -> some View {
     GeometryReader { geo in
       ZStack(alignment: .leading) {
@@ -143,6 +150,7 @@ enum ArcadeUI {
     .overlay(Rectangle().stroke(Color.white.opacity(0.2), lineWidth: 1))
   }
 
+/// Wykonuje operacje `hudBar`.
   static func hudBar(title: String, onExit: @escaping () -> Void, linkActive: Bool) -> some View {
     HStack(spacing: 10) {
       Button(action: onExit) {
@@ -182,15 +190,22 @@ enum ArcadeUI {
 
 /// Pełnoekranowy canvas + nakładka UI poniżej wycięcia / Dynamic Island.
 struct GameScreenLayout<Overlay: View>: View {
+/// Przechowuje wartosc `commands`.
   let commands: [DrawCommand]
+/// Przechowuje wartosc `canvasDisplayMode`.
   var canvasDisplayMode: PixelCanvasDisplayMode = .portraitPhone
+/// Przechowuje wartosc `horizontalPadding`.
   var horizontalPadding: CGFloat = 10
+/// Przechowuje wartosc `topExtraPadding`.
   var topExtraPadding: CGFloat = 4
+/// Przechowuje wartosc `bottomExtraPadding`.
   var bottomExtraPadding: CGFloat = 10
   @ViewBuilder let overlay: () -> Overlay
 
+/// Przechowuje wartosc `body`.
   var body: some View {
     GeometryReader { geo in
+/// Przechowuje wartosc `insets`.
       let insets = geo.safeAreaInsets
       ZStack {
         Color.black

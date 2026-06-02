@@ -48,6 +48,7 @@ motion.config = MotionConfig.preset(for: .paddle)  // optional tuning
 
 - [MotionSDK](./motion-sdk) — API
 - [GameInput](./game-input) — fields
+- [Triki UI navigation](./triki-ui) — `.trikiUIScreen`, focus, hold, activation lifecycle
 - [BLE](./ble-integration) — packets
 - [Examples](../examples/pong) — copy-paste per game
 

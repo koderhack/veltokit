@@ -1,0 +1,60 @@
+---
+title: Skill for Cursor
+description: Practical Cursor playbook for working with VeltoKit and Triki UI
+---
+
+# Skill for Cursor
+
+Use this as a compact operating guide when developing in Cursor on this repository.
+
+## What to open first
+
+1. `VeltoKit/MotionSDK.swift`
+2. `VeltoKit/GameInput.swift`
+3. `app/Platform/TrikiInputAdapter.swift`
+4. `app/UI/TrikiUI/TrikiUIComponents.swift`
+5. Relevant page in [SDK docs](./sdk/overview)
+
+## Default implementation loop
+
+1. Confirm scope (SDK core vs app integration vs docs website).
+2. Read current implementation before proposing changes.
+3. Apply minimal edits with stable API names.
+4. Update `///` docs for touched Swift public/internal APIs.
+5. Sync website docs for behavior changes.
+6. Run lint/tests for changed area.
+
+## Cursor-first prompt templates
+
+### 1) Implement minimal fix
+
+```text
+Implement a minimal, behavior-preserving fix in the touched files.
+Do not rename symbols unless required.
+Explain root cause and verify with focused checks.
+```
+
+### 2) Document API changes
+
+```text
+Add or update Swift /// comments for all touched public/internal APIs.
+Include purpose, parameters, return value, side effects, and short example where helpful.
+Do not change runtime logic.
+```
+
+### 3) Triki UI debug pass
+
+```text
+Trace trikiUIScreen lifecycle from activation to focus and onActivate callback.
+Check MotionInputProvider liveInput -> focused slot mapping -> hold/button confirmation.
+Propose smallest safe patch.
+```
+
+## Guardrails
+
+- Keep gameplay behavior deterministic.
+- Prefer additive changes over rewrites.
+- Keep docs actionable and example-driven.
+- If uncertain, infer from usage and existing architecture.
+
+[For Cursor Claude hub](./for-cursor-claude) · [Skill for Claude](./for-claude)

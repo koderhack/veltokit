@@ -2,6 +2,7 @@ import Combine
 import SwiftUI
 import UIKit
 
+/// Opisuje enum `ArcadeTVSettings` używany przez warstwę UI i logikę gry.
 enum ArcadeTVSettings {
   static let dartBoardOnTVKey = "dartBoardOnTV"
   static let bowlingOnTVKey = "bowlingOnTV"
@@ -24,82 +25,147 @@ enum ArcadeTVSettings {
   }
 }
 
+/// Opisuje struct `DartCalibrationTVPayload` używany przez warstwę UI i logikę gry.
 struct DartCalibrationTVPayload: Equatable {
+  /// Przechowuje wartość `isActive` wykorzystywaną przez dany komponent.
   var isActive = false
+  /// Przechowuje wartość `step` wykorzystywaną przez dany komponent.
   var step: DartCalibrationStep = .neutral
+  /// Przechowuje wartość `progress` wykorzystywaną przez dany komponent.
   var progress: Double = 0
+  /// Przechowuje wartość `playerName` wykorzystywaną przez dany komponent.
   var playerName = ""
+  /// Przechowuje wartość `playerIndex` wykorzystywaną przez dany komponent.
   var playerIndex = 0
+  /// Przechowuje wartość `playerCount` wykorzystywaną przez dany komponent.
   var playerCount = 1
+  /// Przechowuje wartość `focusIndex` wykorzystywaną przez dany komponent.
   var focusIndex: Int?
+  /// Przechowuje wartość `holdProgress` wykorzystywaną przez dany komponent.
   var holdProgress: Double = 0
+  /// Przechowuje wartość `showPlayMenu` wykorzystywaną przez dany komponent.
   var showPlayMenu = false
+  /// Przechowuje wartość `menuChoices` wykorzystywaną przez dany komponent.
   var menuChoices: [TVMenuChoice] = []
 }
 
+/// Opisuje struct `DartTVPayload` używany przez warstwę UI i logikę gry.
 struct DartTVPayload: Equatable {
+  /// Przechowuje wartość `isDartActive` wykorzystywaną przez dany komponent.
   var isDartActive = false
+  /// Przechowuje wartość `drawCommands` wykorzystywaną przez dany komponent.
   var drawCommands: [DrawCommand] = []
+  /// Przechowuje wartość `score` wykorzystywaną przez dany komponent.
   var score = 0
+  /// Przechowuje wartość `playerCount` wykorzystywaną przez dany komponent.
   var playerCount = 1
+  /// Przechowuje wartość `playerScores` wykorzystywaną przez dany komponent.
   var playerScores: [Int] = [501]
+  /// Przechowuje wartość `playerNames` wykorzystywaną przez dany komponent.
   var playerNames: [String] = ["Gracz 1"]
+  /// Przechowuje wartość `player1Score` wykorzystywaną przez dany komponent.
   var player1Score = 0
+  /// Przechowuje wartość `player2Score` wykorzystywaną przez dany komponent.
   var player2Score = 0
+  /// Przechowuje wartość `player1Name` wykorzystywaną przez dany komponent.
   var player1Name = "Gracz 1"
+  /// Przechowuje wartość `player2Name` wykorzystywaną przez dany komponent.
   var player2Name = "Gracz 2"
+  /// Przechowuje wartość `activePlayerIndex` wykorzystywaną przez dany komponent.
   var activePlayerIndex = 0
+  /// Przechowuje wartość `activePlayerName` wykorzystywaną przez dany komponent.
   var activePlayerName = ""
+  /// Przechowuje wartość `mode` wykorzystywaną przez dany komponent.
   var mode: DartPlayMode = .solo
+  /// Przechowuje wartość `dartsLeftInTurn` wykorzystywaną przez dany komponent.
   var dartsLeftInTurn = 3
+  /// Przechowuje wartość `gameOver` wykorzystywaną przez dany komponent.
   var gameOver = false
+  /// Przechowuje wartość `winnerName` wykorzystywaną przez dany komponent.
   var winnerName: String?
+  /// Przechowuje wartość `lastHitLabel` wykorzystywaną przez dany komponent.
   var lastHitLabel = ""
+  /// Przechowuje wartość `feedbackLabel` wykorzystywaną przez dany komponent.
   var feedbackLabel: String?
+  /// Przechowuje wartość `turnAnnouncement` wykorzystywaną przez dany komponent.
   var turnAnnouncement: String?
+  /// Przechowuje wartość `aimGridX` wykorzystywaną przez dany komponent.
   var aimGridX = DartBoardLayout.centerX
+  /// Przechowuje wartość `aimGridY` wykorzystywaną przez dany komponent.
   var aimGridY = DartBoardLayout.centerY
+  /// Przechowuje wartość `throwPrimed` wykorzystywaną przez dany komponent.
   var throwPrimed = false
+  /// Przechowuje wartość `flightActive` wykorzystywaną przez dany komponent.
   var flightActive = false
+  /// Przechowuje wartość `flightGridX` wykorzystywaną przez dany komponent.
   var flightGridX = DartBoardLayout.centerX
+  /// Przechowuje wartość `flightGridY` wykorzystywaną przez dany komponent.
   var flightGridY = DartBoardLayout.centerY
+  /// Przechowuje wartość `flightProgress` wykorzystywaną przez dany komponent.
   var flightProgress = 0.0
+  /// Przechowuje wartość `boardMarkers` wykorzystywaną przez dany komponent.
   var boardMarkers: [DartBoardMarker] = []
+  /// Przechowuje wartość `startCountdown` wykorzystywaną przez dany komponent.
   var startCountdown: Int?
+  /// Przechowuje wartość `awaitingTurnStart` wykorzystywaną przez dany komponent.
   var awaitingTurnStart = false
 }
 
+/// Opisuje struct `QuizTVPayload` używany przez warstwę UI i logikę gry.
 struct QuizTVPayload: Equatable {
+  /// Przechowuje wartość `isQuizActive` wykorzystywaną przez dany komponent.
   var isQuizActive = false
+  /// Przechowuje wartość `questionText` wykorzystywaną przez dany komponent.
   var questionText = ""
+  /// Przechowuje wartość `answers` wykorzystywaną przez dany komponent.
   var answers: [String] = []
+  /// Przechowuje wartość `questionIndex` wykorzystywaną przez dany komponent.
   var questionIndex = 0
+  /// Przechowuje wartość `questionTotal` wykorzystywaną przez dany komponent.
   var questionTotal = 0
+  /// Przechowuje wartość `roundLabel` wykorzystywaną przez dany komponent.
   var roundLabel = ""
+  /// Przechowuje wartość `activePlayerName` wykorzystywaną przez dany komponent.
   var activePlayerName = ""
+  /// Przechowuje wartość `player1Score` wykorzystywaną przez dany komponent.
   var player1Score = 0
+  /// Przechowuje wartość `player2Score` wykorzystywaną przez dany komponent.
   var player2Score = 0
+  /// Przechowuje wartość `mode` wykorzystywaną przez dany komponent.
   var mode: QuizPlayMode = .solo
+  /// Przechowuje wartość `feedbackLabel` wykorzystywaną przez dany komponent.
   var feedbackLabel: String?
+  /// Przechowuje wartość `selectedIndex` wykorzystywaną przez dany komponent.
   var selectedIndex: Int?
+  /// Przechowuje wartość `holdAnswerIndex` wykorzystywaną przez dany komponent.
   var holdAnswerIndex: Int?
+  /// Przechowuje wartość `holdProgress` wykorzystywaną przez dany komponent.
   var holdProgress: Double = 0
+  /// Przechowuje wartość `isFinished` wykorzystywaną przez dany komponent.
   var isFinished = false
 }
 
+/// Opisuje struct `BowlingTVLobbyPayload` używany przez warstwę UI i logikę gry.
 struct BowlingTVLobbyPayload: Equatable {
+  /// Przechowuje wartość `isActive` wykorzystywaną przez dany komponent.
   var isActive = false
+  /// Przechowuje wartość `modeTitle` wykorzystywaną przez dany komponent.
   var modeTitle = ""
+  /// Przechowuje wartość `playerNames` wykorzystywaną przez dany komponent.
   var playerNames: [String] = []
 }
 
+/// Opisuje struct `BowlingTVPayload` używany przez warstwę UI i logikę gry.
 struct BowlingTVPayload: Equatable {
+  /// Przechowuje wartość `isBowlingActive` wykorzystywaną przez dany komponent.
   var isBowlingActive = false
+  /// Przechowuje wartość `hud` wykorzystywaną przez dany komponent.
   var hud: BowlingGame.HUD?
 }
 
 /// Drugi ekran (AirPlay / HDMI): pytanie na TV, sterowanie na telefonie.
 @MainActor
+/// Opisuje class `QuizExternalDisplay` używany przez warstwę UI i logikę gry.
 final class QuizExternalDisplay: ObservableObject {
   @Published private(set) var payload = QuizTVPayload()
   @Published private(set) var dartPayload = DartTVPayload()
@@ -114,6 +180,7 @@ final class QuizExternalDisplay: ObservableObject {
   private var externalWindow: UIWindow?
   private var screenObservers: [NSObjectProtocol] = []
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init() {
     let center = NotificationCenter.default
     screenObservers.append(
@@ -137,6 +204,7 @@ final class QuizExternalDisplay: ObservableObject {
     screenObservers.forEach { NotificationCenter.default.removeObserver($0) }
   }
 
+  /// Wykonuje operację `setQuizActive` w bieżącym kontekście gry/UI.
   func setQuizActive(_ active: Bool) {
     payload.isQuizActive = active
     if !active {
@@ -155,6 +223,7 @@ final class QuizExternalDisplay: ObservableObject {
     bowlingScene = nil
   }
 
+  /// Wykonuje operację `setBowlingLobbyActive` w bieżącym kontekście gry/UI.
   func setBowlingLobbyActive(_ active: Bool) {
     bowlingLobbyPayload.isActive = active
     if !active {
@@ -170,12 +239,14 @@ final class QuizExternalDisplay: ObservableObject {
     }
   }
 
+  /// Wykonuje operację `updateBowlingLobby` w bieżącym kontekście gry/UI.
   func updateBowlingLobby(modeTitle: String, playerNames: [String]) {
     guard bowlingLobbyPayload.isActive else { return }
     bowlingLobbyPayload.modeTitle = modeTitle
     bowlingLobbyPayload.playerNames = playerNames
   }
 
+  /// Wykonuje operację `setBowlingActive` w bieżącym kontekście gry/UI.
   func setBowlingActive(_ active: Bool) {
     bowlingPayload.isBowlingActive = active
     if !active {
@@ -191,6 +262,7 @@ final class QuizExternalDisplay: ObservableObject {
     }
   }
 
+  /// Wykonuje operację `updateBowling` w bieżącym kontekście gry/UI.
   func updateBowling(hud: BowlingGame.HUD?, scene: BowlingGameScene?) {
     guard bowlingPayload.isBowlingActive else { return }
     bowlingPayload = BowlingTVPayload(isBowlingActive: true, hud: hud)
@@ -199,6 +271,7 @@ final class QuizExternalDisplay: ObservableObject {
     }
   }
 
+  /// Wykonuje operację `setDartActive` w bieżącym kontekście gry/UI.
   func setDartActive(_ active: Bool) {
     dartPayload.isDartActive = active
     if !active {
@@ -212,6 +285,7 @@ final class QuizExternalDisplay: ObservableObject {
     }
   }
 
+  /// Wykonuje operację `setDartLobbyActive` w bieżącym kontekście gry/UI.
   func setDartLobbyActive(_ active: Bool) {
     dartLobbyPayload.isActive = active
     if !active {
@@ -225,11 +299,13 @@ final class QuizExternalDisplay: ObservableObject {
     }
   }
 
+  /// Wykonuje operację `updateDartLobby` w bieżącym kontekście gry/UI.
   func updateDartLobby(_ state: DartTVLobbyPayload) {
     guard dartLobbyPayload.isActive else { return }
     dartLobbyPayload = state
   }
 
+  /// Wykonuje operację `setDartCalibrationActive` w bieżącym kontekście gry/UI.
   func setDartCalibrationActive(_ active: Bool) {
     dartCalibrationPayload.isActive = active
     if !active {
@@ -243,6 +319,7 @@ final class QuizExternalDisplay: ObservableObject {
     }
   }
 
+  /// Wykonuje operację `updateDartCalibration` w bieżącym kontekście gry/UI.
   func updateDartCalibration(
     step: DartCalibrationStep,
     progress: Double,
@@ -266,6 +343,7 @@ final class QuizExternalDisplay: ObservableObject {
     dartCalibrationPayload.menuChoices = menuChoices
   }
 
+  /// Wykonuje operację `updateDart` w bieżącym kontekście gry/UI.
   func updateDart(commands: [DrawCommand], hud: DartGame.HUD?) {
     guard dartPayload.isDartActive else { return }
     dartPayload.drawCommands = commands
@@ -298,6 +376,7 @@ final class QuizExternalDisplay: ObservableObject {
     dartPayload.awaitingTurnStart = hud?.awaitingTurnStart ?? false
   }
 
+  /// Wykonuje operację `update` w bieżącym kontekście gry/UI.
   func update(hud: QuizGame.HUD?, session: QuizSession) {
     guard payload.isQuizActive, let hud else { return }
     payload = QuizTVPayload(
@@ -368,9 +447,11 @@ final class QuizExternalDisplay: ObservableObject {
 
 // MARK: - Korzeń TV (quiz / dart)
 
+/// Opisuje struct `ArcadeTVRootView` używany przez warstwę UI i logikę gry.
 struct ArcadeTVRootView: View {
   @EnvironmentObject private var display: QuizExternalDisplay
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     if display.dartLobbyPayload.isActive {
       DartTVLobbyView()
@@ -390,15 +471,24 @@ struct ArcadeTVRootView: View {
 
 // MARK: - Wiersz odpowiedzi TV (quiz + dart)
 
+/// Opisuje struct `TVQuizAnswerRow` używany przez warstwę UI i logikę gry.
 struct TVQuizAnswerRow: View {
+  /// Przechowuje wartość `letter` wykorzystywaną przez dany komponent.
   let letter: String
+  /// Przechowuje wartość `text` wykorzystywaną przez dany komponent.
   let text: String
+  /// Przechowuje wartość `accent` wykorzystywaną przez dany komponent.
   let accent: Color
+  /// Przechowuje wartość `isSelected` wykorzystywaną przez dany komponent.
   let isSelected: Bool
+  /// Przechowuje wartość `isHolding` wykorzystywaną przez dany komponent.
   let isHolding: Bool
+  /// Przechowuje wartość `holdProgress` wykorzystywaną przez dany komponent.
   let holdProgress: Double
+  /// Przechowuje wartość `type` wykorzystywaną przez dany komponent.
   let type: TVTypography
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     HStack(spacing: type.contentPadding * 0.65) {
       ZStack {
@@ -458,7 +548,9 @@ struct TVQuizAnswerRow: View {
   }
 }
 
+/// Opisuje struct `TVQuizBackdrop` używany przez warstwę UI i logikę gry.
 struct TVQuizBackdrop: View {
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     ZStack {
       LinearGradient(
@@ -487,10 +579,13 @@ struct TVQuizBackdrop: View {
   }
 }
 
+/// Opisuje struct `TVQuizShowFrame` używany przez warstwę UI i logikę gry.
 struct TVQuizShowFrame<Content: View>: View {
+  /// Przechowuje wartość `type` wykorzystywaną przez dany komponent.
   let type: TVTypography
   @ViewBuilder let content: () -> Content
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     content()
       .padding(.horizontal, type.contentPadding)
@@ -517,9 +612,11 @@ struct TVQuizShowFrame<Content: View>: View {
 
 // MARK: - Widok TV — lobby Dart (menu jak quiz)
 
+/// Opisuje struct `DartTVLobbyView` używany przez warstwę UI i logikę gry.
 struct DartTVLobbyView: View {
   @EnvironmentObject private var display: QuizExternalDisplay
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     let payload = display.dartLobbyPayload
     GeometryReader { geo in
@@ -648,9 +745,11 @@ struct DartTVLobbyView: View {
 
 // MARK: - Widok TV — kalibracja Dart
 
+/// Opisuje struct `DartCalibrationTVView` używany przez warstwę UI i logikę gry.
 struct DartCalibrationTVView: View {
   @EnvironmentObject private var display: QuizExternalDisplay
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     let payload = display.dartCalibrationPayload
     GeometryReader { geo in
@@ -771,9 +870,11 @@ struct DartCalibrationTVView: View {
 
 // MARK: - Widok TV — Dart
 
+/// Opisuje struct `DartTVView` używany przez warstwę UI i logikę gry.
 struct DartTVView: View {
   @EnvironmentObject private var display: QuizExternalDisplay
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     GeometryReader { geo in
       ZStack {
@@ -949,33 +1050,55 @@ struct DartTVView: View {
 
 // MARK: - Widok TV (teleturniej)
 
+/// Opisuje struct `TVTypography` używany przez warstwę UI i logikę gry.
 struct TVTypography {
+  /// Przechowuje wartość `scale` wykorzystywaną przez dany komponent.
   let scale: CGFloat
+  /// Przechowuje wartość `screenSize` wykorzystywaną przez dany komponent.
   let screenSize: CGSize
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init(size: CGSize) {
     screenSize = size
     let ref = min(size.width / 960, size.height / 540)
     scale = max(1.2, min(2.2, ref))
   }
 
+  /// Przechowuje wartość `title` wykorzystywaną przez dany komponent.
   var title: CGFloat { 88 * scale }
+  /// Przechowuje wartość `subtitle` wykorzystywaną przez dany komponent.
   var subtitle: CGFloat { 40 * scale }
+  /// Przechowuje wartość `footnote` wykorzystywaną przez dany komponent.
   var footnote: CGFloat { 28 * scale }
+  /// Przechowuje wartość `questionBase` wykorzystywaną przez dany komponent.
   var questionBase: CGFloat { 42 * scale }
+  /// Przechowuje wartość `answer` wykorzystywaną przez dany komponent.
   var answer: CGFloat { 34 * scale }
+  /// Przechowuje wartość `answerLetter` wykorzystywaną przez dany komponent.
   var answerLetter: CGFloat { 40 * scale }
+  /// Przechowuje wartość `answerBadge` wykorzystywaną przez dany komponent.
   var answerBadge: CGFloat { 80 * scale }
+  /// Przechowuje wartość `headerMeta` wykorzystywaną przez dany komponent.
   var headerMeta: CGFloat { 24 * scale }
+  /// Przechowuje wartość `headerPlayer` wykorzystywaną przez dany komponent.
   var headerPlayer: CGFloat { 30 * scale }
+  /// Przechowuje wartość `headerQuestion` wykorzystywaną przez dany komponent.
   var headerQuestion: CGFloat { 42 * scale }
+  /// Przechowuje wartość `headerQuestionLabel` wykorzystywaną przez dany komponent.
   var headerQuestionLabel: CGFloat { 18 * scale }
+  /// Przechowuje wartość `score` wykorzystywaną przez dany komponent.
   var score: CGFloat { 46 * scale }
+  /// Przechowuje wartość `feedback` wykorzystywaną przez dany komponent.
   var feedback: CGFloat { 72 * scale }
+  /// Przechowuje wartość `finishedTitle` wykorzystywaną przez dany komponent.
   var finishedTitle: CGFloat { 68 * scale }
+  /// Przechowuje wartość `footer` wykorzystywaną przez dany komponent.
   var footer: CGFloat { 20 * scale }
+  /// Przechowuje wartość `icon` wykorzystywaną przez dany komponent.
   var icon: CGFloat { 32 * scale }
+  /// Przechowuje wartość `contentPadding` wykorzystywaną przez dany komponent.
   var contentPadding: CGFloat { 28 * scale }
+  /// Przechowuje wartość `answerSpacing` wykorzystywaną przez dany komponent.
   var answerSpacing: CGFloat { 18 * scale }
 
   /// Maks. wysokość bloku pytania — zostawia miejsce na odpowiedzi.
@@ -999,6 +1122,7 @@ struct TVTypography {
   }
 }
 
+/// Opisuje struct `QuizTVView` używany przez warstwę UI i logikę gry.
 struct QuizTVView: View {
   @EnvironmentObject private var display: QuizExternalDisplay
 
@@ -1010,6 +1134,7 @@ struct QuizTVView: View {
     NeonTheme.neonMagenta,
   ]
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     GeometryReader { geo in
       let type = TVTypography(size: geo.size)

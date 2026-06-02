@@ -1,6 +1,7 @@
 import SwiftUI
 import VeltoKit
 
+/// Opisuje struct `BowlingGameView` używany przez warstwę UI i logikę gry.
 struct BowlingGameView: View {
   @Environment(\.dismiss) private var dismiss
   @EnvironmentObject private var trikiUI: TrikiUINavigator
@@ -17,6 +18,7 @@ struct BowlingGameView: View {
   @State private var uiTick = 0
   @State private var sceneReady = false
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init(session: BowlingSession, inputProvider: MotionInputProvider, tuning: GameTuning) {
     self.session = session
     self.inputProvider = inputProvider
@@ -36,6 +38,7 @@ struct BowlingGameView: View {
     )
   }
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     GeometryReader { geo in
       let insets = geo.safeAreaInsets
@@ -228,10 +231,14 @@ struct BowlingGameView: View {
 
 /// Kompaktowy HUD na telefonie, gdy tor jest na TV.
 struct BowlingPhonePilotHUD: View {
+  /// Przechowuje wartość `hud` wykorzystywaną przez dany komponent.
   let hud: BowlingGame.HUD
+  /// Przechowuje wartość `session` wykorzystywaną przez dany komponent.
   let session: BowlingSession
+  /// Przechowuje wartość `onConfirmTurnStart` wykorzystywaną przez dany komponent.
   var onConfirmTurnStart: () -> Void = {}
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     ZStack {
       VStack(spacing: 0) {

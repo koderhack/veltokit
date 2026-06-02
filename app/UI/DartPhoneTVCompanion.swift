@@ -4,8 +4,11 @@ import VeltoKit
 /// Minimalny pilot na telefonie — menu i gra na TV.
 struct DartPhoneTVCompanion: View {
   @ObservedObject var inputProvider: MotionInputProvider
+  /// Przechowuje wartość `tvConnected` wykorzystywaną przez dany komponent.
   var tvConnected: Bool = false
+  /// Przechowuje wartość `title` wykorzystywaną przez dany komponent.
   let title: String
+  /// Przechowuje wartość `subtitle` wykorzystywaną przez dany komponent.
   let subtitle: String
 
   private var trikiControlHint: String {
@@ -14,6 +17,7 @@ struct DartPhoneTVCompanion: View {
       : "Obrót Triki = wybór · hold lub przycisk = OK"
   }
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(spacing: 16) {
       Image(systemName: "tv.fill")

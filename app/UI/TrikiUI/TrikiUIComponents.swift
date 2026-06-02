@@ -1,18 +1,33 @@
 import SwiftUI
 import VeltoKit
 
+/// Shared Triki UI building blocks for screen wiring, HUD, and focus rows.
+///
+/// Use these components to enable consistent Triki interaction patterns on SwiftUI screens
+/// that expose menu-like focus and activation behavior.
+
+/// Triki UI surface helpers: screen modifier, HUD overlay and focus-aware row components.
+///
+/// Use these views/modifiers to add consistent Triki navigation behavior and affordances
+/// across menu-like SwiftUI screens.
+
 // MARK: - Ekran z nawigacją Triki
 
+/// Applies Triki navigation loop and optional phone HUD to a screen.
 struct TrikiUIScreenModifier: ViewModifier {
   @EnvironmentObject private var motion: MotionInputProvider
   @EnvironmentObject private var trikiUI: TrikiUINavigator
 
+  /// Number of focusable items exposed by the screen.
   let itemCount: Int
+  /// Enables or disables Triki handling for the current screen lifecycle.
   let isActive: Bool
-  /// Gdy `false` (np. menu na TV), Triki nadal działa w tle, ale bez HUD na telefonie.
+  /// Controls whether phone-side HUD is rendered while Triki navigation is active.
   let showsPhoneHUD: Bool
+  /// Called when user confirms currently focused item.
   let onActivate: (Int) -> Void
 
+  /// Wraps content with Triki update loop, safe-area HUD and activation lifecycle hooks.
   func body(content: Content) -> some View {
     let hudVisible = isActive && showsPhoneHUD && trikiUI.isConfigured && !trikiUI.isSuspended
     content
@@ -43,6 +58,7 @@ struct TrikiUIScreenModifier: ViewModifier {
       }
   }
 
+  /// Re-initializes Triki navigation for the current screen context.
   private func activateScreen() {
     GameManager.applyUIMode(to: motion)
     trikiUI.isSuspended = false
@@ -51,7 +67,22 @@ struct TrikiUIScreenModifier: ViewModifier {
   }
 }
 
+/// Opisuje extension `View` używany przez warstwę UI i logikę gry.
 extension View {
+  /// Triki screen modifier convenience entry points.
+  ///
+  /// Use these APIs on root containers of focusable screens to keep activation logic centralized.
+  /// Attaches Triki screen behavior to any SwiftUI view.
+  ///
+  /// - Parameters:
+  ///   - itemCount: Number of focusable items available on the screen.
+  ///   - isActive: Whether Triki updates should run for this screen.
+  ///   - showsPhoneHUD: Whether to render the bottom HUD on phone.
+  ///   - onActivate: Action called on item confirmation.
+  /// - Returns: A view decorated with Triki navigation and HUD overlays.
+  ///
+  /// Example:
+  /// `menuView.trikiUIScreen(itemCount: 4) { index in select(index) }`
   func trikiUIScreen(
     itemCount: Int,
     isActive: Bool = true,
@@ -71,10 +102,12 @@ extension View {
 
 // MARK: - HUD
 
+/// Bottom overlay showing current Triki interaction status and hints.
 struct TrikiUIHUD: View {
   @EnvironmentObject private var motion: MotionInputProvider
   @EnvironmentObject private var trikiUI: TrikiUINavigator
 
+  /// Renders compact guidance for available control mode and hold progress.
   var body: some View {
     if trikiUI.isConfigured, !trikiUI.isSuspended {
       VStack(spacing: 6) {
@@ -126,24 +159,33 @@ struct TrikiUIHUD: View {
 
 // MARK: - Wiersz menu
 
+/// Single menu row with focus and hold feedback synchronized with Triki navigator.
 struct TrikiFocusRow: View {
   @EnvironmentObject private var motion: MotionInputProvider
   @EnvironmentObject private var trikiUI: TrikiUINavigator
 
+  /// Zero-based index used by navigator.
   let index: Int
+  /// Primary row label.
   let title: String
+  /// Optional secondary row label.
   var subtitle: String?
+  /// Accent color used for focus visuals.
   var accent: Color = NeonTheme.neonCyan
+  /// Optional SF Symbol rendered in row indicator.
   var icon: String?
 
+  /// Whether this row is currently focused by Triki navigation.
   private var isFocused: Bool {
     trikiUI.isConfigured && trikiUI.focusIndex == index
   }
 
+  /// Hold completion progress for this row in range `0...1`.
   private var holdProgress: Double {
     isFocused ? trikiUI.holdProgress : 0
   }
 
+  /// Renders focus-aware row visuals and immediate touch activation behavior.
   var body: some View {
     Button {
       trikiUI.activate(at: index)

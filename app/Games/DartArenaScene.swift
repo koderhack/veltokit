@@ -5,6 +5,14 @@ enum DartArenaScene {
   private static let w = GameContext.width
   private static let h = GameContext.height
 
+  /// Renderuje tło i otoczenie areny wokół tarczy dartowej.
+  ///
+  /// - Parameters:
+  ///   - context: Docelowy kontekst rasteryzacji pikselowej.
+  ///   - boardCenterX: Pozycja X środka tarczy.
+  ///   - boardCenterY: Pozycja Y środka tarczy.
+  ///   - boardRadius: Promień tarczy.
+  ///   - animTick: Licznik animacji używany do subtelnych efektów sceny.
   static func render(
     context: GameContext,
     boardCenterX: Double,

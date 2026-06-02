@@ -6,6 +6,7 @@ struct TrikiCalibrationView: View {
   @EnvironmentObject private var motion: MotionInputProvider
   @Environment(\.dismiss) private var dismiss
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     ZStack {
       ArcadeUI.screenBackground

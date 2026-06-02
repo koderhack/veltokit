@@ -2,10 +2,12 @@ import UIKit
 
 /// Blokuje wygaszanie ekranu podczas gry (referencje — zagnieżdżone sesje).
 @MainActor
+/// Reprezentuje typ `ScreenAwake`.
 enum ScreenAwake {
   private static var holdCount = 0
   private static var didInstallLifecycleObserver = false
 
+/// Wykonuje operacje `push`.
   static func push() {
     installLifecycleObserverIfNeeded()
     holdCount += 1
@@ -24,12 +26,14 @@ enum ScreenAwake {
     }
   }
 
+/// Wykonuje operacje `pop`.
   static func pop() {
     guard holdCount > 0 else { return }
     holdCount -= 1
     apply()
   }
 
+/// Wykonuje operacje `releaseAll`.
   static func releaseAll() {
     holdCount = 0
     apply()

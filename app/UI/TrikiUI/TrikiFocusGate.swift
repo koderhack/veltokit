@@ -1,16 +1,31 @@
 import Foundation
 
-/// Opóźnia przeskakiwanie między opcjami — tilt musi chwilę trzymać nowy slot.
+/// Focus stabilization primitives for Triki menu navigation.
+///
+/// The gate delays large focus jumps long enough to suppress jitter while preserving
+/// responsive adjacent-item movement.
+
+/// Stabilizes focus transitions between Triki menu slots.
+///
+/// Use this gate when raw slot selection is jittery and should switch only after a short dwell.
 struct TrikiFocusGate {
   private var pendingIndex: Int?
   private var switchRemaining: TimeInterval = 0
 
+  /// Clears pending transition state.
   mutating func reset() {
     pendingIndex = nil
     switchRemaining = 0
   }
 
-  /// Zwraca indeks do użycia (może zostać przy `current`, gdy trwa oczekiwanie).
+  /// Resolves the effective focused index for the current frame.
+  ///
+  /// - Parameters:
+  ///   - rawIndex: Slot suggested by current motion sample.
+  ///   - current: Currently focused slot.
+  ///   - deltaTime: Elapsed frame time in seconds.
+  /// - Returns: Active slot to render and use for activation. Can remain on `current` while dwell
+  ///   timing is still in progress.
   mutating func resolve(rawIndex: Int?, current: Int?, deltaTime: TimeInterval) -> Int? {
     guard let rawIndex else {
       reset()

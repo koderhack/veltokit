@@ -4,12 +4,14 @@ import VeltoKit
 
 private let devModeRefreshInterval = 0.12
 
+/// Opisuje struct `DevModeView` używany przez warstwę UI i logikę gry.
 struct DevModeView: View {
   @EnvironmentObject private var motion: MotionInputProvider
 
   @State private var inputSnapshot = GameInput()
   @State private var uiTick = 0
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 14) {

@@ -7,6 +7,7 @@
 
 import Testing
 
+/// Represents gametriki tests.
 struct gametrikiTests {
 
     @Test func example() async throws {

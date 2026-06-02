@@ -2,13 +2,25 @@ import Combine
 import Foundation
 import VeltoKit
 
-/// Globalna nawigacja UI: dotyk = natychmiast; Triki = obrót + hold lub przycisk.
+/// Runtime navigator that translates Triki motion into focused menu intent.
+///
+/// This file hosts the core tick-based navigation loop used by `.trikiUIScreen` and related
+/// components to keep focus, hold, and activation state synchronized.
+
+/// Coordinates Triki-driven focus and activation flow for menu-like screens.
+///
+/// Use this navigator when a screen should support both touch-first navigation and
+/// motion-based focus with hold/button confirmation.
 @MainActor
+/// Zarządza cyklem focus/hold/activate dla ekranów opartych o Triki.
 final class TrikiUINavigator: ObservableObject {
-  /// `nil` = żadna opcja nie jest podświetlona (strefa neutralna Triki).
+  /// Focused item index, or `nil` when pointer is in neutral zone.
   @Published private(set) var focusIndex: Int?
+  /// Current hold-to-activate progress for the focused item (`0...1`).
   @Published private(set) var holdProgress: Double = 0
+  /// Indicates whether navigator has active configuration for current screen.
   @Published private(set) var isConfigured = false
+  /// Temporarily pauses motion-driven updates while preserving setup.
   @Published var isSuspended = false
 
   private var itemCount = 0
@@ -18,6 +30,11 @@ final class TrikiUINavigator: ObservableObject {
   private var neutralGraceRemaining: TimeInterval = 0
   private var lastTimestamp: TimeInterval?
 
+  /// Configures the navigator for a screen with a fixed item count.
+  ///
+  /// - Parameters:
+  ///   - itemCount: Number of focusable items on the target screen.
+  ///   - onActivate: Callback executed when user confirms focused item.
   func configure(itemCount: Int, onActivate: @escaping (Int) -> Void) {
     self.itemCount = max(1, itemCount)
     self.onActivate = onActivate
@@ -31,6 +48,7 @@ final class TrikiUINavigator: ObservableObject {
     holdProgress = 0
   }
 
+  /// Clears configuration and resets focus/hold state.
   func clear() {
     isConfigured = false
     itemCount = 0
@@ -42,7 +60,10 @@ final class TrikiUINavigator: ObservableObject {
     holdProgress = 0
   }
 
-  /// Dotyk: natychmiastowa akcja (bez hold).
+  /// Activates an item immediately, typically for touch interaction.
+  ///
+  /// - Parameter index: Target item index to activate.
+  /// - Side Effects: Emits menu confirm sound and resets hold/focus settle windows.
   func activate(at index: Int) {
     guard isConfigured, !isSuspended, (0 ..< itemCount).contains(index) else { return }
     focusIndex = index
@@ -54,6 +75,7 @@ final class TrikiUINavigator: ObservableObject {
     onActivate?(index)
   }
 
+  /// Removes current focus and clears hold progress.
   func clearFocus() {
     focusIndex = nil
     focusSettleRemaining = 0
@@ -62,6 +84,15 @@ final class TrikiUINavigator: ObservableObject {
     holdProgress = 0
   }
 
+  /// Advances navigation state for a single frame.
+  ///
+  /// - Parameters:
+  ///   - motion: Motion input provider used to sample Triki controls.
+  ///   - now: Current timestamp in seconds.
+  /// - Side Effects: Updates published focus/progress values and may trigger `onActivate`.
+  ///
+  /// Example:
+  /// `navigator.tick(motion: motionProvider, now: CACurrentMediaTime())`
   func tick(motion: MotionInputProvider, now: TimeInterval) {
     guard isConfigured, !isSuspended, itemCount > 0 else { return }
 
@@ -138,6 +169,7 @@ final class TrikiUINavigator: ObservableObject {
     }
   }
 
+  /// Resets internal time reference used for frame delta calculations.
   func resetClock() {
     lastTimestamp = nil
   }

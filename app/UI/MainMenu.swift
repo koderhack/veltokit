@@ -9,6 +9,7 @@ private enum MainMenuRoute: String, Hashable {
   case dev
 }
 
+/// Opisuje struct `MainMenu` używany przez warstwę UI i logikę gry.
 struct MainMenu: View {
   @EnvironmentObject private var tuning: GameTuning
   @EnvironmentObject private var motion: MotionInputProvider
@@ -19,6 +20,7 @@ struct MainMenu: View {
   @State private var showConnect = false
   @AppStorage(ArcadeSettings.backgroundMusicEnabledKey) private var backgroundMusicEnabled = false
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     NavigationStack(path: $path) {
       ZStack {

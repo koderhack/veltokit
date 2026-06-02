@@ -1,6 +1,7 @@
 import SwiftUI
 import VeltoKit
 
+/// Opisuje struct `DartGameView` używany przez warstwę UI i logikę gry.
 struct DartGameView: View {
   @Environment(\.dismiss) private var dismiss
   @EnvironmentObject private var trikiUI: TrikiUINavigator
@@ -22,6 +23,7 @@ struct DartGameView: View {
   @State private var linkActive = false
   @State private var uiTick = 0
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init(session: DartSession, inputProvider: MotionInputProvider, tuning: GameTuning) {
     self.session = session
     self.inputProvider = inputProvider
@@ -39,6 +41,7 @@ struct DartGameView: View {
     )
   }
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     GeometryReader { geo in
       let insets = geo.safeAreaInsets

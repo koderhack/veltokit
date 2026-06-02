@@ -12,17 +12,28 @@ public enum MotionPaddleLog {
   private static var lastLogTime: TimeInterval = 0
   private static let minInterval: TimeInterval = 0.5
 
+  /// Próbka diagnostyczna stanu paletki.
   public struct Sample: Sendable {
+    /// Rotacja wejściowa.
     public var rotation: Double
+    /// Wartość żyroskopu Z.
     public var gyroZ: Double
+    /// Surowa wartość wejścia X.
     public var rawX: Double
+    /// Wygładzony sygnał X.
     public var smoothX: Double
+    /// Delta X względem środka.
     public var relX: Double
+    /// Aktualny bias X.
     public var biasX: Double
+    /// Sygnał sterowania paletki.
     public var steer: Double
+    /// Pozycja wyjściowa paletki.
     public var posX: Double
+    /// Etykieta kierunku.
     public var direction: String
 
+    /// Tworzy próbkę diagnostyczną paletki.
     public init(
       rotation: Double = 0,
       gyroZ: Double = 0,
@@ -46,12 +57,14 @@ public enum MotionPaddleLog {
     }
   }
 
+  /// Zwraca etykietę kierunku na podstawie osi.
   public static func directionLabel(for value: Double, threshold: Double = 0.03) -> String {
     if value < -threshold { return "LEWO ←" }
     if value > threshold { return "PRAWO →" }
     return "ŚRODEK"
   }
 
+  /// Emisja logu diagnostycznego (throttling + zmiana kierunku).
   public static func emit(_ sample: Sample, force: Bool = false) {
     #if DEBUG
     guard isEnabled else { return }
@@ -78,6 +91,7 @@ public enum MotionPaddleLog {
     logger.info("\(line, privacy: .public)")
   }
 
+  /// Czyści stan throttlingu loggera.
   public static func reset() {
     lastDirection = ""
     lastLogTime = 0

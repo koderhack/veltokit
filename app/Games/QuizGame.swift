@@ -3,7 +3,9 @@ import VeltoKit
 
 /// Quiz — logika rundy; UI w `QuizGameView`.
 final class QuizGame: Game {
+  /// Nazwa gry widoczna w metadanych silnika.
   let name = "Quiz"
+  /// Profil wejścia określający czułość i mapowanie dla trybu quizowego.
   let inputProfile: GameInputProfile = .quiz
 
   private let questions: [Question]
@@ -12,7 +14,9 @@ final class QuizGame: Game {
   private let roundLabel: String
   private let player1Score: Int
   private let player2Score: Int
+  /// Callback wywoływany po zarejestrowaniu odpowiedzi w bieżącym pytaniu.
   var onAnswerRecorded: ((Bool) -> Void)?
+  /// Callback wywoływany po zakończeniu rundy.
   var onRoundComplete: (() -> Void)?
 
   private var index = 0
@@ -23,13 +27,16 @@ final class QuizGame: Game {
   private var holdTracker = TrikiHoldTracker()
   private var focusGate = TrikiFocusGate()
   private var focusSettleRemaining: TimeInterval = 0
+  /// Włącza obsługę Triki focus/hold dla wyboru odpowiedzi.
   var isTrikiInputEnabled = false
   private var feedback: Feedback?
   private var feedbackTimer = 0.0
   private var finished = false
 
+  /// Informuje, czy gra powinna renderować błysk pikselowy (quiz nie używa tego efektu).
   var showsPixelFlash: Bool { false }
 
+  /// Snapshot stanu rundy wykorzystywany przez warstwę SwiftUI.
   struct HUD: Equatable {
     var questionIndex: Int
     var questionTotal: Int
@@ -71,6 +78,7 @@ final class QuizGame: Game {
     case wrong
   }
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init(
     questions: [Question],
     mode: QuizPlayMode,
@@ -87,6 +95,7 @@ final class QuizGame: Game {
     self.player2Score = player2Score
   }
 
+  /// Inicjalizuje nową rundę i synchronizuje początkowy stan HUD.
   func start(context: GameContext) {
     index = 0
     roundScore = 0
@@ -110,6 +119,7 @@ final class QuizGame: Game {
     confirmAnswer()
   }
 
+  /// Przetwarza input dla focus/hold, feedbacku i przejść między pytaniami.
   func update(input: GameInput, deltaTime: TimeInterval) {
     let dt = min(deltaTime, 0.05)
     guard !questions.isEmpty else {
@@ -183,11 +193,13 @@ final class QuizGame: Game {
     syncHUD(feedbackLabel: nil)
   }
 
+  /// Zatwierdza aktualnie wybraną odpowiedź, jeśli runda jest aktywna.
   func confirmAnswer() {
     guard feedback == nil, !finished, index < questions.count else { return }
     submitCurrentAnswer()
   }
 
+  /// Placeholder wymagań protokołu `Game` (quiz renderuje się przez HUD/SwiftUI).
   func render(context: GameContext) {}
 
   private func selectionIndex(for posX: Double) -> Int? {

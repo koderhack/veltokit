@@ -1,7 +1,9 @@
 import SceneKit
 import SwiftUI
 
+/// Opisuje struct `BowlingScoreboardView` używany przez warstwę UI i logikę gry.
 struct BowlingScoreboardView: View {
+  /// Opisuje enum `Style` używany przez warstwę UI i logikę gry.
   enum Style {
     /// Telefon — gra na ekranie telefonu.
     case phone
@@ -11,9 +13,13 @@ struct BowlingScoreboardView: View {
     case tv
   }
 
+  /// Przechowuje wartość `players` wykorzystywaną przez dany komponent.
   let players: [BowlingGameLogic.Player]
+  /// Przechowuje wartość `currentPlayerIndex` wykorzystywaną przez dany komponent.
   let currentPlayerIndex: Int
+  /// Przechowuje wartość `currentFrame` wykorzystywaną przez dany komponent.
   let currentFrame: Int
+  /// Przechowuje wartość `style` wykorzystywaną przez dany komponent.
   var style: Style = .phone
   /// Dodatkowy mnożnik (np. skala TV).
   var scale: CGFloat = 1
@@ -75,6 +81,7 @@ struct BowlingScoreboardView: View {
     )
   }
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     let m = metrics
     ScrollView(.horizontal, showsIndicators: true) {
@@ -172,8 +179,10 @@ struct BowlingScoreboardView: View {
 
 /// Kompaktowy pasek wyników podczas gry (bez pełnej tabeli 10 frame'ów).
 struct BowlingCompactScoreStrip: View {
+  /// Przechowuje wartość `hud` wykorzystywaną przez dany komponent.
   let hud: BowlingGame.HUD
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(spacing: 8) {
@@ -208,9 +217,12 @@ struct BowlingCompactScoreStrip: View {
 
 /// Pełnoekranowa tabela — krótko między turami graczy.
 struct BowlingFullscreenScoreboardOverlay: View {
+  /// Przechowuje wartość `hud` wykorzystywaną przez dany komponent.
   let hud: BowlingGame.HUD
+  /// Przechowuje wartość `onConfirmTurnStart` wykorzystywaną przez dany komponent.
   var onConfirmTurnStart: () -> Void = {}
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     GeometryReader { geo in
       let fitScale = min(1.15, geo.size.width / 340, geo.size.height / 520)
@@ -270,10 +282,14 @@ struct BowlingFullscreenScoreboardOverlay: View {
   }
 }
 
+/// Opisuje struct `BowlingHUDOverlay` używany przez warstwę UI i logikę gry.
 struct BowlingHUDOverlay: View {
+  /// Przechowuje wartość `hud` wykorzystywaną przez dany komponent.
   let hud: BowlingGame.HUD
+  /// Przechowuje wartość `onConfirmTurnStart` wykorzystywaną przez dany komponent.
   var onConfirmTurnStart: () -> Void = {}
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     ZStack {
       VStack(spacing: 0) {
@@ -348,6 +364,7 @@ struct BowlingHUDOverlay: View {
   }
 }
 
+/// Opisuje enum `BowlingSceneViewRole` używany przez warstwę UI i logikę gry.
 enum BowlingSceneViewRole {
   /// Pełnoekranowy podgląd (telefon lub TV).
   case display
@@ -357,9 +374,12 @@ enum BowlingSceneViewRole {
 
 /// Render 3D w niskiej rozdzielczości + powiększenie nearest-neighbor = efekt pixel.
 struct PixelatedBowlingSceneView: View {
+  /// Przechowuje wartość `scene` wykorzystywaną przez dany komponent.
   let scene: BowlingGameScene
+  /// Przechowuje wartość `pixelScale` wykorzystywaną przez dany komponent.
   var pixelScale: CGFloat = 3
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     GeometryReader { geo in
       let w = max(1, geo.size.width)
@@ -373,20 +393,26 @@ struct PixelatedBowlingSceneView: View {
   }
 }
 
+/// Opisuje struct `BowlingSceneView` używany przez warstwę UI i logikę gry.
 struct BowlingSceneView: UIViewRepresentable {
+  /// Przechowuje wartość `scene` wykorzystywaną przez dany komponent.
   let scene: BowlingGameScene
+  /// Przechowuje wartość `role` wykorzystywaną przez dany komponent.
   var role: BowlingSceneViewRole = .display
 
+  /// Wykonuje operację `makeCoordinator` w bieżącym kontekście gry/UI.
   func makeCoordinator() -> Coordinator {
     Coordinator(scene: scene)
   }
 
+  /// Wykonuje operację `makeUIView` w bieżącym kontekście gry/UI.
   func makeUIView(context: Context) -> SCNView {
     let view = SCNView(frame: .zero)
     context.coordinator.bind(view)
     return view
   }
 
+  /// Wykonuje operację `updateUIView` w bieżącym kontekście gry/UI.
   func updateUIView(_ uiView: SCNView, context: Context) {
     context.coordinator.bind(uiView)
   }
@@ -395,6 +421,7 @@ struct BowlingSceneView: UIViewRepresentable {
     coordinator.unbind(uiView)
   }
 
+  /// Opisuje class `Coordinator` używany przez warstwę UI i logikę gry.
   final class Coordinator {
     private let scene: BowlingGameScene
     private weak var boundView: SCNView?
@@ -439,9 +466,11 @@ struct BowlingSceneView: UIViewRepresentable {
 
 // MARK: - TV · Bowling
 
+/// Opisuje struct `BowlingTVLobbyView` używany przez warstwę UI i logikę gry.
 struct BowlingTVLobbyView: View {
   @EnvironmentObject private var display: QuizExternalDisplay
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     GeometryReader { geo in
       ZStack {
@@ -470,9 +499,11 @@ struct BowlingTVLobbyView: View {
   }
 }
 
+/// Opisuje struct `BowlingTVView` używany przez warstwę UI i logikę gry.
 struct BowlingTVView: View {
   @EnvironmentObject private var display: QuizExternalDisplay
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     GeometryReader { geo in
       ZStack {
@@ -578,9 +609,12 @@ struct BowlingTVView: View {
 
 /// Pełnoekranowa tabela na TV — tylko między turami graczy.
 struct BowlingTVFullscreenScoreboardOverlay: View {
+  /// Przechowuje wartość `hud` wykorzystywaną przez dany komponent.
   let hud: BowlingGame.HUD
+  /// Przechowuje wartość `scale` wykorzystywaną przez dany komponent.
   var scale: CGFloat = 1
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     ZStack {
       Color.black.opacity(0.88)
@@ -618,10 +652,14 @@ struct BowlingTVFullscreenScoreboardOverlay: View {
   }
 }
 
+/// Opisuje struct `BowlingTVScoreboardOverlay` używany przez warstwę UI i logikę gry.
 struct BowlingTVScoreboardOverlay: View {
+  /// Przechowuje wartość `hud` wykorzystywaną przez dany komponent.
   let hud: BowlingGame.HUD
+  /// Przechowuje wartość `scale` wykorzystywaną przez dany komponent.
   var scale: CGFloat = 1
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(alignment: .leading, spacing: 10 * scale) {
       Text("TABELA WYNIKÓW")
@@ -662,6 +700,7 @@ private func bowlingTVBackdrop() -> some View {
 }
 
 private func bowlingTVWaiting(title: String, subtitle: String, footnote: String) -> some View {
+  /// Przechowuje wartość `scale` wykorzystywaną przez dany komponent.
   let scale = max(1.2, min(2.0, UIScreen.main.bounds.width / 960))
   return VStack(spacing: 28 * scale) {
     Spacer()

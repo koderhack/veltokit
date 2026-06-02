@@ -1,6 +1,7 @@
 // swift-tools-version: 5.9
 import PackageDescription
 
+/// Stores `package` used by this scope.
 let package = Package(
   name: "veltokit",
   platforms: [

@@ -3,41 +3,60 @@ import Combine
 
 /// Fasada Motion SDK: pozycja, gest rzutu, przycisk BLE → `GameInput`.
 @MainActor
+/// Represents motion sdk.
 public final class MotionSDK: ObservableObject {
+  /// Stores `processor` used by this scope.
   let processor = MotionProcessor()
+  /// Stores `gesture` used by this scope.
   let gesture = GestureDetector()
+  /// Stores `button` used by this scope.
   let button = ButtonDetector()
+  /// Współdzielony silnik przetwarzania ruchu.
   public let engine: MotionEngine
 
   /// Ostatni bajt przycisku BLE (DEV).
   public var lastButtonByte: UInt8 { button.lastSeenButtonByte }
 
+  /// Ostatnia opublikowana ramka wejścia.
   public private(set) var input = GameInput()
 
   // MARK: - BLE (connect + pollInput)
 
+  /// Stan połączenia BLE.
   @Published public internal(set) var isConnected = false
+  /// Informuje, czy napływają pakiety BLE.
   @Published public internal(set) var isReceiving = false
+  /// Ostatnia ramka wejścia publikowana do HUD.
   @Published public internal(set) var liveInput = GameInput()
 
+  /// Stores `bleManager` used by this scope.
   var bleManager: BLEManager?
+  /// Stores `streamParser` used by this scope.
   var streamParser: MotionParser?
+  /// Stores `bleCancellables` used by this scope.
   var bleCancellables = Set<AnyCancellable>()
+  /// Stores `lastPacketAt` used by this scope.
   var lastPacketAt: TimeInterval = 0
+  /// Stores `lastHudPublishAt` used by this scope.
   var lastHudPublishAt: TimeInterval = 0
+  /// Stores `latestEnrichedInput` used by this scope.
   var latestEnrichedInput = GameInput()
 
+  /// Konfiguracja silnika ruchu.
   public var config: MotionConfig {
     get { engine.config }
     set { engine.config = newValue }
   }
 
+  /// Aktualny tryb sterowania.
   public var mode: MotionMode {
     get { engine.config.mode }
     set { engine.setMode(newValue) }
   }
 
+  /// Ostatni wynik ruchu z silnika.
   public var output: MotionOutput { engine.output }
+  /// Ostatnie dane debugowe z silnika.
   public var debug: MotionDebug { engine.debug }
 
   private var rxBuffer: [UInt8] = []
@@ -47,14 +66,17 @@ public final class MotionSDK: ObservableObject {
   private var ingressGyroY = 0.0
   private var latestPaddleRaw: Double?
 
+  /// Tworzy instancję SDK ruchu.
   public init() {
     engine = MotionEngine(processor: processor, gesture: gesture)
   }
 
+  /// Ustawia tryb pracy silnika.
   public func setMode(_ mode: MotionMode) {
     engine.setMode(mode)
   }
 
+  /// Ustawia dodatkowe źródła wejścia podawane spoza BLE.
   public func setIngressSupplement(rotation: Double, tiltX: Double, gyroY: Double) {
     ingressRotation = rotation
     ingressTiltX = tiltX
@@ -77,6 +99,7 @@ public final class MotionSDK: ObservableObject {
     }
   }
 
+  /// Handles `flushIngress`.
   public func flushIngress() {
     if engine.config.mode == .paddle {
       if let raw = latestPaddleRaw {
@@ -116,6 +139,7 @@ public final class MotionSDK: ObservableObject {
     engine.updateRaw(x: mapped.x, y: mapped.y, gyroBlockIndex: blockIndex)
   }
 
+  /// Podaje do SDK zdekodowaną ramkę Triki.
   public func ingestTrikiFrame(
     gyroX: Double,
     gyroY: Double,
@@ -135,7 +159,14 @@ public final class MotionSDK: ObservableObject {
   }
 
   /// Aktualizacja klatki: opcjonalnie surowy X i pakiet BLE (przycisk).
+  ///
+  /// - Parameters:
+  ///   - rawX: Optional raw X sample forwarded directly to motion engine.
+  ///   - bytes: Optional BLE payload slice used for button decoding.
+  ///   - deltaTime: Optional frame delta in seconds overriding internal timing.
+  /// - Returns: Motion output produced for the updated frame.
   @discardableResult
+  /// Convenience frame update entrypoint with optional raw input and BLE packet payload.
   public func update(
     rawX: Double? = nil,
     bytes: [UInt8] = [],
@@ -150,7 +181,13 @@ public final class MotionSDK: ObservableObject {
     return updateFrame(deltaTime: deltaTime)
   }
 
+  /// Aktualizuje silnik i zwraca wynik aktualnej klatki.
   @discardableResult
+  /// Handles `updateFrame`.
+  ///
+  /// - Parameters:
+  ///   - deltaTime: Input used by this operation.
+  /// - Returns: Result produced by this operation.
   public func updateFrame(deltaTime: TimeInterval? = nil) -> MotionOutput {
     flushIngress()
     let now = Date().timeIntervalSince1970
@@ -166,6 +203,7 @@ public final class MotionSDK: ObservableObject {
     return engine.output
   }
 
+  /// Resetuje pełny stan SDK i silnika.
   public func reset() {
     rxBuffer.removeAll(keepingCapacity: false)
     lastPollTime = nil

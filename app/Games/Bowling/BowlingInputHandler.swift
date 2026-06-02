@@ -3,6 +3,7 @@ import VeltoKit
 
 /// Sterowanie Triki: pochylenie lewo/prawo (tiltY) + gest cofnij → rzuć (tiltX + żyro).
 final class BowlingInputHandler {
+  /// Opisuje stan wejścia gracza podczas przygotowania i wykonania rzutu.
   enum ThrowPhase: Equatable {
     case idle
     case pullingBack
@@ -19,6 +20,7 @@ final class BowlingInputHandler {
     }
   }
 
+  /// Zawiera komplet danych emitowanych w chwili zwolnienia kuli.
   struct ThrowEvent {
     let power: Double
     let lateralPosX: Double
@@ -29,6 +31,7 @@ final class BowlingInputHandler {
   private(set) var smoothedPosX: Double = 0
   private(set) var phase: ThrowPhase = .idle
   private(set) var isPrimed = false
+  /// Odwraca poziome sterowanie celowaniem, gdy aktywne jest ustawienie preferencji gracza.
   var invertLateral = false
 
   private let throwController = DartThrowController()
@@ -47,6 +50,7 @@ final class BowlingInputHandler {
   private let leanHoldThreshold = 0.011
   private let maxAimStepPerFrame = 0.014
 
+  /// Resetuje stan wejścia i przywraca punkt startowy celowania oraz rzutu.
   func reset() {
     smoothedPosX = 0
     lockedAimX = 0
@@ -59,16 +63,19 @@ final class BowlingInputHandler {
     throwController.applyBowlingCalibration()
   }
 
+  /// Przygotowuje handler na start nowej tury bez kasowania kalibracji osi.
   func prepareForTurnGate() {
     phase = .idle
     isPrimed = false
     throwController.reset(tiltAxis: throwNeutralTiltX)
   }
 
+  /// Aktualizuje mapowanie osi Triki zgodnie z bieżącą konfiguracją urządzenia.
   func applyAxisMapping(_ axisMapping: MotionAxisMapping) {
     grip = DartGripMapping.from(axisMapping: axisMapping)
   }
 
+  /// Stosuje kalibrację tła i synchronizuje neutralne punkty dla celowania oraz rzutu.
   func applyInvisibleCalibration(_ result: BowlingInvisibleCalibrator.Result, currentAim: Double = 0) {
     aimNeutralTiltY = result.lateralNeutral
     throwNeutralTiltX = result.neutralTilt
@@ -107,6 +114,14 @@ final class BowlingInputHandler {
     smoothedPosX = lockedAimX
   }
 
+  /// Aktualizuje celowanie i wykrywa gest rzutu na podstawie wejścia z aktualnej klatki.
+  ///
+  /// - Parameters:
+  ///   - input: Ujednolicona próbka wejścia z sensorów Triki.
+  ///   - deltaTime: Czas trwania klatki symulacji.
+  ///   - aimEnabled: Flaga włączająca/wyłączająca aktualizację celu.
+  ///   - throwsEnabled: Flaga włączająca/wyłączająca emisję zdarzeń rzutu.
+  /// - Returns: `ThrowEvent` tylko w klatce, w której wykryto poprawne zwolnienie.
   func update(
     input: GameInput,
     deltaTime: TimeInterval,

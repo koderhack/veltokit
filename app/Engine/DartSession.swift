@@ -3,13 +3,21 @@ import Foundation
 
 /// Zapisany stan rozgrywki 501 (przywracany po wyjściu z gry).
 struct DartMatchState: Equatable, Codable {
+/// Przechowuje wartosc `playerCount`.
   var playerCount: Int
+/// Przechowuje wartosc `playerScores`.
   var playerScores: [Int]
+/// Przechowuje wartosc `activePlayerIndex`.
   var activePlayerIndex: Int
+/// Przechowuje wartosc `dartsLeftInTurn`.
   var dartsLeftInTurn: Int
+/// Przechowuje wartosc `turnStartScore`.
   var turnStartScore: Int
+/// Przechowuje wartosc `gameOver`.
   var gameOver: Bool
+/// Przechowuje wartosc `winnerName`.
   var winnerName: String?
+/// Przechowuje wartosc `lastHitLabel`.
   var lastHitLabel: String
 
   private enum CodingKeys: String, CodingKey {
@@ -18,6 +26,7 @@ struct DartMatchState: Equatable, Codable {
     case mode, player1Score, player2Score
   }
 
+/// Inicjalizuje nowa instancje.
   init(
     playerCount: Int,
     playerScores: [Int],
@@ -38,6 +47,7 @@ struct DartMatchState: Equatable, Codable {
     self.lastHitLabel = lastHitLabel
   }
 
+/// Inicjalizuje nowa instancje.
   init(from decoder: Decoder) throws {
     let c = try decoder.container(keyedBy: CodingKeys.self)
     if c.contains(.playerScores) {
@@ -59,6 +69,7 @@ struct DartMatchState: Equatable, Codable {
     playerCount = DartPlayers.clampCount(playerCount)
   }
 
+/// Wykonuje operacje `encode`.
   func encode(to encoder: Encoder) throws {
     var c = encoder.container(keyedBy: CodingKeys.self)
     try c.encode(playerCount, forKey: .playerCount)
@@ -71,6 +82,7 @@ struct DartMatchState: Equatable, Codable {
     try c.encode(lastHitLabel, forKey: .lastHitLabel)
   }
 
+/// Przechowuje wartosc `canResume`.
   var canResume: Bool {
     !gameOver && hasProgress
   }
@@ -79,10 +91,12 @@ struct DartMatchState: Equatable, Codable {
     playerScores.contains { $0 < DartPlayers.startingScore }
   }
 
+/// Przechowuje wartosc `resumeSummary`.
   var resumeSummary: String {
     playerScores.map(String.init).joined(separator: " · ")
   }
 
+/// Przechowuje wartosc `shouldPersist`.
   var shouldPersist: Bool {
     hasProgress || gameOver
   }
@@ -91,6 +105,7 @@ struct DartMatchState: Equatable, Codable {
 /// Ustawienia rozgrywki Dart (lobby / kalibracja → gra).
 final class DartSession: ObservableObject {
   private enum Storage {
+/// Przechowuje wartosc `savedMatchKey`.
     static let savedMatchKey = "dart.session.savedMatch"
   }
 
@@ -111,29 +126,35 @@ final class DartSession: ObservableObject {
     playerCount > 1 ? .duo : .solo
   }
 
+/// Przechowuje wartosc `player1Name`.
   var player1Name: String {
     get { name(at: 0) }
     set { setName(newValue, at: 0) }
   }
 
+/// Przechowuje wartosc `player2Name`.
   var player2Name: String {
     get { name(at: 1) }
     set { setName(newValue, at: 1) }
   }
 
+/// Inicjalizuje nowa instancje.
   init() {
     normalizeRoster()
     loadLobbyPreferences()
     loadSavedMatch()
   }
 
+/// Przechowuje wartosc `isMultiplayer`.
   var isMultiplayer: Bool { playerCount > 1 }
 
+/// Przechowuje wartosc `canResumeMatch`.
   var canResumeMatch: Bool {
     guard let savedMatch, savedMatch.playerCount == playerCount else { return false }
     return savedMatch.canResume
   }
 
+/// Wykonuje operacje `name`.
   func name(at index: Int) -> String {
     guard playerNames.indices.contains(index) else {
       return DartPlayers.defaultName(index: index)
@@ -142,6 +163,7 @@ final class DartSession: ObservableObject {
     return trimmed.isEmpty ? DartPlayers.defaultName(index: index) : trimmed
   }
 
+/// Wykonuje operacje `setName`.
   func setName(_ value: String, at index: Int) {
     guard index >= 0, index < playerCount else { return }
     if playerNames.count <= index {
@@ -150,6 +172,7 @@ final class DartSession: ObservableObject {
     playerNames[index] = value
   }
 
+/// Wykonuje operacje `persistMatch`.
   func persistMatch(_ state: DartMatchState) {
     guard state.shouldPersist else { return }
     savedMatch = state
@@ -158,11 +181,13 @@ final class DartSession: ObservableObject {
     }
   }
 
+/// Wykonuje operacje `clearSavedMatch`.
   func clearSavedMatch() {
     savedMatch = nil
     UserDefaults.standard.removeObject(forKey: Storage.savedMatchKey)
   }
 
+/// Wykonuje operacje `cyclePlayerCount`.
   func cyclePlayerCount() {
     let next = playerCount >= DartPlayers.maxCount ? DartPlayers.minCount : playerCount + 1
     if savedMatch?.playerCount != next {
@@ -177,6 +202,7 @@ final class DartSession: ObservableObject {
     cyclePlayerCount()
   }
 
+/// Wykonuje operacje `persistLobbyPreferences`.
   func persistLobbyPreferences() {
     DartLobbySettings.savePlayerCount(playerCount)
     DartLobbySettings.savePlayerNames(playerNames)
@@ -227,8 +253,10 @@ enum DartPlayMode: String, CaseIterable, Identifiable, Equatable, Codable {
   case solo
   case duo
 
+/// Przechowuje wartosc `id`.
   var id: String { rawValue }
 
+/// Przechowuje wartosc `title`.
   var title: String {
     switch self {
     case .solo: return "1 gracz"
@@ -236,6 +264,7 @@ enum DartPlayMode: String, CaseIterable, Identifiable, Equatable, Codable {
     }
   }
 
+/// Przechowuje wartosc `subtitle`.
   var subtitle: String {
     switch self {
     case .solo: return "501 · 3 lotki na turę"

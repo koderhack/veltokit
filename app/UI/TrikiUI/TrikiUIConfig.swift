@@ -1,6 +1,11 @@
 import CoreGraphics
 import Foundation
 
+/// Centralized constants for Triki UI timing and spacing.
+///
+/// Purpose: keep hold/focus behavior and HUD layout coherent across screens.
+/// Use when: a Triki-enabled view needs thresholds or animation-like timing values.
+/// Example: `TrikiUIConfig.menuHoldDuration` controls hold-to-confirm length.
 enum TrikiUIConfig {
   /// Hold w menu i listach (sekundy).
   static let menuHoldDuration: TimeInterval = 2.25

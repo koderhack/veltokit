@@ -3,18 +3,26 @@ import VeltoKit
 
 /// Zapis kalibracji jednego gracza (neutral · podniesienie · rzut w dół).
 struct DartPlayerProfile: Equatable, Codable {
+/// Przechowuje wartosc `referenceEnergy`.
   var referenceEnergy: Double
+/// Przechowuje wartosc `aimNeutralX`.
   var aimNeutralX: Double
+/// Przechowuje wartosc `aimNeutralY`.
   var aimNeutralY: Double
+/// Przechowuje wartosc `throwNeutralTilt`.
   var throwNeutralTilt: Double
+/// Przechowuje wartosc `gyroBaselineX`.
   var gyroBaselineX: Double
+/// Przechowuje wartosc `gyroBaselineY`.
   var gyroBaselineY: Double
+/// Przechowuje wartosc `gyroBaselineZ`.
   var gyroBaselineZ: Double
   /// Jak głęboko cofnąłeś rękę w kroku 2 (tilt względem neutralu).
   var calibratedPullDepth: Double
   /// Szczyt impulsu żyro przy machnięciu w kroku 3 — próg rzutu w grze.
   var calibratedThrowGyroPeak: Double
 
+/// Inicjalizuje nowa instancje.
   init(
     referenceEnergy: Double,
     aimNeutralX: Double,
@@ -37,6 +45,7 @@ struct DartPlayerProfile: Equatable, Codable {
     self.calibratedThrowGyroPeak = calibratedThrowGyroPeak
   }
 
+/// Inicjalizuje nowa instancje.
   init(from decoder: Decoder) throws {
     let c = try decoder.container(keyedBy: CodingKeys.self)
     referenceEnergy = try c.decode(Double.self, forKey: .referenceEnergy)
@@ -50,25 +59,30 @@ struct DartPlayerProfile: Equatable, Codable {
     calibratedThrowGyroPeak = try c.decodeIfPresent(Double.self, forKey: .calibratedThrowGyroPeak) ?? 0.78
   }
 
+/// Przechowuje wartosc `isComplete`.
   var isComplete: Bool {
     referenceEnergy > 0.008 && calibratedPullDepth > 0.02 && calibratedThrowGyroPeak > 0.2
   }
 }
 
+/// Reprezentuje typ `DartPlayerProfileStore`.
 enum DartPlayerProfileStore {
   private static let p1Key = "dart.profile.player1"
   private static let p2Key = "dart.profile.player2"
 
+/// Przechowuje wartosc `player1`.
   static var player1: DartPlayerProfile? {
     get { profile(for: 0) }
     set { if let newValue { save(newValue, for: 0) } else { save(nil, key: key(for: 0)) } }
   }
 
+/// Przechowuje wartosc `player2`.
   static var player2: DartPlayerProfile? {
     get { profile(for: 1) }
     set { if let newValue { save(newValue, for: 1) } else { save(nil, key: key(for: 1)) } }
   }
 
+/// Wykonuje operacje `profile`.
   static func profile(for playerIndex: Int) -> DartPlayerProfile? {
     guard playerIndex >= 0, playerIndex < DartPlayers.maxCount else { return nil }
     if playerIndex == 0, let p = load(key: p1Key) { return p }
@@ -76,6 +90,7 @@ enum DartPlayerProfileStore {
     return load(key: key(for: playerIndex))
   }
 
+/// Wykonuje operacje `save`.
   static func save(_ profile: DartPlayerProfile, for playerIndex: Int) {
     guard playerIndex >= 0, playerIndex < DartPlayers.maxCount else { return }
     save(profile, key: key(for: playerIndex))

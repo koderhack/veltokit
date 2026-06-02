@@ -1,14 +1,17 @@
 import Combine
 import Foundation
 
+/// Reprezentuje typ `BowlingPlayMode`.
 enum BowlingPlayMode: String, CaseIterable, Identifiable {
   case solo
   case duo
   case trio
   case quad
 
+/// Przechowuje wartosc `id`.
   var id: String { rawValue }
 
+/// Przechowuje wartosc `title`.
   var title: String {
     switch self {
     case .solo: return "1 gracz"
@@ -18,6 +21,7 @@ enum BowlingPlayMode: String, CaseIterable, Identifiable {
     }
   }
 
+/// Przechowuje wartosc `playerCount`.
   var playerCount: Int {
     switch self {
     case .solo: return 1
@@ -28,6 +32,7 @@ enum BowlingPlayMode: String, CaseIterable, Identifiable {
   }
 }
 
+/// Reprezentuje typ `BowlingSession`.
 final class BowlingSession: ObservableObject {
   @Published var mode: BowlingPlayMode = .solo
   @Published var player1Name = "Gracz 1"
@@ -35,6 +40,7 @@ final class BowlingSession: ObservableObject {
   @Published var player3Name = "Gracz 3"
   @Published var player4Name = "Gracz 4"
 
+/// Przechowuje wartosc `playerNames`.
   var playerNames: [String] {
     switch mode {
     case .solo: return [player1Name]
@@ -44,6 +50,7 @@ final class BowlingSession: ObservableObject {
     }
   }
 
+/// Wykonuje operacje `cycleMode`.
   func cycleMode() {
     let all = BowlingPlayMode.allCases
     guard let idx = all.firstIndex(of: mode) else { return }

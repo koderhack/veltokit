@@ -1,15 +1,21 @@
 import Foundation
 
+/// Reprezentuje typ `QuizCategory`.
 struct QuizCategory: Identifiable, Equatable, Codable, Sendable {
+/// Przechowuje wartosc `id`.
   let id: Int
+/// Przechowuje wartosc `namePL`.
   let namePL: String
 
+/// Przechowuje wartosc `any`.
   static let any = QuizCategory(id: 0, namePL: "Losowa mieszanka")
 }
 
+/// Reprezentuje typ `QuizCategoryService`.
 enum QuizCategoryService {
   private static let url = URL(string: "https://opentdb.com/api_category.php")!
 
+/// Wykonuje operacje `fetchCategories`.
   static func fetchCategories() async throws -> [QuizCategory] {
     let (data, response) = try await URLSession.shared.data(from: url)
     guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
@@ -54,10 +60,13 @@ enum QuizCategoryService {
 }
 
 private struct CategoryResponse: Decodable {
+/// Przechowuje wartosc `trivia_categories`.
   let trivia_categories: [CategoryItem]
 }
 
 private struct CategoryItem: Decodable {
+/// Przechowuje wartosc `id`.
   let id: Int
+/// Przechowuje wartosc `name`.
   let name: String
 }

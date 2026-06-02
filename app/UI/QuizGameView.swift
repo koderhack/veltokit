@@ -1,6 +1,7 @@
 import SwiftUI
 import VeltoKit
 
+/// Opisuje struct `QuizGameView` używany przez warstwę UI i logikę gry.
 struct QuizGameView: View {
   @ObservedObject var session: QuizSession
   @ObservedObject var inputProvider: MotionInputProvider
@@ -13,6 +14,7 @@ struct QuizGameView: View {
   @State private var linkActive = false
   @State private var uiTick = 0
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init(session: QuizSession, inputProvider: MotionInputProvider, tuning: GameTuning) {
     self.session = session
     self.inputProvider = inputProvider
@@ -37,6 +39,7 @@ struct QuizGameView: View {
     )
   }
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     GeometryReader { geo in
       let insets = geo.safeAreaInsets

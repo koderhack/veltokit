@@ -2,8 +2,11 @@ import SwiftUI
 
 /// Jednolite skalowanie siatki pikseli w prostokącie (np. celownik nad canvasem).
 struct PixelGridFitLayout: Equatable {
+  /// Przechowuje wartość `scale` wykorzystywaną przez dany komponent.
   let scale: CGFloat
+  /// Przechowuje wartość `canvasSize` wykorzystywaną przez dany komponent.
   let canvasSize: CGSize
+  /// Przechowuje wartość `origin` wykorzystywaną przez dany komponent.
   let origin: CGPoint
   /// Przesunięcie siatki przy trybie `croppedUniform`.
   var cropOrigin: CGPoint = .zero
@@ -21,6 +24,7 @@ struct PixelGridFitLayout: Equatable {
     )
   }
 
+  /// Wykonuje operację `point` w bieżącym kontekście gry/UI.
   func point(gridX: Double, gridY: Double) -> CGPoint {
     CGPoint(
       x: origin.x + (CGFloat(gridX) - cropOrigin.x) * scale,
@@ -44,6 +48,7 @@ struct PixelGridFitLayout: Equatable {
   }
 }
 
+/// Opisuje enum `PixelPalette` używany przez warstwę UI i logikę gry.
 enum PixelPalette {
   static func color(_ pixel: PixelColor) -> Color {
     switch pixel {
@@ -63,6 +68,7 @@ enum PixelPalette {
   }
 }
 
+/// Opisuje enum `PixelCanvasDisplayMode` używany przez warstwę UI i logikę gry.
 enum PixelCanvasDisplayMode: Equatable {
   case fit
   case portraitPhone
@@ -70,10 +76,15 @@ enum PixelCanvasDisplayMode: Equatable {
   case croppedUniform(source: CGRect)
 }
 
+/// Opisuje struct `PixelCanvas` używany przez warstwę UI i logikę gry.
 struct PixelCanvas: View, Equatable {
+  /// Przechowuje wartość `commands` wykorzystywaną przez dany komponent.
   let commands: [DrawCommand]
+  /// Przechowuje wartość `gridWidth` wykorzystywaną przez dany komponent.
   let gridWidth: Int
+  /// Przechowuje wartość `gridHeight` wykorzystywaną przez dany komponent.
   let gridHeight: Int
+  /// Przechowuje wartość `displayMode` wykorzystywaną przez dany komponent.
   var displayMode: PixelCanvasDisplayMode = .portraitPhone
 
   static func == (lhs: PixelCanvas, rhs: PixelCanvas) -> Bool {
@@ -83,6 +94,7 @@ struct PixelCanvas: View, Equatable {
       lhs.displayMode == rhs.displayMode
   }
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     GeometryReader { geo in
       let layout = displayLayout(in: geo.size)

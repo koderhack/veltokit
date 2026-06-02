@@ -35,6 +35,8 @@ The sample uses **`TrikiFocusGate`** so the highlight does not jump instantly wh
 
 Same mode as Pong, different **game logic** — good example of reusing `.paddle` for menus.
 
+The sample flow is attached to `.trikiUIScreen(...)`, so focus, hold, and activation are consistent with other Triki-driven screens.
+
 ## Integrate in your app
 
 ```swift
@@ -73,4 +75,4 @@ Map `posX` to discrete slots with dead zones — copy `TrikiUIMath` from `app/UI
 - Test **hold vs press** — some players prefer one confirmation style; the sample supports both.
 - Questions require network on first load; see `QuizCache` for offline rounds.
 
-[← Bowling](bowling) · [Configuration](../sdk/configuration) · [Demo](../demo) · [Help](../faq)
+[← Bowling](bowling) · [Triki UI navigation](../sdk/triki-ui) · [Configuration](../sdk/configuration) · [Demo](../demo) · [Help](../faq)

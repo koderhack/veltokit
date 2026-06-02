@@ -1,22 +1,29 @@
+/// Petla czasowa gry i synchronizacja klatek.
+
 import SwiftUI
 import QuartzCore
 
 /// Stały tick ~60 FPS (CADisplayLink).
 struct DisplayLinkView: UIViewRepresentable {
+/// Przechowuje wartosc `onFrame`.
   let onFrame: @MainActor (TimeInterval) -> Void
 
+/// Wykonuje operacje `makeUIView`.
   func makeUIView(context: Context) -> DisplayLinkHostView {
     let view = DisplayLinkHostView()
     view.onFrame = onFrame
     return view
   }
 
+/// Wykonuje operacje `updateUIView`.
   func updateUIView(_ uiView: DisplayLinkHostView, context: Context) {
     uiView.onFrame = onFrame
   }
 }
 
+/// Reprezentuje typ `DisplayLinkHostView`.
 final class DisplayLinkHostView: UIView {
+/// Przechowuje wartosc `onFrame`.
   var onFrame: (@MainActor (TimeInterval) -> Void)?
   private var link: CADisplayLink?
 
@@ -54,13 +61,16 @@ final class DisplayLinkHostView: UIView {
   }
 
   @objc private func tick(_ sender: CADisplayLink) {
+/// Przechowuje wartosc `timestamp`.
     let timestamp = sender.timestamp
+/// Przechowuje wartosc `callback`.
     let callback = onFrame
     DispatchQueue.main.async {
       callback?(timestamp)
     }
   }
 
+/// Zwalnia zasoby podczas usuwania instancji.
   deinit {
     link?.invalidate()
   }
@@ -68,8 +78,10 @@ final class DisplayLinkHostView: UIView {
 
 /// Modyfikator pętli gry — podłącz pod widok z `GameEngine`.
 struct GameLoop: ViewModifier {
+/// Przechowuje wartosc `onTick`.
   let onTick: @MainActor (TimeInterval) -> Void
 
+/// Wykonuje operacje `body`.
   func body(content: Content) -> some View {
     content.background {
       DisplayLinkView(onFrame: onTick)
@@ -78,7 +90,9 @@ struct GameLoop: ViewModifier {
   }
 }
 
+/// Rozszerza istniejacy typ o dodatkowe zachowanie.
 extension View {
+/// Wykonuje operacje `gameLoop`.
   func gameLoop(onTick: @escaping @MainActor (TimeInterval) -> Void) -> some View {
     modifier(GameLoop(onTick: onTick))
   }

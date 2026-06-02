@@ -2,9 +2,12 @@ import Foundation
 
 /// Przycisk Triki w pakiecie NUS: `22` na [0], przycisk **0/1 na [1]** (edge 0→1).
 public enum BLEButtonDecoder {
+  /// Oczekiwany nagłówek pakietu BLE.
   public static let packetHeader: UInt8 = 0x22
+  /// Indeks bajtu przycisku w pakiecie.
   public static let buttonIndex = 1
 
+  /// Sprawdza, czy bajt reprezentuje stan wciśnięty.
   public static func isPressed(_ byte: UInt8) -> Bool {
     byte == 1
   }

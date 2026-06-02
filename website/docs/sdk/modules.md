@@ -47,8 +47,10 @@ Source lives in [`VeltoKit/`](https://github.com/koderhack/veltokit/tree/main/Ve
 | File | Types |
 |------|-------|
 | `TrikiInputAdapter.swift` | Forwards `connect` / `pollInput` to `MotionSDK` + calibration UI |
+| `app/UI/TrikiUI/*.swift` | `TrikiUINavigator`, `TrikiFocusGate`, `TrikiHoldTracker`, `.trikiUIScreen` |
 
 ## Related repo docs
 
 - [`docs/ARCHITECTURE.md`](https://github.com/koderhack/veltokit/blob/main/docs/ARCHITECTURE.md) — full-app architecture (PL)
 - [`VeltoKit/README.md`](https://github.com/koderhack/veltokit/blob/main/VeltoKit/README.md) — short developer readme
+- [Triki UI navigation](./triki-ui) — practical UI integration guide

@@ -2,6 +2,11 @@ import SwiftUI
 import Translation
 import VeltoKit
 
+/// End-to-end Quiz navigation flow with Triki category selection support.
+///
+/// This file coordinates phase transitions from lobby to results and wires `.trikiUIScreen`
+/// for category picking where motion-based focus is most helpful.
+
 /// Wejście w quiz: lobby → kategoria → ładowanie → gra (kalibracja Triki automatyczna po BLE).
 struct QuizFlowView: View {
   @ObservedObject var inputProvider: MotionInputProvider
@@ -12,6 +17,8 @@ struct QuizFlowView: View {
   @StateObject private var loader = QuizLoader()
   @State private var categoryToLoad: QuizCategory?
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
+  /// Main phase-driven quiz UI container.
   var body: some View {
     ZStack {
       ArcadeUI.screenBackground
@@ -112,6 +119,9 @@ struct QuizFlowView: View {
     max(1, session.categoryChoices.count)
   }
 
+  /// Handles Triki activation events emitted by `.trikiUIScreen`.
+  ///
+  /// - Parameter index: Focused category slot selected by user.
   private func handleTrikiActivate(_ index: Int) {
     switch session.phase {
     case .categoryPick:
@@ -145,9 +155,12 @@ struct QuizFlowView: View {
 
 private struct QuizLobbyScreen: View {
   @ObservedObject var session: QuizSession
+  /// Przechowuje wartość `onStart` wykorzystywaną przez dany komponent.
   let onStart: () -> Void
+  /// Przechowuje wartość `onToggleMode` wykorzystywaną przez dany komponent.
   let onToggleMode: () -> Void
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     ScrollView {
       VStack(spacing: 20) {
@@ -204,6 +217,7 @@ private struct QuizLobbyScreen: View {
 private struct QuizCategoryPickerScreen: View {
   @ObservedObject var session: QuizSession
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(spacing: 12) {
       Text(session.roundLabel())
@@ -249,6 +263,7 @@ private struct QuizCategoryPickerScreen: View {
 private struct QuizLoadingScreen: View {
   @ObservedObject var loader: QuizLoader
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(spacing: 20) {
       if loader.progress > 0 {
@@ -287,9 +302,11 @@ private struct QuizLoadingScreen: View {
 
 /// Uruchamia `.translationTask` przy każdej nowej kategorii (rootowy task nie restartował się sam).
 private struct QuizRoundLoadTrigger: View {
+  /// Przechowuje wartość `category` wykorzystywaną przez dany komponent.
   let category: QuizCategory
   @ObservedObject var loader: QuizLoader
   @ObservedObject var session: QuizSession
+  /// Przechowuje wartość `onComplete` wykorzystywaną przez dany komponent.
   let onComplete: () -> Void
 
   @State private var translationConfiguration = TranslationSession.Configuration(
@@ -297,6 +314,7 @@ private struct QuizRoundLoadTrigger: View {
     target: Locale.Language(identifier: "pl")
   )
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     Color.clear
       .frame(width: 0, height: 0)
@@ -316,11 +334,15 @@ private struct QuizRoundLoadTrigger: View {
 
 // MARK: - Wyniki
 
+/// Opisuje struct `QuizResultsScreen` używany przez warstwę UI i logikę gry.
 struct QuizResultsScreen: View {
   @ObservedObject var session: QuizSession
+  /// Przechowuje wartość `onReplay` wykorzystywaną przez dany komponent.
   let onReplay: () -> Void
+  /// Przechowuje wartość `onMenu` wykorzystywaną przez dany komponent.
   let onMenu: () -> Void
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(spacing: 24) {
       Text("KONIEC GRY")
@@ -342,9 +364,11 @@ struct QuizResultsScreen: View {
 
 // MARK: - TV / udostępnianie
 
+/// Opisuje struct `QuizDisplayShareRow` używany przez warstwę UI i logikę gry.
 struct QuizDisplayShareRow: View {
   @ObservedObject var session: QuizSession
 
+  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(spacing: 12) {
       QuizTVConnectPanel()

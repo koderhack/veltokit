@@ -11,6 +11,7 @@ final class DartPlayZone {
     "Stoisz przed ekranem z Triki w dłoni (telefon lub TV). " +
     "Pasek mierzy ruch kontrolera, nie odległość od wyświetlacza."
 
+  /// Opisuje enum `Band` używany przez warstwę UI i logikę gry.
   enum Band: String, Equatable {
     case unknown = "—"
     case close = "BLISKO"
@@ -39,12 +40,14 @@ final class DartPlayZone {
     isCalibrated ? band : Self.absoluteBand(for: liveEnergy)
   }
 
+  /// Przechowuje wartość `displayLevel` wykorzystywaną przez dany komponent.
   var displayLevel: Int {
     isCalibrated ? level : Self.absoluteLevel(for: liveEnergy)
   }
 
   private var calibrated = false
 
+  /// Wykonuje operację `applySessionCalibration` w bieżącym kontekście gry/UI.
   func applySessionCalibration() {
     guard let energy = Self.sessionReferenceEnergy, energy > 0.008 else { return }
     referenceEnergy = energy
@@ -52,11 +55,13 @@ final class DartPlayZone {
     isCalibrated = true
   }
 
+  /// Wykonuje operację `stashForSession` w bieżącym kontekście gry/UI.
   func stashForSession() {
     guard referenceEnergy > 0.008 else { return }
     Self.sessionReferenceEnergy = referenceEnergy
   }
 
+  /// Wykonuje operację `applyProfile` w bieżącym kontekście gry/UI.
   func applyProfile(_ profile: DartPlayerProfile) {
     referenceEnergy = profile.referenceEnergy
     calibrated = true
@@ -66,6 +71,7 @@ final class DartPlayZone {
     distanceFactor = 1.0
   }
 
+  /// Wykonuje operację `reset` w bieżącym kontekście gry/UI.
   func reset() {
     referenceEnergy = 0
     liveEnergy = 0
@@ -86,6 +92,7 @@ final class DartPlayZone {
     refresh(sensors: sensors)
   }
 
+  /// Wykonuje operację `update` w bieżącym kontekście gry/UI.
   func update(sensors: TrikiSensors) {
     liveEnergy = motionEnergy(sensors)
     refresh(sensors: sensors)

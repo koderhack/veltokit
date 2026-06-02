@@ -4,6 +4,7 @@ import Translation
 
 /// Pobieranie kategorii i rund po 10 pytań (tłumaczenie PL).
 @MainActor
+/// Reprezentuje typ `QuizLoader`.
 final class QuizLoader: ObservableObject {
   @Published private(set) var categories: [QuizCategory] = []
   @Published private(set) var roundQuestions: [Question] = []
@@ -12,6 +13,7 @@ final class QuizLoader: ObservableObject {
   @Published private(set) var isLoadingRound = false
   @Published private(set) var errorMessage: String?
 
+/// Wykonuje operacje `loadCategoriesIfNeeded`.
   func loadCategoriesIfNeeded() async {
     guard categories.isEmpty else { return }
     do {
@@ -22,6 +24,7 @@ final class QuizLoader: ObservableObject {
     }
   }
 
+/// Wykonuje operacje `beginRoundLoad`.
   func beginRoundLoad(categoryName: String) {
     isLoadingRound = true
     errorMessage = nil
@@ -40,9 +43,11 @@ final class QuizLoader: ObservableObject {
     errorMessage = nil
     progress = 0
     roundQuestions = []
+/// Przechowuje wartosc `catID`.
     let catID = category.id
 
     if questionCount >= QuizRules.questionsPerRound,
+/// Przechowuje wartosc `cached`.
        let cached = QuizRoundCache.load(categoryID: catID) {
       roundQuestions = Array(cached.prefix(questionCount))
       progress = 100
@@ -54,6 +59,7 @@ final class QuizLoader: ObservableObject {
     do {
       statusMessage = "Pobieram pytania…"
       progress = 5
+/// Przechowuje wartosc `english`.
       let english = try await OpenTriviaClient.fetchQuestions(
         amount: max(questionCount, QuizRules.questionsPerRound),
         categoryID: catID > 0 ? catID : nil
@@ -61,11 +67,13 @@ final class QuizLoader: ObservableObject {
       progress = 25
       statusMessage = "Tłumaczę…"
 
+/// Przechowuje wartosc `polish`.
       let polish = try await QuizTranslator.translateAll(english, session: translationSession) { [weak self] value in
         self?.progress = 25 + (value * 70) / 100
         self?.statusMessage = "Tłumaczę… \(value)%"
       }
 
+/// Przechowuje wartosc `picked`.
       let picked = Array(polish.shuffled().prefix(questionCount))
       roundQuestions = picked
       if questionCount >= QuizRules.questionsPerRound {

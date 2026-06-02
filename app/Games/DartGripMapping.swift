@@ -7,8 +7,11 @@ import VeltoKit
 /// - **Rzut (tilt):** `tiltX` podnieś rękę / opuść w dół
 /// - **Impuls rzutu:** żyro X, Y, Z
 struct DartGripMapping: Equatable {
+  /// Przechowuje wartość `invertAimX` wykorzystywaną przez dany komponent.
   var invertAimX: Bool
+  /// Przechowuje wartość `invertAimY` wykorzystywaną przez dany komponent.
   var invertAimY: Bool
+  /// Przechowuje wartość `invertThrow` wykorzystywaną przez dany komponent.
   var invertThrow: Bool
 
   static let overhead = DartGripMapping(
@@ -61,6 +64,7 @@ struct DartGripMapping: Equatable {
     return axis
   }
 
+  /// Wykonuje operację `throwGyroImpulse` w bieżącym kontekście gry/UI.
   func throwGyroImpulse(
     from sensors: TrikiSensors,
     baselineX: inout Double,
@@ -79,6 +83,7 @@ struct DartGripMapping: Equatable {
     return max(0, max(dx, dy, dz) - 0.09)
   }
 
+  /// Wykonuje operację `calibrateNeutrals` w bieżącym kontekście gry/UI.
   func calibrateNeutrals(from sensors: TrikiSensors) -> (aimX: Double, aimY: Double, throwTilt: Double) {
     (sensors.tiltY, sensors.tiltX, sensors.tiltX)
   }

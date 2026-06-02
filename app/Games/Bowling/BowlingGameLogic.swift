@@ -2,6 +2,7 @@ import Foundation
 
 /// Logika punktacji kręgli (10 frame'ów, strike/spare, multiplayer).
 final class BowlingGameLogic {
+  /// Opisuje struct `Frame` używany przez warstwę UI i logikę gry.
   struct Frame: Equatable {
     var rolls: [Int] = []
     var score: Int?
@@ -12,6 +13,7 @@ final class BowlingGameLogic {
     }
   }
 
+  /// Opisuje struct `Player` używany przez warstwę UI i logikę gry.
   struct Player: Equatable, Identifiable {
     var id: String { name }
     var name: String
@@ -41,10 +43,14 @@ final class BowlingGameLogic {
   private(set) var lastThrowPins = 0
   private(set) var lastThrowLabel = ""
 
+  /// Przechowuje wartość `currentPlayer` wykorzystywaną przez dany komponent.
   var currentPlayer: Player { players[currentPlayerIndex] }
+  /// Przechowuje wartość `currentFrame` wykorzystywaną przez dany komponent.
   var currentFrame: Frame { players[currentPlayerIndex].frames[currentFrameIndex] }
+  /// Przechowuje wartość `currentFrameNumber` wykorzystywaną przez dany komponent.
   var currentFrameNumber: Int { currentFrameIndex + 1 }
 
+  /// Przechowuje wartość `rollsRemainingInFrame` wykorzystywaną przez dany komponent.
   var rollsRemainingInFrame: Int {
     let frame = currentFrame
     if currentFrameIndex == 9 {
@@ -59,6 +65,7 @@ final class BowlingGameLogic {
     return max(0, 2 - frame.rolls.count)
   }
 
+  /// Przechowuje wartość `needsPinReset` wykorzystywaną przez dany komponent.
   var needsPinReset: Bool {
     let frame = currentFrame
     guard !frame.rolls.isEmpty else { return true }
@@ -67,17 +74,20 @@ final class BowlingGameLogic {
     return frame.rolls.count >= 2
   }
 
+  /// Przechowuje wartość `needsPartialPinReset` wykorzystywaną przez dany komponent.
   var needsPartialPinReset: Bool {
     let frame = currentFrame
     guard currentFrameIndex < 9 else { return false }
     return frame.rolls.count == 1 && frame.rolls[0] < 10
   }
 
+  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init(playerNames: [String]) {
     let names = playerNames.isEmpty ? ["Gracz 1"] : playerNames
     players = names.map { Player(name: $0.isEmpty ? "Gracz" : $0) }
   }
 
+  /// Wykonuje operację `addThrow` w bieżącym kontekście gry/UI.
   func addThrow(pins knocked: Int) {
     guard !gameOver else { return }
 
@@ -101,6 +111,7 @@ final class BowlingGameLogic {
     advanceTurnIfNeeded()
   }
 
+  /// Wykonuje operację `calculateScore` w bieżącym kontekście gry/UI.
   func calculateScore() {
     for playerIndex in players.indices {
       let rolls = flattenedRolls(for: players[playerIndex])

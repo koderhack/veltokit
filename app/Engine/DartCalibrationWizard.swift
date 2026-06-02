@@ -2,12 +2,14 @@ import Combine
 import Foundation
 import VeltoKit
 
+/// Reprezentuje typ `DartCalibrationStep`.
 enum DartCalibrationStep: String, Equatable {
   case neutral
   case pullBack
   case pushForward
   case done
 
+/// Przechowuje wartosc `title`.
   var title: String {
     switch self {
     case .neutral: return "POZYCJA NEUTRALNA"
@@ -17,6 +19,7 @@ enum DartCalibrationStep: String, Equatable {
     }
   }
 
+/// Przechowuje wartosc `tvDetail`.
   var tvDetail: String {
     switch self {
     case .neutral:
@@ -30,6 +33,7 @@ enum DartCalibrationStep: String, Equatable {
     }
   }
 
+/// Przechowuje wartosc `phoneHint`.
   var phoneHint: String {
     switch self {
     case .neutral:
@@ -45,6 +49,7 @@ enum DartCalibrationStep: String, Equatable {
 }
 
 @MainActor
+/// Reprezentuje typ `DartCalibrationWizard`.
 final class DartCalibrationWizard: ObservableObject {
   /// Czas trzymania pozycji neutralnej (s).
   private static let neutralHoldDuration: TimeInterval = 6.5
@@ -64,9 +69,11 @@ final class DartCalibrationWizard: ObservableObject {
   @Published private(set) var playerIndex = 0
   @Published private(set) var isComplete = false
 
+/// Przechowuje wartosc `playerCount`.
   let playerCount: Int
   private unowned let session: DartSession
 
+/// Wykonuje operacje `playerDisplayName`.
   func playerDisplayName(for index: Int) -> String {
     session.name(at: index)
   }
@@ -83,15 +90,18 @@ final class DartCalibrationWizard: ObservableObject {
   private var forwardDetected = false
   private var calibrationGyroPeak: Double = 0
 
+/// Inicjalizuje nowa instancje.
   init(session: DartSession) {
     self.session = session
     self.playerCount = session.playerCount
   }
 
+/// Wykonuje operacje `applyGrip`.
   func applyGrip(from axisMapping: MotionAxisMapping) {
     grip = DartGripMapping.from(axisMapping: axisMapping)
   }
 
+/// Wykonuje operacje `resetForPlayer`.
   func resetForPlayer(_ index: Int) {
     playerIndex = index
     stableNeutralTime = 0
@@ -118,6 +128,7 @@ final class DartCalibrationWizard: ObservableObject {
     neutralSamples.calibratedPullDepth = max(pullTiltPeak, 0.028)
   }
 
+/// Wykonuje operacje `confirmCurrentStep`.
   func confirmCurrentStep(sensors: TrikiSensors) {
     switch step {
     case .neutral:
@@ -130,6 +141,7 @@ final class DartCalibrationWizard: ObservableObject {
     }
   }
 
+/// Wykonuje operacje `tick`.
   func tick(sensors: TrikiSensors, deltaTime: TimeInterval) {
     guard !isComplete else { return }
 

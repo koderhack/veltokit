@@ -5,12 +5,14 @@ import UIKit
 enum OpenTriviaClient {
   private static let baseURL = "https://opentdb.com/api.php"
 
+/// Reprezentuje typ `FetchError`.
   enum FetchError: LocalizedError {
     case badStatus(Int)
     case apiCode(Int)
     case emptyResults
     case decodeFailed
 
+/// Przechowuje wartosc `errorDescription`.
     var errorDescription: String? {
       switch self {
       case .badStatus(let code): return "HTTP \(code)"
@@ -52,15 +54,21 @@ enum OpenTriviaClient {
 // MARK: - DTO
 
 private struct OpenTriviaResponse: Decodable {
+/// Przechowuje wartosc `response_code`.
   let response_code: Int
+/// Przechowuje wartosc `results`.
   let results: [OpenTriviaItem]
 }
 
 private struct OpenTriviaItem: Decodable {
+/// Przechowuje wartosc `question`.
   let question: String
+/// Przechowuje wartosc `correct_answer`.
   let correct_answer: String
+/// Przechowuje wartosc `incorrect_answers`.
   let incorrect_answers: [String]
 
+/// Wykonuje operacje `makeQuestion`.
   func makeQuestion() -> Question? {
     let prompt = TriviaText.decode(question)
     let correct = TriviaText.decode(correct_answer)
@@ -71,7 +79,9 @@ private struct OpenTriviaItem: Decodable {
   }
 }
 
+/// Reprezentuje typ `TriviaText`.
 enum TriviaText {
+/// Wykonuje operacje `decode`.
   static func decode(_ raw: String) -> String {
     let wrapped = "<!DOCTYPE html><html><body>\(raw)</body></html>"
     guard let data = wrapped.data(using: .utf8) else { return raw }

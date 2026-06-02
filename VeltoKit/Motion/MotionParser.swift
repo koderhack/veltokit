@@ -2,19 +2,29 @@ import Combine
 import Foundation
 
 @MainActor
+/// Parser strumienia BLE do modelu `TrikiSensors` oraz impulsów klik/shake.
 final class MotionParser: ObservableObject {
+  /// Ostatni zdekodowany stan sensorów.
   @Published private(set) var sensors = TrikiSensors()
+  /// Etykieta ostatniego dekodowania do podglądu DEV.
   @Published private(set) var lastDecodeLabel: String = "—"
+  /// Ostatnie surowe ramki (tryb diagnostyczny).
   @Published private(set) var recentFrames: [[UInt8]] = []
   /// Wyłączone w grze — oszczędza RAM i CPU przy wysokim BLE notify.
   var retainRecentFrames = true
 
+  /// Czas wygładzania kanału tilt.
   var tiltAlpha: Double = 0.18
+  /// Czas wygładzania kanału gyro.
   var gyroAlpha: Double = 0.32
+  /// Czas wygładzania kanału rotacji.
   var rotationAlpha: Double = 0.22
+  /// Minimalna zmiana potrzebna do aktualizacji wartości.
   var noiseFloor: Double = 0.001
 
+  /// Minimalny odstęp między impulsami kliknięcia.
   var clickCooldown: TimeInterval = 0.12
+  /// Minimalny odstęp między impulsami shake.
   var shakeCooldown: TimeInterval = 0.10
 
   private var lastClickAt: TimeInterval = 0
@@ -48,6 +58,7 @@ final class MotionParser: ObservableObject {
     }
   }
 
+  /// Opróżnia bufor i dekoduje dostępne ramki.
   func flush() {
     guard !rxBuffer.isEmpty else { return }
     let samples = TrikiMotionProtocol.drainFrames(from: &rxBuffer)
@@ -67,6 +78,7 @@ final class MotionParser: ObservableObject {
     applyBLEBlocks(from: &rxBuffer)
   }
 
+  /// Wygodna ścieżka: enqueue + flush.
   func process(data: [UInt8]) {
     enqueue(data: data)
     flush()
@@ -78,6 +90,7 @@ final class MotionParser: ObservableObject {
     applyBLEBlocks(from: &rxBuffer)
   }
 
+  /// Opróżnia tylko impulsy (klik/shake) bez pełnej ścieżki filtrowania.
   func flushImpulsesOnly() {
     guard !rxBuffer.isEmpty else { return }
     ingestBLEButtonEdgesFromBufferHead()
@@ -97,6 +110,7 @@ final class MotionParser: ObservableObject {
     refreshClickSensorFlag()
   }
 
+  /// Zwraca i czyści oczekujące impulsy klik/shake.
   func consumeImpulses() -> (click: Bool, shake: Bool) {
     let impulses = (click: pendingClick, shake: pendingShake)
     pendingClick = false
@@ -104,6 +118,7 @@ final class MotionParser: ObservableObject {
     return impulses
   }
 
+  /// Resetuje cały stan parsera i bufora RX.
   func resetStream() {
     rxBuffer.removeAll()
     smoothTiltX = 0

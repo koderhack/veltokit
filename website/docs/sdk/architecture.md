@@ -57,6 +57,16 @@ let input = motion.pollInput(deltaTime: dt)   // preferred after connect()
 
 `MotionInputProvider` is a type alias for `TrikiInputAdapter`.
 
+### Triki UI navigation layer
+
+For screen navigation, the sample app adds a thin UI layer on top of `MotionInputProvider`:
+
+- `.trikiUIScreen(...)` wires per-screen lifecycle and ticking
+- `TrikiUINavigator` maps `posX` to slots and triggers activation
+- `TrikiFocusGate` + `TrikiHoldTracker` stabilize and confirm focus
+
+See [Triki UI navigation](./triki-ui) for integration details and examples.
+
 ## Sample games
 
 | Game | `MotionMode` | Primary fields |
@@ -76,4 +86,4 @@ let input = motion.pollInput(deltaTime: dt)   // preferred after connect()
 - `motion.output` — normalized `x`, `y`, `didShoot`, `paddleAtRest`
 - DEV UI in the sample app exposes `MotionConfig` sliders
 
-[MotionSDK API](./motion-sdk) · [BLE integration](./ble-integration)
+[MotionSDK API](./motion-sdk) · [Triki UI navigation](./triki-ui) · [BLE integration](./ble-integration)
