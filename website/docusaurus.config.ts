@@ -29,6 +29,7 @@ const config: Config = {
         highlightSearchTermsOnTargetPage: true,
         searchResultLimits: 12,
         searchBarShortcut: true,
+        searchBarShortcutHint: true,
         explicitSearchResultPath: true,
       },
     ],

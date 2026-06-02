@@ -6,6 +6,7 @@ import HeroBadges from '@site/src/components/HeroBadges';
 import ProjectDisclaimer from '@site/src/components/ProjectDisclaimer';
 import DeviceCapVisual from '@site/src/components/DeviceCapVisual';
 import GameExamplesSection from '@site/src/components/GameExamplesSection';
+import SkillDownloads from '@site/src/components/SkillDownloads';
 import styles from './index.module.css';
 
 const GITHUB = 'https://github.com/koderhack/veltokit';
@@ -317,6 +318,24 @@ export default function Home(): JSX.Element {
                 <ProjectDisclaimer />
               </div>
             </div>
+          </div>
+        </section>
+
+        <section className={styles.skillsSection} id="ai-skills">
+          <div className={styles.sectionInner}>
+            <h2 className={styles.sectionTitle}>
+              <Translate id="home.skills.title">Docs search & AI skills</Translate>
+            </h2>
+            <p className={styles.skillsLead}>
+              <Translate id="home.skills.lead">
+                Search all documentation from the navbar (⌘K / Ctrl+K). Download
+                ready-made Cursor or Claude prompt files below.
+              </Translate>
+            </p>
+            <SkillDownloads />
+            <Link className={styles.linkBtn} to="/docs/for-cursor-claude">
+              <Translate id="home.skills.hub">Open full AI skills hub →</Translate>
+            </Link>
           </div>
         </section>
 

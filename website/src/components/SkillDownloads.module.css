@@ -12,6 +12,17 @@
   opacity: 0.9;
 }
 
+.leadPl {
+  margin: 0 0 0.9rem;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  border-radius: 6px;
+  border-left: 3px solid var(--ifm-color-primary);
+  background: rgba(99, 102, 241, 0.1);
+  opacity: 0.95;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

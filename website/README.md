@@ -34,7 +34,7 @@ Downloadable prompt files and setup notes:
 
 - [Skill for Cursor](docs/for-cursor.mdx) → `static/skills/cursor-skill.md`
 - [Skill for Claude](docs/for-claude.mdx) → `static/skills/claude-skill.md`
-- Hub: [For Cursor Claude](docs/for-cursor-claude.md)
+- Hub: [For Cursor Claude](docs/for-cursor-claude.mdx)
 
 ## Translation
 

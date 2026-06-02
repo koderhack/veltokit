@@ -27,6 +27,11 @@ export default function SkillDownloads({showHeading = true}: Props): JSX.Element
         <code>website/static/skills/</code>. Use the docs <strong>Search</strong> box in the
         navbar (<kbd>⌘K</kbd> / <kbd>Ctrl+K</kbd>) to find SDK topics quickly.
       </p>
+      <p className={styles.leadPl}>
+        <strong>PL:</strong> Wyszukiwarka — pole <strong>Search</strong> w prawym górnym rogu
+        (`⌘K` / `Ctrl+K`). Pobranie skilli — przyciski poniżej lub menu <strong>AI Skills</strong>{' '}
+        → <em>↓ Download Cursor (.md)</em> / <em>↓ Download Claude (.md)</em>.
+      </p>
       <div className={styles.grid}>
         <a
           className={styles.card}
