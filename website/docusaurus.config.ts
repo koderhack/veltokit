@@ -17,7 +17,7 @@ const config: Config = {
   onBrokenLinks: 'throw',
   onDuplicateRoutes: 'warn',
 
-  plugins: [
+  themes: [
     [
       require.resolve('@easyops-cn/docusaurus-search-local'),
       {
@@ -32,6 +32,9 @@ const config: Config = {
         explicitSearchResultPath: true,
       },
     ],
+  ],
+
+  plugins: [
     [
       '@docusaurus/plugin-client-redirects',
       {
