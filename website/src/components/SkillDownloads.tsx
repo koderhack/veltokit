@@ -84,9 +84,11 @@ export default function SkillDownloads({showHeading = true}: Props): JSX.Element
         </ul>
       </details>
       <p className={styles.hint}>
-        <strong>Cursor:</strong> save as <code>.cursor/skills/veltokit/SKILL.md</code> in this
-        repo, or paste into chat / User Rules. <strong>Claude:</strong> add to Project
-        instructions or paste at the start of a chat.
+        <strong>Best for understanding the repo:</strong> open <code>AGENTS.md</code> at the repo
+        root (already in clone). <strong>Cursor:</strong> skill is at{' '}
+        <code>.cursor/skills/veltokit/SKILL.md</code> or paste downloaded file into chat.{' '}
+        <strong>Claude:</strong> attach <code>AGENTS.md</code> or add Project instructions from the
+        downloaded file.
       </p>
     </div>
   );

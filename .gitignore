@@ -27,8 +27,10 @@ Package.resolved
 Icon?
 ._*
 
-# Cursor / IDE
-.cursor/
+# Cursor / IDE (keep shared project skills in repo)
+.cursor/*
+!.cursor/skills/
+!.cursor/skills/**
 
 # Env / secrets
 .env

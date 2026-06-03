@@ -53,6 +53,7 @@ const sidebars: SidebarsConfig = {
       label: 'Developer workflow',
       collapsed: false,
       items: [
+        'ai-context',
         'for-cursor-claude',
         'for-cursor',
         'for-claude',

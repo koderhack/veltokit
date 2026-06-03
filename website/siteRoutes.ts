@@ -7,6 +7,7 @@ export const DOC_PATHS = {
   gettingStarted: '/docs/getting-started',
   installation: '/docs/installation',
   faq: '/docs/faq',
+  aiContext: '/docs/ai-context',
   forCursorClaude: '/docs/for-cursor-claude',
   forCursor: '/docs/for-cursor',
   forClaude: '/docs/for-claude',
@@ -76,6 +77,7 @@ export const navbarItems = [
     label: 'AI Skills',
     position: 'left' as const,
     items: [
+      {to: d.aiContext, label: 'Context for AI'},
       {to: d.forCursorClaude, label: 'Hub + downloads'},
       {to: d.forCursor, label: 'Skill for Cursor'},
       {to: d.forClaude, label: 'Skill for Claude'},
@@ -125,6 +127,7 @@ export const footerLinks = [
       {label: 'Quick Start', to: d.quickStart},
       {label: 'Getting Started', to: d.gettingStarted},
       {label: 'SDK Overview', to: d.sdkOverview},
+      {label: 'Context for AI', to: d.aiContext},
       {label: 'For Cursor Claude', to: d.forCursorClaude},
       {label: 'Skill for Cursor', to: d.forCursor},
       {label: 'Skill for Claude', to: d.forClaude},

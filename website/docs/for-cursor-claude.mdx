@@ -11,6 +11,12 @@ import SkillDownloads from '@site/src/components/SkillDownloads';
 This page is a practical hub for AI-assisted development in this repository.  
 Use it as a fast checklist before implementing, debugging, or documenting.
 
+:::warning Jeśli AI „nie rozumie” dokumentacji
+1. Wklej do czatu treść z **[Context for AI](./ai-context)** lub wskaż plik **`AGENTS.md`** w katalogu głównym repozytorium.  
+2. Zainstaluj skill: `.cursor/skills/veltokit/SKILL.md` (już w repo) albo pobierz plik `.md` poniżej.  
+3. Proś AI o czytanie **`VeltoKit/GameInput.swift`** i **`VeltoKit/MotionSDK.swift`** — to jest kontrakt API, nie tylko strony www.
+:::
+
 :::info Po polsku — gdzie co jest
 **Wyszukiwarka dokumentacji:** pole **Search** w prawym górnym rogu paska (`⌘K` / `Ctrl+K`).  
 **Pobranie skilli Cursor / Claude:** sekcja [Download AI skills](#download-ai-skills) poniżej (przyciski **Download**), albo menu **AI Skills** w navbarze → **↓ Download Cursor (.md)** / **↓ Download Claude (.md)**.  
@@ -27,6 +33,7 @@ Use the **Search** field in the top navbar (keyboard: `⌘K` on macOS, `Ctrl+K` 
 
 ## Fast orientation
 
+- **AI ground truth:** [Context for AI](./ai-context) · repo root `AGENTS.md`
 - SDK core: `VeltoKit/`
 - Sample app: `app/`
 - Website docs: `website/docs/`
@@ -103,5 +110,7 @@ Prioritize developer-facing clarity and actionable examples.
 - [Module map](./sdk/modules)
 - [Configuration](./sdk/configuration)
 - [Gestures](./sdk/gestures)
+- [Context for AI](./ai-context)
+- [Triki UI — calibration & menu](./sdk/triki-ui#calibration-and-simple-menu)
 - [Skill for Cursor](./for-cursor)
 - [Skill for Claude](./for-claude)

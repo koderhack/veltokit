@@ -67,14 +67,29 @@ func tick(dt: TimeInterval) {
 
 Presets and per-game tuning: [`app/Engine/GameManager.swift`](./app/Engine/GameManager.swift).
 
+## For AI assistants (Cursor, Claude, …)
+
+If the model confuses **VeltoKit** vs **gametriki** or invents APIs, point it at:
+
+| Resource | Location |
+|----------|----------|
+| **AGENTS.md** | Repo root — read this first |
+| **Context for AI** | [website/docs/ai-context.mdx](./website/docs/ai-context.mdx) |
+| **Cursor skill** | [.cursor/skills/veltokit/SKILL.md](./.cursor/skills/veltokit/SKILL.md) (tracked in repo) |
+| **Triki menu + calibration** | [Triki UI docs](website/docs/sdk/triki-ui.md#calibration-and-simple-menu) · Quiz: `app/UI/Quiz/QuizFlowView.swift` |
+| **Download prompts** | [For Cursor Claude](https://koderhack.github.io/veltokit/docs/for-cursor-claude) |
+
+Ground truth for game code: [`VeltoKit/GameInput.swift`](./VeltoKit/GameInput.swift) and [`VeltoKit/MotionSDK.swift`](./VeltoKit/MotionSDK.swift).
+
 ## Documentation
 
 | | |
 |---|---|
 | **Site** | https://koderhack.github.io/veltokit/ |
 | **Docs** | https://koderhack.github.io/veltokit/docs/intro |
+| **AI context** | https://koderhack.github.io/veltokit/docs/ai-context |
 
-English source docs; use **Translate** in the navbar for other languages (Google Translate).
+English source docs; use **Translate** in the navbar for other languages (Google Translate). **Search** in the docs navbar: `⌘K` / `Ctrl+K`.
 
 [intro](website/docs/intro.mdx) · [SDK](website/docs/sdk/overview.md) · [Pong](website/docs/examples/pong.md)
 

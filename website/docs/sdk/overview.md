@@ -8,7 +8,18 @@ description: VeltoKit — MotionSDK and GameInput
 
 **VeltoKit** maps BLE motion bytes → **`GameInput`** each frame. No UI, no CoreBluetooth in the core target.
 
+:::info Names (do not confuse)
+| Name | What it is |
+|------|------------|
+| **VeltoKit** | Swift SDK in `VeltoKit/` — link this in your app |
+| **gametriki** | Sample iOS app in `app/` — not a second framework |
+| **Triki** | Informal name for the BLE cap + app UI layer (`TrikiInputAdapter`, `TrikiUI`) |
+
+**API source of truth:** `VeltoKit/GameInput.swift` and `VeltoKit/MotionSDK.swift` — not marketing text on the website. If docs and code disagree, trust the Swift files.
+:::
+
 :::tip Docs search & AI skills
+Use **Search** (`⌘K` / `Ctrl+K`). Assistants: [Context for AI](../ai-context) · repo root `AGENTS.md`.
 Use **Search** in the top navbar (`⌘K` / `Ctrl+K`) to find any topic.  
 Download Cursor / Claude prompt files on [For Cursor Claude](../for-cursor-claude#download-ai-skills) (footer: **AI skills (download)**).
 :::
@@ -35,7 +46,7 @@ motion.updateFrame(deltaTime: dt)
 let input = motion.input
 ```
 
-Optional: **`TrikiInputAdapter`** in the sample app adds calibration UI on top of `MotionSDK` — see [BLE integration](./ble-integration).
+Optional: **`TrikiInputAdapter`** in the sample app adds calibration UI on top of `MotionSDK` — see [BLE integration](./ble-integration). For cap calibration + a motion-driven menu (Quiz-style), see [Triki UI — calibration & simple menu](./triki-ui#calibration-and-simple-menu).
 
 ## Modes
 

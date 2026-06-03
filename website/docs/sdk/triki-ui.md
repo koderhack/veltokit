@@ -73,8 +73,79 @@ BLE / parser -> MotionInputProvider.liveInput.posX -> focused slot -> hold or cl
 - Leaving `isActive = true` on hidden screens can steal focus updates.
 - If your menu feels jittery, tune `MotionConfig` deadzones and smoothing in UI mode.
 
+## Calibration and simple menu {#calibration-and-simple-menu}
+
+Triki UI lives in the **sample app** only. You need:
+
+1. `MotionInputProvider` + `TrikiUINavigator` as `@EnvironmentObject` (see `gametrikiApp.swift`).
+2. BLE: `motion.connect()` (Main menu → **POŁĄCZ BLE** or `ConnectView`).
+3. **Calibration** — neutral pose while holding the cap:
+
+```swift
+// Same as TrikiCalibrationView — sets SDK neutral center
+motion.performCalibration()  // → MotionSDK.calibrateNeutralPose()
+```
+
+After the first frames, the app may show `TrikiCalibrationView` automatically (`motion.showsCalibrationPrompt`).
+
+4. **UI mode** for horizontal menu selection (Quiz category picker uses this):
+
+```swift
+GameManager.applyUIMode(to: motion)  // .paddle tuning for posX slots + hold
+```
+
+5. **Menu screen** — mirror `QuizFlowView` category pick:
+
+```swift
+import SwiftUI
+import VeltoKit
+
+struct SimpleTrikiMenuView: View {
+  @EnvironmentObject private var motion: MotionInputProvider
+  @EnvironmentObject private var trikiUI: TrikiUINavigator
+
+  private let items = ["Start", "Settings", "Quit"]
+  @State private var lastChoice: String?
+
+  var body: some View {
+    VStack(spacing: 12) {
+      Text("Triki: turn = focus · hold or button = OK")
+        .font(.caption.monospaced())
+
+      ForEach(Array(items.enumerated()), id: \.offset) { i, title in
+        TrikiFocusRow(index: i, title: title, accent: .cyan, icon: "circle.fill")
+      }
+
+      if let lastChoice {
+        Text("Selected: \(lastChoice)")
+      }
+      Spacer()
+    }
+    .padding()
+    .trikiUIScreen(itemCount: items.count, isActive: true) { index in
+      guard items.indices.contains(index) else { return }
+      lastChoice = items[index]
+    }
+    .onAppear {
+      if !motion.isConnected { motion.connect() }
+      GameManager.applyUIMode(to: motion)
+    }
+  }
+}
+```
+
+**Reference implementation:** `app/UI/Quiz/QuizFlowView.swift` — `trikiNavigationActive` only in `.categoryPick`, rows use `TrikiFocusRow`, activation in `handleTrikiActivate`.
+
+| Step | Quiz equivalent |
+|------|-----------------|
+| Calibrate once | Global `TrikiCalibrationView` on main menu after BLE |
+| Menu with Triki | `.categoryPick` + `.trikiUIScreen` |
+| Touch fallback | `TrikiFocusRow` is a `Button` |
+
 ## Where to look in the sample app
 
+- `app/UI/TrikiCalibrationView.swift` — calibration UX
+- `app/UI/MainMenu.swift` — BLE + calibration sheet wiring
 - `app/UI/TrikiUI/TrikiUIComponents.swift`
 - `app/UI/TrikiUI/TrikiUINavigator.swift`
 - `app/UI/TrikiUI/TrikiFocusGate.swift`
