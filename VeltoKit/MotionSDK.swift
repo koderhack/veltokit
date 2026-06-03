@@ -30,7 +30,9 @@ public final class MotionSDK: ObservableObject {
   @Published public internal(set) var liveInput = GameInput()
 
   /// Stores `bleManager` used by this scope.
-  var bleManager: BLEManager?
+  var bleManager: TrikiBLEManager?
+  /// Gamepad pipeline (parser + motion engine).
+  var trikiController: TrikiGameController?
   /// Stores `streamParser` used by this scope.
   var streamParser: MotionParser?
   /// Stores `bleCancellables` used by this scope.
@@ -219,11 +221,12 @@ public final class MotionSDK: ObservableObject {
   private func publishInput() {
     let out = engine.output
     let click = button.consumeClick()
+    let trikiAction = trikiController?.gameInput.isAction ?? false
     let throwShot = out.didShoot
     input.posX = out.x
     input.posY = out.y
     input.shotTriggered = throwShot
-    input.primaryAction = click || throwShot
+    input.primaryAction = click || throwShot || trikiAction
     input.throwPower = throwShot ? engine.lastGestureThrowPower : 0
     input.gesturePrimed = engine.gesturePrimed
   }

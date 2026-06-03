@@ -110,6 +110,10 @@
 		A10000562FC6EB2E00CDBB83 /* MotionParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614282FC6EB2E00CDBB83 /* MotionParser.swift */; };
 		A10000582FC6EB2E00CDBB83 /* TrikiMotionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113614502FC6EB3000CDBB84 /* TrikiMotionProtocol.swift */; };
 		A10000702FC6EB2E00CDBB83 /* MotionSDK+Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000712FC6EB2E00CDBB83 /* MotionSDK+Connection.swift */; };
+		TRIKI0012FC6EB2E00CDBB01 /* TrikiBLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = TRIKI0112FC6EB2E00CDBB01 /* TrikiBLEManager.swift */; };
+		TRIKI0032FC6EB2E00CDBB01 /* TrikiParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = TRIKI0212FC6EB2E00CDBB01 /* TrikiParser.swift */; };
+		TRIKI0052FC6EB2E00CDBB01 /* TrikiMotionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = TRIKI0312FC6EB2E00CDBB01 /* TrikiMotionEngine.swift */; };
+		TRIKI0072FC6EB2E00CDBB01 /* TrikiGameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = TRIKI0412FC6EB2E00CDBB01 /* TrikiGameController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -240,6 +244,11 @@
 		A10000332FC6EB2E00CDBB83 /* MotionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionEngine.swift; sourceTree = "<group>"; };
 		A10000352FC6EB2E00CDBB83 /* MotionSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionSDK.swift; sourceTree = "<group>"; };
 		A10000712FC6EB2E00CDBB83 /* MotionSDK+Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MotionSDK+Connection.swift"; sourceTree = "<group>"; };
+		TRIKI0112FC6EB2E00CDBB01 /* TrikiBLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiBLEManager.swift; sourceTree = "<group>"; };
+		TRIKI0212FC6EB2E00CDBB01 /* TrikiParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiParser.swift; sourceTree = "<group>"; };
+		TRIKI0312FC6EB2E00CDBB01 /* TrikiMotionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiMotionEngine.swift; sourceTree = "<group>"; };
+		TRIKI0412FC6EB2E00CDBB01 /* TrikiGameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiGameController.swift; sourceTree = "<group>"; };
+		TRIKI0912FC6EB2E00CDBB01 /* Triki */ = {isa = PBXGroup; children = (TRIKI0112FC6EB2E00CDBB01 /* TrikiBLEManager.swift */, TRIKI0212FC6EB2E00CDBB01 /* TrikiParser.swift */, TRIKI0312FC6EB2E00CDBB01 /* TrikiMotionEngine.swift */, TRIKI0412FC6EB2E00CDBB01 /* TrikiGameController.swift */); path = Triki; sourceTree = "<group>"; };
 		A10000372FC6EB2E00CDBB83 /* MotionPaddleLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionPaddleLog.swift; sourceTree = "<group>"; };
 		A10000392FC6EB2E00CDBB83 /* BLEButtonDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEButtonDecoder.swift; sourceTree = "<group>"; };
 		A10000412FC6EB2E00CDBB83 /* MotionProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionProcessor.swift; sourceTree = "<group>"; };
@@ -515,6 +524,7 @@
 				A10000372FC6EB2E00CDBB83 /* MotionPaddleLog.swift */,
 				A10000802FC6EB2E00CDBB83 /* BLE */,
 				A10000812FC6EB2E00CDBB83 /* Motion */,
+				TRIKI0912FC6EB2E00CDBB01 /* Triki */,
 			);
 			name = VeltoKit;
 			path = ../VeltoKit;
@@ -812,6 +822,10 @@
 				A10000542FC6EB2E00CDBB83 /* BLEByteProbe.swift in Sources */,
 				A10000562FC6EB2E00CDBB83 /* MotionParser.swift in Sources */,
 				A10000582FC6EB2E00CDBB83 /* TrikiMotionProtocol.swift in Sources */,
+				TRIKI0012FC6EB2E00CDBB01 /* TrikiBLEManager.swift in Sources */,
+				TRIKI0032FC6EB2E00CDBB01 /* TrikiParser.swift in Sources */,
+				TRIKI0052FC6EB2E00CDBB01 /* TrikiMotionEngine.swift in Sources */,
+				TRIKI0072FC6EB2E00CDBB01 /* TrikiGameController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

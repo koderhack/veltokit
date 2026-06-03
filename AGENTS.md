@@ -30,8 +30,12 @@ VeltoKit/
   MotionEngine.swift   # Per-frame processing, modes, calibration
   GameInput.swift      # Output contract — start here for game logic
   MotionConfig.swift   # Presets per MotionMode
-  BLE/BLEManager.swift # Scan, connect, notify
-  BLEGyroParser.swift  # Packet parsing
+  BLE/BLEManager.swift # Stub → TrikiBLEManager
+  Triki/TrikiBLEManager.swift      # Scan, connect, reconnect, notify
+  Triki/TrikiParser.swift          # Format-detecting int16 decode
+  Triki/TrikiMotionEngine.swift    # Velocity / shake / tilt / swing
+  Triki/TrikiGameController.swift  # Gamepad API (TrikiGameInput)
+  BLEGyroParser.swift  # Legacy block parser (enriched GameInput path)
 app/
   gametriki.xcodeproj
   Platform/TrikiInputAdapter.swift   # Optional adapter (sample app)

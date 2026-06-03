@@ -6,6 +6,32 @@ title: BLE integration
 
 VeltoKit accepts **bytes** and optional **rawX**. You can let **`MotionSDK`** scan and connect, feed bytes yourself, or use the sample **`TrikiInputAdapter`** for calibration UI.
 
+## Gamepad pipeline (`TrikiGameController`)
+
+Layered stack for firmware that ships **filtered int16 packets** at ~20–30 Hz:
+
+| Layer | Type | Role |
+|-------|------|------|
+| BLE | `TrikiBLEManager` | Scan, connect, UUID cache, auto-reconnect, notify |
+| Parser | `TrikiParser` | `parse(Data)` → `ParsedMotionData`; preset **v2** (int16 @2,4,6 ÷100), legacy + fallback |
+| Motion | `TrikiMotionEngine` | Velocity, direction, shake / tilt / swing |
+| API | `TrikiGameController` | `TrikiGameInput`, `onMove` / `onShake` / `onAction` |
+
+```swift
+let triki = TrikiGameController()
+triki.inputMode = .game   // or .smooth
+triki.onMove { direction in /* -1…1 */ }
+triki.onShake { }
+triki.onAction { }
+triki.connect()
+
+// Game loop:
+let pad = triki.tick(deltaTime: dt)
+// pad.direction, pad.velocity, pad.isMoving — no raw X/Y/Z API
+```
+
+`MotionSDK.connect()` uses this pipeline internally and still publishes **`GameInput`** for existing games.
+
 ## Simple connection (built into MotionSDK)
 
 ```swift

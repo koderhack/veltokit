@@ -26,6 +26,9 @@ extension MotionSDK {
   ///   - deltaTime: Input used by this operation.
   /// - Returns: Result produced by this operation.
   public func pollInput(deltaTime: TimeInterval? = nil) -> GameInput {
+    trikiController?.tick(deltaTime: deltaTime)
+    applyTrikiGamepadToEngine()
+
     guard let parser = streamParser else {
       updateFrame(deltaTime: deltaTime)
       return input
@@ -44,7 +47,7 @@ extension MotionSDK {
       enriched.tiltX = parser.sensors.tiltX
       enriched.lateral = out.x
       enriched.lateralSmooth = out.x
-      enriched.shake = impulses.shake
+      enriched.shake = impulses.shake || (trikiController?.gameInput.isShake ?? false)
       enriched.sensors = parser.sensors
       applyClickToSensors(&enriched)
       latestEnrichedInput = enriched
@@ -126,15 +129,16 @@ extension MotionSDK {
 
   /// Handles `ensureBLEPipeline`.
   func ensureBLEPipeline() {
-    guard bleManager == nil else { return }
+    guard trikiController == nil else { return }
 
-    let ble = BLEManager()
+    let triki = TrikiGameController()
     let parser = MotionParser()
     parser.retainRecentFrames = false
-    bleManager = ble
+    trikiController = triki
+    bleManager = triki.ble
     streamParser = parser
 
-    ble.rxBytes
+    triki.ble.rxBytes
       .receive(on: DispatchQueue.main)
       .sink { [weak self] bytes in
         guard let self, !bytes.isEmpty else { return }
@@ -145,8 +149,7 @@ extension MotionSDK {
       }
       .store(in: &bleCancellables)
 
-    ble.$status
-      .map { $0 == .connected }
+    triki.$isConnected
       .removeDuplicates()
       .sink { [weak self] connected in
         self?.isConnected = connected
@@ -158,11 +161,24 @@ extension MotionSDK {
   /// Handles `resetConnectionState`.
   func resetConnectionState() {
     streamParser?.resetStream()
+    trikiController?.resetSession()
     reset()
     liveInput = GameInput()
     latestEnrichedInput = GameInput()
     isReceiving = false
     lastHudPublishAt = 0
+  }
+
+  /// Mapuje wyjście gamepada na silnik pozycji (bez surowych osi w API gry).
+  func applyTrikiGamepadToEngine() {
+    guard let triki = trikiController else { return }
+    let pad = triki.gameInput
+    if config.mode == .paddle {
+      let scaled = Double(pad.direction) * BLEGyroParser.gyroDivisor
+      engine.setRawX(scaled)
+    } else {
+      engine.updateRaw(x: Double(pad.direction), y: Double(pad.velocity))
+    }
   }
 
   /// Handles `refreshLiveInputFromEngine`.
@@ -219,7 +235,7 @@ extension MotionSDK {
       enriched.lateralSmooth = output.x
       enriched.velocityY = dbg.relY
       enriched.intensity = output.velocityX
-      enriched.shake = impulses.shake
+      enriched.shake = impulses.shake || (trikiController?.gameInput.isShake ?? false)
       enriched.sensors = parser.sensors
       enriched.pointerDirection = pointerDirection(posX: output.x, posY: output.y)
     }
