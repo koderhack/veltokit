@@ -26,6 +26,9 @@ final class TrikiUINavigator: ObservableObject {
   private var itemCount = 0
   private var onActivate: ((Int) -> Void)?
   private var holdTracker = TrikiHoldTracker()
+  private var focusGate = TrikiFocusGate()
+  private var confirmGate = TrikiButtonConfirmGate()
+  private var preferButtonConfirm = false
   private var focusSettleRemaining: TimeInterval = 0
   private var neutralGraceRemaining: TimeInterval = 0
   private var lastTimestamp: TimeInterval?
@@ -34,15 +37,23 @@ final class TrikiUINavigator: ObservableObject {
   ///
   /// - Parameters:
   ///   - itemCount: Number of focusable items on the target screen.
+  ///   - preferButtonConfirm: When true, only the BLE button confirms (no hold auto-activate).
   ///   - onActivate: Callback executed when user confirms focused item.
-  func configure(itemCount: Int, onActivate: @escaping (Int) -> Void) {
+  func configure(
+    itemCount: Int,
+    preferButtonConfirm: Bool = false,
+    onActivate: @escaping (Int) -> Void
+  ) {
     self.itemCount = max(1, itemCount)
+    self.preferButtonConfirm = preferButtonConfirm
     self.onActivate = onActivate
     if let focusIndex, focusIndex >= self.itemCount {
       self.focusIndex = nil
     }
     isConfigured = true
     holdTracker.reset()
+    focusGate.reset()
+    confirmGate.reset()
     focusSettleRemaining = 0
     neutralGraceRemaining = 0
     holdProgress = 0
@@ -55,6 +66,9 @@ final class TrikiUINavigator: ObservableObject {
     onActivate = nil
     focusIndex = nil
     holdTracker.reset()
+    focusGate.reset()
+    confirmGate.reset()
+    preferButtonConfirm = false
     focusSettleRemaining = 0
     neutralGraceRemaining = 0
     holdProgress = 0
@@ -104,13 +118,13 @@ final class TrikiUINavigator: ObservableObject {
     }
     lastTimestamp = now
 
+    let input = motion.pollInput(deltaTime: deltaTime)
+
     guard motion.isTrikiControlAvailable else {
       holdTracker.reset()
       holdProgress = 0
       return
     }
-
-    let input = motion.pollInput(deltaTime: deltaTime)
 
     guard let index = TrikiUIMath.focusedSlot(
       posX: input.posX,
@@ -134,9 +148,17 @@ final class TrikiUINavigator: ObservableObject {
 
     neutralGraceRemaining = 0
 
-    if index != focusIndex {
+    let resolved = focusGate.resolve(
+      rawIndex: index,
+      current: focusIndex,
+      deltaTime: deltaTime,
+      adjacentDwell: TrikiUIConfig.focusSwitchDurationAdjacent,
+      jumpDwell: TrikiUIConfig.focusSwitchDuration
+    ) ?? index
+
+    if resolved != focusIndex {
       QuizSFX.menuFocus()
-      focusIndex = index
+      focusIndex = resolved
       focusSettleRemaining = TrikiUIConfig.focusSettleDuration
       holdTracker.reset()
       holdProgress = 0
@@ -149,19 +171,24 @@ final class TrikiUINavigator: ObservableObject {
       return
     }
 
-    if input.primaryAction {
+    if confirmGate.consume(input: input, deltaTime: deltaTime) {
       holdProgress = 0
       holdTracker.reset()
       QuizSFX.menuConfirm()
-      onActivate?(index)
+      onActivate?(resolved)
       focusSettleRemaining = TrikiUIConfig.focusSettleDuration
+      return
+    }
+
+    guard !preferButtonConfirm else {
+      holdProgress = 0
       return
     }
 
     if holdTracker.advance(deltaTime: deltaTime, duration: TrikiUIConfig.menuHoldDuration) {
       holdProgress = 0
       QuizSFX.menuConfirm()
-      onActivate?(index)
+      onActivate?(resolved)
       holdTracker.reset()
       focusSettleRemaining = TrikiUIConfig.focusSettleDuration
     } else {

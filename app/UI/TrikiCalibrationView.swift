@@ -44,7 +44,7 @@ struct TrikiCalibrationView: View {
               .foregroundStyle(.black)
           }
           .buttonStyle(.plain)
-          .disabled(!motion.isReceiving)
+          .disabled(!motion.isTrikiControlAvailable)
 
           Button(action: skip) {
             Text("PÓŹNIEJ")
@@ -63,27 +63,22 @@ struct TrikiCalibrationView: View {
     .onAppear {
       GameManager.applyUIMode(to: motion)
     }
-    .background {
-      TimelineView(.periodic(from: .now, by: 1.0 / 30.0)) { _ in
-        Color.clear.onAppear {
-          _ = motion.pollInput()
-        }
-      }
-    }
+    .motionInputPolling(motion)
   }
 
   private var signalCard: some View {
     let input = motion.liveInput
-    let ready = motion.isReceiving
+    let ready = motion.isTrikiControlAvailable
+    let live = motion.isTrikiGameplayActive
 
     return VStack(spacing: 10) {
       HStack {
         Circle()
-          .fill(ready ? NeonTheme.neonGreen : Color.red.opacity(0.85))
+          .fill(motion.linkIndicatorColor)
           .frame(width: 10, height: 10)
-        Text(ready ? "Sygnał BLE OK" : "Czekam na dane z Triki…")
+        Text(live ? "Sygnał BLE · \(motion.bleMode.statusLabel)" : (ready ? "Triki · \(motion.bleMode.statusLabel)" : "Czekam na Triki…"))
           .font(.system(size: 12, weight: .bold, design: .monospaced))
-          .foregroundStyle(ready ? NeonTheme.neonGreen : NeonTheme.neonOrange)
+          .foregroundStyle(live ? NeonTheme.neonGreen : NeonTheme.neonOrange)
         Spacer()
         Text("pos \(String(format: "%+.2f", input.posX))")
           .font(.system(size: 12, weight: .bold, design: .monospaced))

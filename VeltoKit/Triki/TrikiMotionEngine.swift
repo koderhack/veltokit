@@ -29,7 +29,6 @@ public struct TrikiMotionEngine: Sendable {
 
   private var previousPrimary: Float = 0
   private var previousVelocity: Float = 0
-  private var directionLP: Float = 0
   private var tiltSignStreak: Int = 0
   private var lastTiltSign: Int = 0
   private var swingArmed = false
@@ -46,7 +45,6 @@ public struct TrikiMotionEngine: Sendable {
   public mutating func reset() {
     previousPrimary = 0
     previousVelocity = 0
-    directionLP = 0
     tiltSignStreak = 0
     lastTiltSign = 0
     swingArmed = false
@@ -133,11 +131,10 @@ public struct TrikiMotionEngine: Sendable {
     let velocity = (current - previousPrimary) / dt
     let acceleration = (velocity - previousVelocity) / dt
     previousPrimary = current
-    previousVelocity = velocity * 0.5
+    previousVelocity = velocity
 
-    directionLP += tuning.directionAlpha * (current - directionLP)
-    output.direction = min(1, max(-1, directionLP))
-    output.velocity = abs(velocity) * 0.6
+    output.direction = min(1, max(-1, Float(current)))
+    output.velocity = abs(velocity)
     output.isMoving = abs(current) > tuning.moveThreshold || abs(velocity) > tuning.moveThreshold
 
     applyShake(frame: frame, acceleration: acceleration, tuning: tuning, now: now)

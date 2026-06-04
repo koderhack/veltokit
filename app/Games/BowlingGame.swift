@@ -162,7 +162,7 @@ final class BowlingGame: Game {
           confirmTurnStart()
         }
         _ = inputHandler.update(input: input, deltaTime: deltaTime, aimEnabled: true, throwsEnabled: false)
-        scene.setAiming(lateralPosX: inputHandler.smoothedPosX)
+        scene.setAiming(lateralPosX: inputHandler.aimPosX)
       } else {
         setupCountdown = max(0, setupCountdown - deltaTime)
         let readyToThrow = setupCountdown <= 0 && calibrationAppliedThisSetup
@@ -174,7 +174,7 @@ final class BowlingGame: Game {
           aimEnabled: true,
           throwsEnabled: throwsEnabled
         )
-        scene.setAiming(lateralPosX: inputHandler.smoothedPosX)
+        scene.setAiming(lateralPosX: inputHandler.aimPosX)
 
         runInvisibleCalibration(input: input, deltaTime: deltaTime)
         if setupCountdown <= 0, !calibrationAppliedThisSetup {
@@ -336,7 +336,7 @@ final class BowlingGame: Game {
   private func applyInvisibleCalibration(_ result: BowlingInvisibleCalibrator.Result) {
     guard !calibrationAppliedThisSetup else { return }
     calibrationAppliedThisSetup = true
-    inputHandler.applyInvisibleCalibration(result, currentAim: inputHandler.smoothedPosX)
+    inputHandler.applyInvisibleCalibration(result, currentAim: inputHandler.aimPosX)
     requestMotionCalibration = true
   }
 

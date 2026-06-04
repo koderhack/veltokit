@@ -21,7 +21,7 @@ final class GameTuning: ObservableObject {
     gyroWeight = d.object(forKey: Keys.gyroWeight) as? Double ?? 1
     tiltWeight = d.object(forKey: Keys.tiltWeight) as? Double ?? 0
     lateralDeadzone = d.object(forKey: Keys.lateralDeadzone) as? Double ?? 0.01
-    lateralSmoothing = d.object(forKey: Keys.lateralSmoothing) as? Double ?? 10
+    lateralSmoothing = d.object(forKey: Keys.lateralSmoothing) as? Double ?? 0
     movementSpeed = d.object(forKey: Keys.movementSpeed) as? Double ?? 260
   }
 
@@ -32,7 +32,7 @@ final class GameTuning: ObservableObject {
     gyroWeight = 1
     tiltWeight = 0
     lateralDeadzone = 0.03
-    lateralSmoothing = 0.3
+    lateralSmoothing = 0
     movementSpeed = 260
   }
 

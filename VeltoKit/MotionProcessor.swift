@@ -138,12 +138,20 @@ final class MotionProcessor {
 
     let scale = max(0.001, frameScale)
     if stableInput != 0 {
-      let retain = pow(config.paddleSmoothRetain, scale)
-      smoothX = smoothX * retain + stableInput * (1 - retain)
+      if config.paddleSmoothBlend >= 1, config.paddleSmoothRetain <= 0 {
+        smoothX = stableInput
+      } else {
+        let retain = pow(config.paddleSmoothRetain, scale)
+        smoothX = smoothX * retain + stableInput * (1 - retain)
+      }
     } else {
-      let retainIdle = pow(config.paddleSmoothRetainIdle, scale)
-      smoothX *= retainIdle
-      if abs(smoothX) < 0.02 { smoothX = 0 }
+      if config.paddleSmoothRetainIdle <= 0 {
+        smoothX = 0
+      } else {
+        let retainIdle = pow(config.paddleSmoothRetainIdle, scale)
+        smoothX *= retainIdle
+        if abs(smoothX) < 0.02 { smoothX = 0 }
+      }
     }
 
     let cap = max(0.1, config.paddleSmoothMax)

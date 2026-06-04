@@ -383,7 +383,7 @@ final class BowlingGameScene: SCNScene {
       clampBallSpeed()
       constrainBallToLane()
       resolveBallPinHits()
-      if ballInPinZone {
+      if rollElapsed >= 0.35, ballTravelDistance >= minTravelBeforeScore {
         processKnockedPinsDuringRoll()
       }
       updateCamera(toBall: ballNode.presentation.position, immediate: false)
@@ -569,9 +569,14 @@ final class BowlingGameScene: SCNScene {
     return stoppedFor >= 0.45 && stopped && rollElapsed >= 1.4
   }
 
-  /// Wykonuje operację `processKnockedPinsDuringRoll` w bieżącym kontekście gry/UI.
+  /// Zaznacza kręgle przewrócone fizyką (również po zderzeniu z innym kręglem), żeby wynik = animacja.
   func processKnockedPinsDuringRoll() {
-    // Punktacja tylko za bezpośredni kontakt kuli — bez łańcuchowej reakcji.
+    guard phase == .rolling || phase == .settling else { return }
+    for index in pinStates.indices where !pinStates[index].knocked {
+      if isPinFallen(index) {
+        knockPin(at: index, fromBall: false, applyImpulse: false)
+      }
+    }
   }
 
   /// Trafienie kuli — kręgel przewraca się fizycznie, zostaje w scenie do końca rzutu.
@@ -615,7 +620,8 @@ final class BowlingGameScene: SCNScene {
 
   private func isPinFallen(_ index: Int) -> Bool {
     if pinStates[index].knocked { return true }
-    guard ballTravelDistance >= 8.0 else { return false }
+    guard rollElapsed >= 0.25 else { return false }
+    guard ballTravelDistance >= minTravelBeforeScore || ballInPinZone else { return false }
 
     let root = pinStates[index].node
     let rest = pinStates[index].restPosition
@@ -626,9 +632,9 @@ final class BowlingGameScene: SCNScene {
 
     let tiltX = abs(root.presentation.eulerAngles.x)
     let tiltZ = abs(root.presentation.eulerAngles.z)
-    let tilted = tiltX > 0.72 || tiltZ > 0.72
-    let fallen = world.y < rest.y - 0.02
-    let pushed = horizontal > 0.22
+    let tilted = tiltX > 0.52 || tiltZ > 0.52
+    let fallen = world.y < rest.y - 0.015
+    let pushed = horizontal > 0.14
 
     return fallen || (tilted && pushed)
   }
@@ -677,9 +683,9 @@ final class BowlingGameScene: SCNScene {
     pinStates.filter(\.knocked).count
   }
 
-  /// Do punktacji — wyłącznie kręgle trafione bezpośrednio przez kulkę.
+  /// Do punktacji — wszystkie kręgle powalone w tym rzucie (kula + reakcja łańcuchowa).
   func countScoredPins() -> Int {
-    pinStates.filter(\.hitByBall).count
+    pinStates.filter(\.knocked).count
   }
 
   /// Wykonuje operację `resetBall` w bieżącym kontekście gry/UI.

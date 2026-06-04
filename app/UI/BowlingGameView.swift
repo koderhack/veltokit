@@ -117,7 +117,7 @@ struct BowlingGameView: View {
       engine.step(now: now)
       uiTick &+= 1
       if uiTick % 6 == 0 {
-        linkActive = inputProvider.isReceiving
+        linkActive = inputProvider.isTrikiControlAvailable
         _ = inputProvider.pollInput()
       }
       if bowlingOnTV || quizDisplay.isExternalScreenConnected {
@@ -220,7 +220,7 @@ struct BowlingGameView: View {
       .accessibilityLabel("Odwróć lewo prawo")
 
       Circle()
-        .fill(linkActive ? NeonTheme.neonGreen : Color.red.opacity(0.85))
+        .fill(inputProvider.linkIndicatorColor)
         .frame(width: 7, height: 7)
     }
     .padding(.horizontal, 12)

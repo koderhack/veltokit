@@ -1,20 +1,37 @@
 import SwiftUI
 import VeltoKit
 
-/// Wspólne elementy HUD w grach (sterowanie, połączenie Triki).
 enum ArcadeHUD {
-  /// Buduje plakietkę stanu połączenia Triki dla ekranów gry.
-  ///
-  /// - Parameters:
-  ///   - connected: Czy telefon jest połączony z sesją wejścia.
-  ///   - receiving: Czy napływają aktualne próbki ruchu.
-  /// - Returns: Widok z kolorem statusu i etykietą połączenia.
   static func connectionBadge(connected: Bool, receiving: Bool) -> some View {
-    HStack(spacing: 6) {
+    connectionBadge(connected: connected, receiving: receiving, bleMode: .unknown)
+  }
+
+  static func connectionBadge(
+    connected: Bool,
+    receiving: Bool,
+    bleMode: TrikiBLEMode
+  ) -> some View {
+    let (dot, label): (Color, String) = {
+      guard connected else { return (.red, "BRAK TRIKI") }
+      switch bleMode {
+      case .fast where receiving:
+        return (.green, "TRIKI · SZYBKI")
+      case .normal where receiving:
+        return (NeonTheme.neonCyan, "TRIKI · NORMAL")
+      case .lowPower:
+        return (NeonTheme.neonOrange, receiving ? "TRIKI · CZUWANIE" : "TRIKI · OSZCZ.")
+      case .fast, .normal:
+        return (.orange, "POŁĄCZONO")
+      case .unknown:
+        return (receiving ? .green : .orange, receiving ? "TRIKI LIVE" : "POŁĄCZONO")
+      }
+    }()
+
+    return HStack(spacing: 6) {
       Circle()
-        .fill(connected ? (receiving ? Color.green : Color.orange) : Color.red)
+        .fill(dot)
         .frame(width: 8, height: 8)
-      Text(connected ? (receiving ? "TRIKI LIVE" : "POŁĄCZONO") : "BRAK TRIKI")
+      Text(label)
         .font(.system(size: 9, weight: .bold, design: .monospaced))
     }
     .padding(.horizontal, 8)
@@ -23,11 +40,6 @@ enum ArcadeHUD {
     .clipShape(Capsule())
   }
 
-  /// Buduje pojedynczy wiersz diagnostyczny HUD (etykieta + wartość).
-  ///
-  /// - Parameters:
-  ///   - label: Nazwa metryki.
-  ///   - value: Sformatowana wartość metryki.
   static func motionRow(label: String, value: String) -> some View {
     HStack {
       Text(label)

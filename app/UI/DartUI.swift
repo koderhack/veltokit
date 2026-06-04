@@ -7,6 +7,8 @@ struct DartPhonePilotPanel: View {
   let isConnected: Bool
   /// Przechowuje wartość `isReceiving` wykorzystywaną przez dany komponent.
   let isReceiving: Bool
+  /// Kolor statusu połączenia (tryb BLE).
+  let linkIndicatorColor: Color
   /// Przechowuje wartość `motionEnergy` wykorzystywaną przez dany komponent.
   let motionEnergy: Double
   /// Przechowuje wartość `throwState` wykorzystywaną przez dany komponent.
@@ -35,7 +37,7 @@ struct DartPhonePilotPanel: View {
         }
         Spacer()
         Circle()
-          .fill(isReceiving ? NeonTheme.neonGreen : (isConnected ? NeonTheme.neonOrange : Color.red))
+          .fill(linkIndicatorColor)
           .frame(width: 9, height: 9)
       }
 

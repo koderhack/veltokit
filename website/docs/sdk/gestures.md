@@ -35,7 +35,7 @@ if input.shotTriggered {
 }
 ```
 
-`input.primaryAction` is also `true` on the throw frame (click OR throw).
+In **`.gesture`** and **`.pointer`** modes, `input.primaryAction` is also `true` on the throw frame (click OR throw OR velocity action). In **`.paddle`** mode, `primaryAction` is the BLE button only — see [GameInput](./game-input#primary-action-by-mode).
 
 ## Tuning
 

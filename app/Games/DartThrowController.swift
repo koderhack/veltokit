@@ -20,15 +20,12 @@ final class DartThrowController {
   }
 
   private(set) var state: ThrowState = .idle
-  private(set) var smoothedTiltVelocity: Double = 0
-  private(set) var smoothedGyroForward: Double = 0
+  private(set) var tiltVelocity: Double = 0
+  private(set) var gyroForward: Double = 0
   private(set) var lastReleasePeakGyro: Double = 0
   private(set) var lastReleaseTiltVelocity: Double = 0
 
   private var lastTiltAxis: Double = 0
-  private var tiltDeltaBuffer: [Double] = []
-  private var gyroBuffer: [Double] = []
-  private let bufferSize = 8
   private var cooldown: TimeInterval = 0
   private var throwConfirmFrames = 0
 
@@ -92,11 +89,9 @@ final class DartThrowController {
   func reset(tiltAxis: Double = 0) {
     state = .idle
     lastTiltAxis = tiltAxis
-    tiltDeltaBuffer.removeAll(keepingCapacity: true)
-    gyroBuffer.removeAll(keepingCapacity: true)
-    smoothedTiltVelocity = 0
-    smoothedGyroForward = 0
     cooldown = 0
+    tiltVelocity = 0
+    gyroForward = 0
     idleNeutralTilt = tiltAxis
     pullStartTilt = tiltAxis
     readyTilt = tiltAxis
@@ -137,16 +132,13 @@ final class DartThrowController {
     let tiltDelta = tiltAxis - lastTiltAxis
     lastTiltAxis = tiltAxis
 
-    push(tiltDelta, into: &tiltDeltaBuffer)
-    let gyroSignal = max(0, gyroForward - gyroNoiseFloor)
-    push(gyroSignal, into: &gyroBuffer)
-    smoothedTiltVelocity = average(tiltDeltaBuffer)
-    smoothedGyroForward = average(gyroBuffer)
+    tiltVelocity = tiltDelta
+    self.gyroForward = max(0, gyroForward - gyroNoiseFloor)
 
     switch state {
     case .idle:
-      if abs(smoothedTiltVelocity) < idleStability {
-        idleNeutralTilt = idleNeutralTilt * 0.94 + tiltAxis * 0.06
+      if abs(tiltVelocity) < idleStability {
+        idleNeutralTilt = tiltAxis
       }
       beginPullbackIfNeeded(tiltAxis: tiltAxis, tiltDelta: tiltDelta, zone: zone)
 
@@ -165,7 +157,7 @@ final class DartThrowController {
 
     case .ready:
       readyElapsed += dt
-      peakGyroWhileReady = max(peakGyroWhileReady, gyroForward, smoothedGyroForward)
+      peakGyroWhileReady = max(peakGyroWhileReady, gyroForward, self.gyroForward)
       if pullDepthFromNeutral(tiltAxis: tiltAxis) >= minPullDepth * 0.38 / zone {
         readyHoldElapsed += dt
       } else {
@@ -184,9 +176,9 @@ final class DartThrowController {
           state = .throwing
           cooldown = shotCooldown
           throwConfirmFrames = 0
-          let peak = max(peakGyroWhileReady, smoothedGyroForward, abs(smoothedTiltVelocity) * 5)
+          let peak = max(peakGyroWhileReady, self.gyroForward, abs(tiltVelocity) * 5)
           lastReleasePeakGyro = peak
-          lastReleaseTiltVelocity = smoothedTiltVelocity
+          lastReleaseTiltVelocity = tiltVelocity
           return throwPower(from: peak, zone: zone)
         }
       } else {
@@ -214,8 +206,8 @@ final class DartThrowController {
     peakGyro: Double
   ) -> Bool {
     let forward = forwardDepth(tiltAxis: tiltAxis)
-    let gyro = max(peakGyro, smoothedGyroForward)
-    let tiltPush = smoothedTiltVelocity > baseThrowTiltVelocity / zone
+    let gyro = max(peakGyro, self.gyroForward)
+    let tiltPush = tiltVelocity > baseThrowTiltVelocity / zone
     let impulse = forwardImpulse(delta: tiltDelta, zone: zone)
     let minForward = minForwardDepth / zone
 
@@ -235,14 +227,14 @@ final class DartThrowController {
     let pullSpeed = abs(basePullTiltVelocity) * zone
     let dist = abs(tiltAxis - idleNeutralTilt)
     let minDist = max(minPullDepth * 0.5 / zone, pullSpeed * 0.55)
-    let moving = abs(smoothedTiltVelocity) >= pullSpeed * 0.95
+    let moving = abs(tiltVelocity) >= pullSpeed * 0.95
       || abs(tiltDelta) >= pullSpeed * 0.95
 
     guard moving, dist >= minDist else { return }
 
     pullDecreasesAxis = (tiltAxis - idleNeutralTilt) < 0
-    if abs(smoothedTiltVelocity) >= pullSpeed * 0.95 {
-      pullDecreasesAxis = smoothedTiltVelocity < 0
+    if abs(tiltVelocity) >= pullSpeed * 0.95 {
+      pullDecreasesAxis = tiltVelocity < 0
     } else if abs(tiltDelta) >= pullSpeed * 0.95 {
       pullDecreasesAxis = tiltDelta < 0
     }
@@ -276,17 +268,5 @@ final class DartThrowController {
     let ref = minThrowGyroImpulse / zone
     let scaled = peak / max(0.001, ref)
     return min(20, max(4, scaled * 9))
-  }
-
-  private func push(_ value: Double, into buffer: inout [Double]) {
-    buffer.append(value)
-    if buffer.count > bufferSize {
-      buffer.removeFirst(buffer.count - bufferSize)
-    }
-  }
-
-  private func average(_ buffer: [Double]) -> Double {
-    guard !buffer.isEmpty else { return 0 }
-    return buffer.reduce(0, +) / Double(buffer.count)
   }
 }

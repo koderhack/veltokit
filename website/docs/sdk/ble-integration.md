@@ -36,11 +36,64 @@ let pad = triki.tick(deltaTime: dt)
 
 The stack measures **Δt between notify packets** and debounces mode changes (3 consecutive samples):
 
-| Mode | Typical Δt | Motion behavior |
-|------|------------|-----------------|
-| `fast` | &lt; 30 ms | Velocity + swing, full gameplay |
-| `normal` | 30 ms – 200 ms | Direction + light smoothing |
-| `lowPower` | &gt; 200 ms | Tilt / shake only, reduced HUD rate, idle message |
+| Mode | Typical Δt | `TrikiInputStrategy` | Game drivers |
+|------|------------|----------------------|--------------|
+| `fast` | &lt; 30 ms | `.velocity` | Δpos + position follow |
+| `normal` | 30 ms – 200 ms | `.hybrid` | Δpos + tilt hold |
+| `lowPower` | &gt; 200 ms | `.threshold` | Tilt edges + debounce |
+
+Each `pollInput` enriches `GameInput` with `bleMode`, `frameDeltaX/Y`, `trikiVelocity`, `tiltLeft`/`tiltRight`.
+
+Use SDK drivers (presets per mode):
+
+```swift
+var paddle = TrikiPaddleDriver()
+var menu = TrikiMenuDriver()
+var pointer = TrikiPointerDriver()
+var lateral = TrikiLateralDriver()
+
+let x = paddle.steer(current: paddleX, input: input, deltaTime: dt, courtCenter: center)
+let menuStep = menu.step(input: input, deltaTime: dt, slots: 4, currentSelection: selected)
+```
+
+| Driver | Sample games |
+|--------|----------------|
+| `TrikiPaddleDriver` | Pong — bezpośrednio `posX` w grze (jak przed adaptive input) |
+| `TrikiMenuDriver` | Quiz |
+| `TrikiPointerDriver` | Dart aim |
+| `TrikiLateralDriver` | Bowling aim |
+
+**FAST mode shaping:** high-rate notify can spike Δpos — `TrikiVelocityController` applies deadzone → clamp → sensitivity per mode before drivers move gameplay. Source: `VeltoKit/Triki/TrikiVelocityController.swift`.
+
+### Game-specific input (`TrikiGameInputManager`)
+
+Per-game strategies on **raw** `velocity = current − last` (never clamped for events). Movement uses filtered signal only in Pong.
+
+| `GameMode` | Strategy |
+|------------|----------|
+| `.pong` | **`TrikiControlStyle`:** `.raw` (×2.5, dz 0.3), `.arcade` (×3), `.smooth` (EMA) — default **raw** |
+| `.quiz` | `posX` → slot A–D; **przycisk BLE** (edge + cooldown) = zatwierdzenie — bez hold / velocity |
+| `.bowling` | Peak velocity + release detection, 0.7 s cooldown |
+| `.dart` | Spike > 7 + 0.5 s cooldown |
+
+```swift
+var inputMgr = TrikiGameInputManager(mode: .pong)
+inputMgr.config.pongControlStyle = .raw  // .arcade | .smooth
+let frame = inputMgr.process(input: input, deltaTime: dt)
+inputMgr.applyPongMovement(to: &paddleX, frame: frame, minX: minX, maxX: maxX)
+```
+
+Source: `VeltoKit/Triki/TrikiGameInputManager.swift`. Sample games wire this in `app/Games/`.
+
+| Mode | deadzone | max Δ | sensitivity |
+|------|----------|-------|-------------|
+| `fast` | 0.004 | 0.012 | 0.22 |
+| `normal` | 0.0018 | 0.028 | 0.42 |
+| `lowPower` | 0.005 | 0.045 | 0.62 |
+
+```swift
+let shaped = TrikiVelocityController.shape(input.frameDeltaX, mode: input.bleMode)
+```
 
 ```swift
 triki.onModeChanged { mode in
@@ -93,7 +146,16 @@ Documented from `BLEGyroParser` + `BLEButtonDecoder`:
 
 - Packet header **`0x22`** on `bytes[0]`
 - Button state on **`bytes[1]`** (`0` / `1`)
-- **Rising edge** `0→1` → `primaryAction` for one frame
+- **Rising edge** `0→1` → one-frame click impulse (`ButtonDetector.consumeClick()`)
+
+`primaryAction` mapping depends on `MotionMode`:
+
+| Mode | Maps to `primaryAction` |
+|------|-------------------------|
+| `.paddle` | BLE click edge **only** |
+| `.pointer`, `.gesture` | Click **or** throw **or** `TrikiMotionEngine.isAction` |
+
+Triki gamepad velocity (`onAction`) is still available on `GameInput.trikiVelocity` / `isMoving` — it does **not** set `primaryAction` in paddle mode, so Quiz and menus are not auto-confirmed by fast tilts.
 
 :::caution Unofficial
 Packet layout is reverse-engineered for education. Your peripheral may differ — log hex in DEV and adapt.
@@ -115,7 +177,7 @@ Paddle mode may use `BLEGyroParser.gyroRawFromPacket` inside `enqueueBLE` withou
 
 ## TrikiInputAdapter (sample app — optional)
 
-Thin wrapper around `MotionSDK` for the **gametriki** demo (calibration prompts, `ObservableObject`):
+Thin wrapper around `MotionSDK` for the **gametriki** demo (`ObservableObject`, HUD wiring):
 
 ```swift
 let adapter = TrikiInputAdapter()
@@ -128,8 +190,8 @@ let input = adapter.pollInput(deltaTime: dt)
 | API | Role |
 |-----|------|
 | `connect()` / `disconnect()` | Forwards to `motionSDK` |
-| `performCalibration()` | `motionSDK.calibrateNeutralPose()` + UI state |
-| `pollInput(deltaTime:)` | Forwards to `motionSDK.pollInput` + auto-calibration prompt |
+| `performCalibration()` | Manual neutral pose — Dev Mode **ZERO** or your own UI |
+| `pollInput(deltaTime:)` | Forwards to `motionSDK.pollInput` |
 | `motionSDK` | Escape hatch to low-level SDK |
 
 Type alias: `MotionInputProvider = TrikiInputAdapter`. Source: `app/Platform/` (not required for SPM-only apps).

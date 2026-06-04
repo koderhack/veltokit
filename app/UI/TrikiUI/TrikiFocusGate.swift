@@ -26,7 +26,13 @@ struct TrikiFocusGate {
   ///   - deltaTime: Elapsed frame time in seconds.
   /// - Returns: Active slot to render and use for activation. Can remain on `current` while dwell
   ///   timing is still in progress.
-  mutating func resolve(rawIndex: Int?, current: Int?, deltaTime: TimeInterval) -> Int? {
+  mutating func resolve(
+    rawIndex: Int?,
+    current: Int?,
+    deltaTime: TimeInterval,
+    adjacentDwell: TimeInterval = TrikiUIConfig.focusSwitchDurationAdjacent,
+    jumpDwell: TimeInterval = TrikiUIConfig.focusSwitchDuration
+  ) -> Int? {
     guard let rawIndex else {
       reset()
       return nil
@@ -37,9 +43,7 @@ struct TrikiFocusGate {
       return rawIndex
     }
 
-    let dwell = abs(rawIndex - current) == 1
-      ? TrikiUIConfig.focusSwitchDurationAdjacent
-      : TrikiUIConfig.focusSwitchDuration
+    let dwell = abs(rawIndex - current) == 1 ? adjacentDwell : jumpDwell
 
     if pendingIndex != rawIndex {
       pendingIndex = rawIndex

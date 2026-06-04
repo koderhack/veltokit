@@ -149,7 +149,7 @@ public struct MotionConfig: Equatable, Sendable {
       cfg.axisMapping.invertX = false
       cfg.axisMapping.invertY = true
       cfg.referenceDriftEnabled = false
-      cfg.inputSmoothing = 0
+      cfg.inputSmoothing = 1.0
       cfg.deadzone = 0
       cfg.pointerSensitivity = 0
       cfg.pointerRotDamping = 1
@@ -160,10 +160,10 @@ public struct MotionConfig: Equatable, Sendable {
       cfg.paddleAutoCalibBlend = 0.015
       cfg.paddleAutoCalibMaxSteer = 0.06
       cfg.paddleAutoCalibEnabled = true
-      cfg.paddleSmoothRetain = 0.58
-      cfg.paddleSmoothBlend = 0.42
-      cfg.paddleSmoothRetainIdle = 0.76
-      cfg.paddleRawSmoothing = 0.22
+      cfg.paddleSmoothRetain = 0
+      cfg.paddleSmoothBlend = 1
+      cfg.paddleSmoothRetainIdle = 0
+      cfg.paddleRawSmoothing = 1.0
       cfg.paddleSmoothMax = 2
       cfg.paddleRawDivisor = 100
       cfg.paddleRawDeadband = 8
@@ -190,7 +190,8 @@ public struct MotionConfig: Equatable, Sendable {
       cfg.deadzone = 0.02
       cfg.pointerSensitivity = 0.03
       cfg.pointerRotDamping = 0.98
-      cfg.pointerOutputSmoothing = 0.15
+      cfg.pointerOutputSmoothing = 0
+      cfg.inputSmoothing = 1.0
     case .gesture:
       cfg.sensorInput = .gyro
       cfg.axisMapping.inputX = .gyroY
@@ -198,11 +199,11 @@ public struct MotionConfig: Equatable, Sendable {
       cfg.axisMapping.invertX = false
       cfg.axisMapping.invertY = true
       cfg.referenceDriftEnabled = false
-      cfg.inputSmoothing = 0.35
+      cfg.inputSmoothing = 1.0
       cfg.deadzone = 0.02
       cfg.pointerSensitivity = 0.045
       cfg.pointerRotDamping = 0.96
-      cfg.pointerOutputSmoothing = 0.22
+      cfg.pointerOutputSmoothing = 0
       cfg.gestureThreshold = 0.28
       cfg.gestureCooldown = 0.45
       cfg.gestureMinRelY = 0.10

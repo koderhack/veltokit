@@ -28,6 +28,9 @@ final class PongGame: Game {
   }
 
   private var paddleX = Double(GameContext.width / 2)
+  /// Wygładzone `posX` (neutral = 0, nie 0.5).
+  private var smoothedPosX = 0.0
+  private var paddleInputSeeded = false
   private var ballX = Double(GameContext.width / 2)
   private var ballY = Double(GameContext.height - 20)
   private var ballVX = 40.0
@@ -42,8 +45,12 @@ final class PongGame: Game {
   private let startingLives = 5
   private let ballSpeed = 40.0
   private let paddleHitMaxVX = 62.0
-  /// smoothX × scale → offset od środka (160 px pole ≈ 66 px przy |smooth|≈1).
-  private let paddleScreenScale = 66.0
+  /// `posX` (0 = środek, ±~2) × scale → offset od środka kortu.
+  private let paddleScreenScale = 72.0
+  /// Maks. przesunięcie paletki na klatkę (px) — ogranicza „latanie”.
+  private let paddleMaxStepPerFrame = 11.0
+  private let posXSmoothing: Double = 0.62
+  private let paddleFollowRate: Double = 22.0
   private let paddleY = Double(GameContext.height - 8)
   private let ballSize = 2.0
   private let physicsStep = 1.0 / 60.0
@@ -57,6 +64,8 @@ final class PongGame: Game {
     gameOver = false
     win = false
     paddleX = Double(GameContext.width / 2)
+    smoothedPosX = 0
+    paddleInputSeeded = false
     spawnBricks()
     resetBall(serveFromPaddle: true)
   }
@@ -85,8 +94,21 @@ final class PongGame: Game {
     let centerX = Double(GameContext.width) / 2
     let minX = paddleHalfWidth
     let maxX = Double(GameContext.width) - paddleHalfWidth
-    let targetX = centerX + input.posX * paddleScreenScale
-    paddleX = min(maxX, max(minX, targetX))
+
+    if !paddleInputSeeded {
+      smoothedPosX = input.posX
+      paddleInputSeeded = true
+    } else {
+      smoothedPosX = smoothedPosX * posXSmoothing + input.posX * (1 - posXSmoothing)
+    }
+
+    let targetX = centerX + smoothedPosX * paddleScreenScale
+    var error = targetX - paddleX
+    var cap = paddleMaxStepPerFrame * max(0.5, dt * 60)
+    if abs(error) > 12 { cap *= 1.55 }
+    var step = error * min(1, dt * paddleFollowRate)
+    step = min(cap, max(-cap, step))
+    paddleX = min(maxX, max(minX, paddleX + step))
 
     var remaining = dt
     while remaining > 0 {

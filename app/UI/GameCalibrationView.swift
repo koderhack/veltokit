@@ -7,8 +7,6 @@ import VeltoKit
 /// Use this screen as the entry point before gameplay to configure players, toggle TV options,
 /// and run Triki-driven lobby navigation (`.trikiUIScreen`) where available.
 
-private let calibrationRefreshInterval = 0.15
-
 /// Tworzy sesje tylko dla gry, która ich potrzebuje (Pong nie inicjuje DartSession).
 @MainActor
 private final class GameLobbySessions: ObservableObject {
@@ -220,16 +218,7 @@ struct GameCalibrationView: View {
       active: lobbyKeepsScreenAwake && !startGame && !startDartCalibration,
       music: lobbyMusic
     )
-    .background {
-      if !startGame, gameType != .dart {
-        TimelineView(.periodic(from: .now, by: calibrationRefreshInterval)) { timeline in
-          Color.clear
-            .onChange(of: timeline.date.timeIntervalSinceReferenceDate, initial: true) { _, _ in
-              _ = inputProvider.pollInput()
-            }
-        }
-      }
-    }
+    .motionInputPolling(inputProvider, active: !startGame && !startDartCalibration)
   }
 
   private var hasMotionSignal: Bool {
@@ -365,14 +354,6 @@ struct GameCalibrationView: View {
           }
         }
         .padding(16)
-      }
-    }
-    .background {
-      TimelineView(.periodic(from: .now, by: calibrationRefreshInterval)) { timeline in
-        Color.clear
-          .onChange(of: timeline.date.timeIntervalSinceReferenceDate, initial: true) { _, _ in
-            _ = inputProvider.pollInput()
-          }
       }
     }
   }

@@ -53,7 +53,7 @@ struct DartPhoneTVCompanion: View {
   private var connectionRow: some View {
     HStack(spacing: 8) {
       Circle()
-        .fill(inputProvider.isReceiving ? NeonTheme.neonGreen : (inputProvider.isConnected ? NeonTheme.neonOrange : .red))
+        .fill(inputProvider.linkIndicatorColor)
         .frame(width: 9, height: 9)
       Text(inputProvider.isConnected ? "Triki połączony" : "Podłącz Triki (Bluetooth)")
         .font(.system(size: 11, weight: .semibold, design: .monospaced))

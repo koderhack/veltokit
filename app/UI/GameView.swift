@@ -23,6 +23,16 @@ enum GameType: String, CaseIterable, Identifiable {
     }
   }
 
+  /// Tryb przetwarzania wejścia w `TrikiGameInputManager`.
+  var gameInputMode: GameMode {
+    switch self {
+    case .pong: return .pong
+    case .dart: return .dart
+    case .quiz: return .quiz
+    case .bowling: return .bowling
+    }
+  }
+
   /// Przechowuje wartość `usesQuizLoader` wykorzystywaną przez dany komponent.
   var usesQuizLoader: Bool { self == .quiz }
 
@@ -102,7 +112,7 @@ struct GameView: View {
       engine.step(now: now)
       uiTick &+= 1
       if uiTick % 20 == 0 {
-        linkActive = inputProvider.isReceiving
+        linkActive = inputProvider.isTrikiControlAvailable
       }
     }
   }
@@ -125,7 +135,7 @@ struct GameView: View {
       Spacer()
 
       Circle()
-        .fill(linkActive ? Color.green : Color.red)
+        .fill(inputProvider.linkIndicatorColor)
         .frame(width: 8, height: 8)
 
       Button {

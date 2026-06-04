@@ -124,7 +124,7 @@ struct DartGameView: View {
       engine.step(now: now)
       uiTick &+= 1
       if uiTick % 6 == 0 {
-        linkActive = inputProvider.isReceiving
+        linkActive = inputProvider.isTrikiControlAvailable
         _ = inputProvider.pollInput()
         engine.dartGame?.applyGrip(from: inputProvider.config.axisMapping)
       }
@@ -234,6 +234,7 @@ struct DartGameView: View {
       DartPhonePilotPanel(
         isConnected: inputProvider.isConnected,
         isReceiving: inputProvider.isReceiving,
+        linkIndicatorColor: inputProvider.linkIndicatorColor,
         motionEnergy: inputProvider.liveInput.sensors.motion,
         throwState: hud.throwState,
         playZoneBand: hud.playZoneBand,
@@ -302,7 +303,7 @@ struct DartGameView: View {
       }
 
       Circle()
-        .fill(linkActive ? NeonTheme.neonGreen : Color.red.opacity(0.85))
+        .fill(inputProvider.linkIndicatorColor)
         .frame(width: 7, height: 7)
     }
     .padding(.horizontal, 12)

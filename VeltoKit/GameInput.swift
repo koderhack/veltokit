@@ -59,6 +59,16 @@ public struct GameInput {
   public var gesturePrimed: Bool = false
   /// Stores `pointerDirection` used by this scope.
   public var pointerDirection: PointerDirection = .center
+  /// Wykryty tryb BLE notify (fast / normal / lowPower).
+  public var bleMode: TrikiBLEMode = .unknown
+  /// Δ`posX` od poprzedniej klatki `pollInput` (SDK).
+  public var frameDeltaX: Double = 0
+  /// Δ`posY` od poprzedniej klatki `pollInput` (SDK).
+  public var frameDeltaY: Double = 0
+  /// Prędkość z `TrikiMotionEngine` (nie mylić z `intensity` silnika pozycji).
+  public var trikiVelocity: Double = 0
+  /// Czy gamepad Triki wykrywa ruch w tej ramce.
+  public var isMoving: Bool = false
 
   /// Przycisk / impuls strzału (gry typu Dart — edge w logice gry).
   public var didShoot: Bool { primaryAction || shotTriggered }
@@ -99,6 +109,11 @@ public struct GameInput {
   ///   - throwPower: Siła rzutu gestem.
   ///   - gesturePrimed: Stan uzbrojenia gestu.
   ///   - pointerDirection: Kierunek wskaźnika.
+  ///   - bleMode: Tryb BLE notify.
+  ///   - frameDeltaX: Δ posX między klatkami.
+  ///   - frameDeltaY: Δ posY między klatkami.
+  ///   - trikiVelocity: Prędkość gamepada Triki.
+  ///   - isMoving: Ruch wykryty przez Triki.
   public init(
     moveX: Double = 0,
     moveY: Double = 0,
@@ -127,7 +142,12 @@ public struct GameInput {
     shotTriggered: Bool = false,
     throwPower: Double = 0,
     gesturePrimed: Bool = false,
-    pointerDirection: PointerDirection = .center
+    pointerDirection: PointerDirection = .center,
+    bleMode: TrikiBLEMode = .unknown,
+    frameDeltaX: Double = 0,
+    frameDeltaY: Double = 0,
+    trikiVelocity: Double = 0,
+    isMoving: Bool = false
   ) {
     self.moveX = moveX
     self.moveY = moveY
@@ -157,5 +177,10 @@ public struct GameInput {
     self.throwPower = throwPower
     self.gesturePrimed = gesturePrimed
     self.pointerDirection = pointerDirection
+    self.bleMode = bleMode
+    self.frameDeltaX = frameDeltaX
+    self.frameDeltaY = frameDeltaY
+    self.trikiVelocity = trikiVelocity
+    self.isMoving = isMoving
   }
 }

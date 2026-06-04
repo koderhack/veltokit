@@ -3,9 +3,7 @@ import VeltoKit
 
 /// Quiz — logika rundy; UI w `QuizGameView`.
 final class QuizGame: Game {
-  /// Nazwa gry widoczna w metadanych silnika.
   let name = "Quiz"
-  /// Profil wejścia określający czułość i mapowanie dla trybu quizowego.
   let inputProfile: GameInputProfile = .quiz
 
   private let questions: [Question]
@@ -14,29 +12,24 @@ final class QuizGame: Game {
   private let roundLabel: String
   private let player1Score: Int
   private let player2Score: Int
-  /// Callback wywoływany po zarejestrowaniu odpowiedzi w bieżącym pytaniu.
   var onAnswerRecorded: ((Bool) -> Void)?
-  /// Callback wywoływany po zakończeniu rundy.
   var onRoundComplete: (() -> Void)?
 
   private var index = 0
   private var roundScore = 0
   private var selected = 0
-  private var holdProgress: Double = 0
-  private var holdAnswerIndex: Int?
-  private var holdTracker = TrikiHoldTracker()
+  private var confirmGate = TrikiButtonConfirmGate()
   private var focusGate = TrikiFocusGate()
-  private var focusSettleRemaining: TimeInterval = 0
-  /// Włącza obsługę Triki focus/hold dla wyboru odpowiedzi.
+  private var smoothedPosX = 0.0
+  private var posXSeeded = false
+  /// Włącza sterowanie Triki: `posX` = wybór A–D, przycisk = zatwierdzenie.
   var isTrikiInputEnabled = false
   private var feedback: Feedback?
   private var feedbackTimer = 0.0
   private var finished = false
 
-  /// Informuje, czy gra powinna renderować błysk pikselowy (quiz nie używa tego efektu).
   var showsPixelFlash: Bool { false }
 
-  /// Snapshot stanu rundy wykorzystywany przez warstwę SwiftUI.
   struct HUD: Equatable {
     var questionIndex: Int
     var questionTotal: Int
@@ -78,7 +71,6 @@ final class QuizGame: Game {
     case wrong
   }
 
-  /// Inicjalizuje instancję i ustawia wymagane zależności.
   init(
     questions: [Question],
     mode: QuizPlayMode,
@@ -95,23 +87,20 @@ final class QuizGame: Game {
     self.player2Score = player2Score
   }
 
-  /// Inicjalizuje nową rundę i synchronizuje początkowy stan HUD.
   func start(context: GameContext) {
     index = 0
     roundScore = 0
     selected = 0
-    holdProgress = 0
-    holdAnswerIndex = nil
-    holdTracker.reset()
+    confirmGate.reset()
     focusGate.reset()
-    focusSettleRemaining = 0
+    smoothedPosX = 0
+    posXSeeded = false
     feedback = nil
     feedbackTimer = 0
     finished = false
     syncHUD(feedbackLabel: nil)
   }
 
-  /// Dotyk: natychmiastowe zatwierdzenie odpowiedzi.
   func submitAnswer(at index: Int) {
     guard feedback == nil, !finished, index >= 0, index < 4 else { return }
     selected = index
@@ -119,7 +108,6 @@ final class QuizGame: Game {
     confirmAnswer()
   }
 
-  /// Przetwarza input dla focus/hold, feedbacku i przejść między pytaniami.
   func update(input: GameInput, deltaTime: TimeInterval) {
     let dt = min(deltaTime, 0.05)
     guard !questions.isEmpty else {
@@ -131,9 +119,6 @@ final class QuizGame: Game {
       feedbackTimer -= dt
       if feedbackTimer <= 0 {
         self.feedback = nil
-        holdProgress = 0
-        holdAnswerIndex = nil
-        holdTracker.reset()
         index += 1
         if index >= questions.count {
           finishRound()
@@ -153,79 +138,68 @@ final class QuizGame: Game {
     }
 
     if isTrikiInputEnabled {
-      let rawIndex = selectionIndex(for: input.posX)
-      if rawIndex == nil {
-        focusGate.reset()
-        focusSettleRemaining = 0
-        holdAnswerIndex = nil
-        holdTracker.reset()
-        holdProgress = 0
-      } else {
-        let target = focusGate.resolve(
-          rawIndex: rawIndex,
-          current: selected,
-          deltaTime: dt
-        ) ?? selected
+      updateTrikiSelection(input: input, deltaTime: dt)
 
-        if target != selected {
-          selected = target
-          QuizSFX.menuFocus()
-          focusSettleRemaining = TrikiUIConfig.focusSettleDuration
-          holdTracker.reset()
-          holdProgress = 0
-          holdAnswerIndex = nil
-        } else {
-          focusSettleRemaining = max(0, focusSettleRemaining - dt)
-          if focusSettleRemaining <= 0 {
-            if input.primaryAction {
-              holdTracker.reset()
-              holdProgress = 0
-              holdAnswerIndex = nil
-              QuizSFX.answerLockIn()
-              confirmAnswer()
-            } else {
-              updateHold(deltaTime: dt, focusIndex: selected)
-            }
-          }
-        }
+      if confirmGate.consume(input: input, deltaTime: dt) {
+        QuizSFX.answerLockIn()
+        confirmAnswer()
+        syncHUD(feedbackLabel: nil)
+        return
       }
     }
+
     syncHUD(feedbackLabel: nil)
   }
 
-  /// Zatwierdza aktualnie wybraną odpowiedź, jeśli runda jest aktywna.
+  /// Pochylenie → slot A–D (wygładzone, sąsiednie kroki, debounce).
+  private func updateTrikiSelection(input: GameInput, deltaTime: TimeInterval) {
+    if !posXSeeded {
+      smoothedPosX = input.posX
+      posXSeeded = true
+    } else {
+      let w = TrikiUIConfig.quizPosXSmoothing
+      smoothedPosX = smoothedPosX * w + input.posX * (1 - w)
+    }
+
+    let rawSlot = TrikiSlotMath.focusedSlot(
+      posX: smoothedPosX,
+      slots: 4,
+      currentFocus: selected,
+      neutralEnterBand: TrikiUIConfig.quizNeutralEnterBand,
+      neutralExitBand: TrikiUIConfig.quizNeutralExitBand
+    )
+
+    let steppedSlot: Int?
+    if let rawSlot {
+      if abs(rawSlot - selected) <= 1 {
+        steppedSlot = rawSlot
+      } else {
+        steppedSlot = rawSlot > selected ? selected + 1 : selected - 1
+      }
+    } else {
+      steppedSlot = nil
+    }
+
+    if let resolved = focusGate.resolve(
+      rawIndex: steppedSlot,
+      current: selected,
+      deltaTime: deltaTime,
+      adjacentDwell: TrikiUIConfig.quizFocusSwitchAdjacent,
+      jumpDwell: TrikiUIConfig.quizFocusSwitchJump
+    ), resolved != selected {
+      selected = resolved
+      QuizSFX.menuFocus()
+    } else if rawSlot == nil {
+      focusGate.reset()
+    }
+  }
+
   func confirmAnswer() {
     guard feedback == nil, !finished, index < questions.count else { return }
     submitCurrentAnswer()
   }
 
-  /// Placeholder wymagań protokołu `Game` (quiz renderuje się przez HUD/SwiftUI).
   func render(context: GameContext) {}
-
-  private func selectionIndex(for posX: Double) -> Int? {
-    TrikiUIMath.focusedSlot(posX: posX, slots: 4, currentFocus: selected)
-  }
-
-  private func updateHold(deltaTime: TimeInterval, focusIndex: Int) {
-    if holdAnswerIndex != focusIndex {
-      holdAnswerIndex = focusIndex
-      holdTracker.reset()
-      holdProgress = 0
-    }
-
-    if holdTracker.advance(deltaTime: deltaTime, duration: TrikiUIConfig.quizHoldDuration) {
-      selected = focusIndex
-      holdTracker.reset()
-      holdProgress = 0
-      holdAnswerIndex = nil
-      QuizSFX.answerLockIn()
-      QuizSFX.resetHoldTicks()
-      confirmAnswer()
-    } else {
-      holdProgress = holdTracker.progress
-      QuizSFX.holdProgress(holdProgress)
-    }
-  }
 
   private func submitCurrentAnswer() {
     guard index < questions.count else { return }
@@ -261,8 +235,8 @@ final class QuizGame: Game {
       player1Score: player1Score,
       player2Score: player2Score,
       selected: selected,
-      holdProgress: min(1, holdProgress),
-      holdAnswerIndex: holdAnswerIndex,
+      holdProgress: 0,
+      holdAnswerIndex: nil,
       isFinished: finished,
       feedbackLabel: feedbackLabel,
       questionText: q?.question ?? "",

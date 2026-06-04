@@ -29,19 +29,19 @@ enum GameManager {
     applyMode(mode, to: motion)
     if gameType == .dart {
       motion.config.referenceDriftEnabled = true
-      motion.config.inputSmoothing = 0.22
+      motion.config.inputSmoothing = 1.0
       motion.config.pointerSensitivity = 0.14
       motion.config.pointerRotDamping = 0.985
-      motion.config.pointerOutputSmoothing = 0.28
+      motion.config.pointerOutputSmoothing = 0
       motion.config.deadzone = 0.01
       motion.motionSDK.engine.resetGestureBaseline()
     }
     if gameType == .bowling {
       motion.config.referenceDriftEnabled = false
-      motion.config.inputSmoothing = 0.22
+      motion.config.inputSmoothing = 1.0
       motion.config.pointerSensitivity = 0.10
       motion.config.pointerRotDamping = 0.985
-      motion.config.pointerOutputSmoothing = 0.30
+      motion.config.pointerOutputSmoothing = 0
       motion.config.deadzone = 0.012
       motion.motionSDK.engine.resetGestureBaseline()
     }

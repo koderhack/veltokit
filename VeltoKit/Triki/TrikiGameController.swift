@@ -85,7 +85,8 @@ public final class TrikiGameController: ObservableObject {
   @discardableResult
   public func tick(deltaTime: TimeInterval? = nil) -> TrikiGameInput {
     let now = Date().timeIntervalSince1970
-    if now - lastPacketAt > 0.35, isReceiving { isReceiving = false }
+    let stale = bleMode.packetStaleSeconds
+    if now - lastPacketAt > stale, isReceiving { isReceiving = false }
 
     if let transition = bleMonitor.evaluateStale(now: now) {
       applyBLEModeTransition(transition)

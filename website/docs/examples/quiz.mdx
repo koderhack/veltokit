@@ -1,6 +1,6 @@
 ---
 title: Quiz
-description: Tilt to highlight answers, press or hold to confirm — .paddle mode
+description: Tilt to pick A–D, press button to confirm — .paddle mode
 ---
 
 import GameDocHeader from '@site/src/components/GameDocHeader';
@@ -13,56 +13,54 @@ import GameDocHeader from '@site/src/components/GameDocHeader';
 
 1. Connect + calibrate.
 2. Open **Quiz** — pick category, language, solo/duo in the flow.
-3. **Rotate / tilt** the cap left or right to move the highlight across answers (`posX` → slot 0…3).
-4. **Confirm** an answer either by:
-   - **Pressing** the cap button (`primaryAction` / click edge), or
-   - **Holding steady** on a choice until the hold bar fills (`TrikiHoldTracker` in sample).
+3. **Tilt** to highlight **A–D** (`posX` → four slots).
+4. **Press** the cap button to confirm the highlighted answer (like a remote OK).
 5. Feedback shows correct/wrong; next question after a short pause.
-6. Touch still works on the phone if you disable Triki input in settings.
+6. **Touch** on the phone still submits immediately (tap any answer).
 
-:::info Focus gate
-The sample uses **`TrikiFocusGate`** so the highlight does not jump instantly when `posX` crosses slots — it settles briefly before hold/press counts.
-:::
+Category pick (before the round) uses **Triki UI** with `preferButtonConfirm: true` — tilt to focus, **button** to pick (no hold auto-select).
 
 ## VeltoKit mapping
 
 | Setting | Value |
 |---------|--------|
 | `MotionMode` | `.paddle` |
-| Navigation | `posX` mapped to 4 slots via `TrikiUIMath.focusedSlot` |
-| Confirm | `primaryAction` (BLE click) or hold timer |
-| Not used | `shotTriggered`, `throwPower` |
+| Selection | `posX` → `TrikiSlotMath.slotIndex` (4 answers) |
+| Confirm | `TrikiButtonConfirmGate` on `primaryAction` (BLE edge + ~0.65 s cooldown) |
+| Not used | Hold timer, velocity triggers, `shotTriggered`, `sensors.click` as confirm |
 
 Same mode as Pong, different **game logic** — good example of reusing `.paddle` for menus.
-
-The sample flow is attached to `.trikiUIScreen(...)`, so focus, hold, and activation are consistent with other Triki-driven screens.
 
 ## Integrate in your app
 
 ```swift
 let motion = MotionSDK()
-motion.setMode(.paddle)
+motion.setMode(.paddle)   // primaryAction = BLE button only in this mode
 motion.connect()
+
+var selected = 0
+var confirmGate = TrikiButtonConfirmGate()  // sample app helper
 
 func tick(dt: TimeInterval) {
   let input = motion.pollInput(deltaTime: dt)
-  let slot = slotIndex(for: input.posX, slots: 4) ?? selected
+  let slot = TrikiSlotMath.slotIndex(posX: input.posX, slots: 4)
+  if slot != selected { selected = slot }
 
-  if slot != selected { selected = slot; playFocusSound() }
-
-  if input.primaryAction {
+  if confirmGate.consume(input: input, deltaTime: dt) {
     submit(answer: selected)
   }
 }
 ```
 
-Map `posX` to discrete slots with dead zones — copy `TrikiUIMath` from `app/UI/TrikiUI/` or use your own thresholds.
+Copy `TrikiButtonConfirmGate` from `app/UI/TrikiUI/` or implement your own edge + cooldown on `primaryAction`.
 
 ## Sample app source
 
 | File | Role |
 |------|------|
-| `app/Games/QuizGame.swift` | Rounds, focus, hold, scoring |
+| `app/Games/QuizGame.swift` | Rounds, slot selection, `TrikiButtonConfirmGate` |
+| `app/UI/TrikiUI/TrikiButtonConfirmGate.swift` | Debounced BLE confirm |
+| `app/UI/Quiz/QuizFlowView.swift` | Category pick + `preferButtonConfirm` |
 | `app/UI/QuizGameView.swift` | Question UI |
 | `app/UI/Quiz/QuizExternalDisplay.swift` | TV / second screen |
 | `app/Quiz/QuizSession.swift` | Loader, categories, cache |
@@ -72,7 +70,6 @@ Map `posX` to discrete slots with dead zones — copy `TrikiUIMath` from `app/UI
 ## Tips
 
 - Tune `lateralDeadzone` if the highlight jitters between A and B — [Configuration](../sdk/configuration).
-- Test **hold vs press** — some players prefer one confirmation style; the sample supports both.
 - Questions require network on first load; see `QuizCache` for offline rounds.
 
 [← Bowling](bowling) · [Triki UI navigation](../sdk/triki-ui) · [Configuration](../sdk/configuration) · [Demo](../demo) · [Help](../faq)

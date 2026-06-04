@@ -27,9 +27,9 @@ public final class MotionSDK: ObservableObject {
   /// Informuje, czy napływają pakiety BLE.
   @Published public internal(set) var isReceiving = false
   /// Wykryty tryb częstotliwości notify (fast / normal / low power).
-  public var trikiBLEMode: TrikiBLEMode {
-    trikiController?.getBLEMode() ?? .unknown
-  }
+  @Published public internal(set) var trikiBLEMode: TrikiBLEMode = .unknown
+  /// Podpowiedź UX przy low power (np. „czeka na ruch”).
+  @Published public internal(set) var trikiIdleStatusMessage: String? = nil
   /// Ostatnia ramka wejścia publikowana do HUD.
   @Published public internal(set) var liveInput = GameInput()
 
@@ -71,6 +71,8 @@ public final class MotionSDK: ObservableObject {
   private var ingressTiltX = 0.0
   private var ingressGyroY = 0.0
   private var latestPaddleRaw: Double?
+  var lastFramePosX: Double?
+  var lastFramePosY: Double?
 
   /// Tworzy instancję SDK ruchu.
   public init() {
@@ -217,6 +219,8 @@ public final class MotionSDK: ObservableObject {
     ingressTiltX = 0
     ingressGyroY = 0
     latestPaddleRaw = nil
+    lastFramePosX = nil
+    lastFramePosY = nil
     button.reset()
     engine.resetState()
     input = GameInput()
@@ -230,7 +234,13 @@ public final class MotionSDK: ObservableObject {
     input.posX = out.x
     input.posY = out.y
     input.shotTriggered = throwShot
-    input.primaryAction = click || throwShot || trikiAction
+    switch engine.config.mode {
+    case .paddle:
+      // Quiz / Pong / menu: only the physical BLE button — not velocity or throw.
+      input.primaryAction = click
+    case .pointer, .gesture:
+      input.primaryAction = click || throwShot || trikiAction
+    }
     input.throwPower = throwShot ? engine.lastGestureThrowPower : 0
     input.gesturePrimed = engine.gesturePrimed
   }

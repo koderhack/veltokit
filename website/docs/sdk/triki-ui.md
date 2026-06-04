@@ -17,6 +17,7 @@ Use it when you want players to navigate UI with the Triki controller instead of
 | `TrikiUINavigator` | Holds UI navigation state (`focusIndex`, hold progress, activation callback) |
 | `TrikiFocusGate` | Stabilizes slot focus before selection |
 | `TrikiHoldTracker` | Converts focused dwell time into activation |
+| `TrikiButtonConfirmGate` | Debounced rising edge on `primaryAction` (BLE button only in `.paddle`) |
 | `.trikiUIScreen(...)` | View modifier that wires screen lifecycle + HUD + ticking |
 | `TrikiFocusRow` | Reusable row that reflects focus and hold state |
 
@@ -30,10 +31,19 @@ VStack(spacing: 12) {
   TrikiFocusRow(index: 1, title: "Settings")
   TrikiFocusRow(index: 2, title: "Quit")
 }
-.trikiUIScreen(itemCount: 3, isActive: true, showsPhoneHUD: true) { index in
+.trikiUIScreen(
+  itemCount: 3,
+  isActive: true,
+  showsPhoneHUD: true,
+  preferButtonConfirm: true   // Quiz-style: button only, no hold auto-OK
+) { index in
   handleSelection(index)
 }
 ```
+
+| Parameter | Default | Effect |
+|-----------|---------|--------|
+| `preferButtonConfirm` | `false` | When `true`: HUD hides hold bar; navigator skips hold-to-activate; only BLE button confirms |
 
 ### What happens in lifecycle
 
@@ -52,12 +62,17 @@ When deactivated, navigator state is cleared so stale focus does not leak betwee
 The flow is:
 
 ```text
-BLE / parser -> MotionInputProvider.liveInput.posX -> focused slot -> hold or click -> onActivate(index)
+BLE / parser -> posX -> TrikiFocusGate -> focused slot
+  -> TrikiButtonConfirmGate (primaryAction edge) OR hold -> onActivate(index)
 ```
 
-- **Focus source:** horizontal position (`posX`) mapped to discrete slots.
-- **Activation source:** cap button edge or hold-complete (depending on current screen logic).
+- **Focus source:** horizontal position (`posX`) mapped to discrete slots (`TrikiUIMath.focusedSlot`).
+- **Activation source:** debounced **BLE button edge** (`TrikiButtonConfirmGate` on `primaryAction`); optional **hold** when `preferButtonConfirm == false`.
 - **Fallback:** touch buttons still work because `TrikiFocusRow` is a normal SwiftUI `Button`.
+
+:::caution False confirms
+Do not activate on `input.primaryAction` every frame while it stays `true`, and do not use `sensors.click` as confirm — both cause accidental double-OK. The sample navigator uses `TrikiButtonConfirmGate` (~0.65 s cooldown).
+:::
 
 ## Recommended screen pattern
 
@@ -86,7 +101,7 @@ Triki UI lives in the **sample app** only. You need:
 motion.performCalibration()  // → MotionSDK.calibrateNeutralPose()
 ```
 
-After the first frames, the app may show `TrikiCalibrationView` automatically (`motion.showsCalibrationPrompt`).
+Calibration is **manual** in the sample app (Dev Mode → **ZERO**, or your own screen). There is no forced calibration sheet on connect.
 
 4. **UI mode** for horizontal menu selection (Quiz category picker uses this):
 
@@ -122,7 +137,7 @@ struct SimpleTrikiMenuView: View {
       Spacer()
     }
     .padding()
-    .trikiUIScreen(itemCount: items.count, isActive: true) { index in
+    .trikiUIScreen(itemCount: items.count, isActive: true, preferButtonConfirm: true) { index in
       guard items.indices.contains(index) else { return }
       lastChoice = items[index]
     }
@@ -134,12 +149,13 @@ struct SimpleTrikiMenuView: View {
 }
 ```
 
-**Reference implementation:** `app/UI/Quiz/QuizFlowView.swift` — `trikiNavigationActive` only in `.categoryPick`, rows use `TrikiFocusRow`, activation in `handleTrikiActivate`.
+**Reference implementation:** `app/UI/Quiz/QuizFlowView.swift` — `trikiNavigationActive` only in `.categoryPick`, `preferButtonConfirm: true`, rows use `TrikiFocusRow`, activation in `handleTrikiActivate`.
 
 | Step | Quiz equivalent |
 |------|-----------------|
-| Calibrate once | Global `TrikiCalibrationView` on main menu after BLE |
-| Menu with Triki | `.categoryPick` + `.trikiUIScreen` |
+| Calibrate (optional) | Dev Mode **ZERO** or `motion.performCalibration()` |
+| Menu with Triki | `.categoryPick` + `.trikiUIScreen(preferButtonConfirm: true)` |
+| In-round confirm | `QuizGame` + `TrikiButtonConfirmGate` |
 | Touch fallback | `TrikiFocusRow` is a `Button` |
 
 ## Where to look in the sample app
@@ -149,6 +165,7 @@ struct SimpleTrikiMenuView: View {
 - `app/UI/TrikiUI/TrikiUIComponents.swift`
 - `app/UI/TrikiUI/TrikiUINavigator.swift`
 - `app/UI/TrikiUI/TrikiFocusGate.swift`
+- `app/UI/TrikiUI/TrikiButtonConfirmGate.swift`
 - `app/UI/TrikiUI/TrikiHoldTracker.swift`
 - `app/UI/Quiz/QuizFlowView.swift`
 - `app/UI/GameCalibrationView.swift`

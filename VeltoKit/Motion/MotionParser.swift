@@ -14,11 +14,11 @@ final class MotionParser: ObservableObject {
   var retainRecentFrames = true
 
   /// Czas wygładzania kanału tilt.
-  var tiltAlpha: Double = 0.18
+  var tiltAlpha: Double = 1.0
   /// Czas wygładzania kanału gyro.
-  var gyroAlpha: Double = 0.32
+  var gyroAlpha: Double = 1.0
   /// Czas wygładzania kanału rotacji.
-  var rotationAlpha: Double = 0.22
+  var rotationAlpha: Double = 1.0
   /// Minimalna zmiana potrzebna do aktualizacji wartości.
   var noiseFloor: Double = 0.001
 

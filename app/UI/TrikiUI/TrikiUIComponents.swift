@@ -24,6 +24,8 @@ struct TrikiUIScreenModifier: ViewModifier {
   let isActive: Bool
   /// Controls whether phone-side HUD is rendered while Triki navigation is active.
   let showsPhoneHUD: Bool
+  /// Ukrywa pasek hold — tylko podpowiedź „przycisk = OK” (quiz).
+  let preferButtonConfirm: Bool
   /// Called when user confirms currently focused item.
   let onActivate: (Int) -> Void
 
@@ -34,7 +36,7 @@ struct TrikiUIScreenModifier: ViewModifier {
       .padding(.bottom, hudVisible ? TrikiUIConfig.bottomContentInset : 0)
       .safeAreaInset(edge: .bottom, spacing: 0) {
         if hudVisible {
-          TrikiUIHUD()
+          TrikiUIHUD(preferButtonConfirm: preferButtonConfirm)
         }
       }
       .gameLoop { now in
@@ -63,7 +65,11 @@ struct TrikiUIScreenModifier: ViewModifier {
     GameManager.applyUIMode(to: motion)
     trikiUI.isSuspended = false
     trikiUI.resetClock()
-    trikiUI.configure(itemCount: itemCount, onActivate: onActivate)
+    trikiUI.configure(
+      itemCount: itemCount,
+      preferButtonConfirm: preferButtonConfirm,
+      onActivate: onActivate
+    )
   }
 }
 
@@ -87,6 +93,7 @@ extension View {
     itemCount: Int,
     isActive: Bool = true,
     showsPhoneHUD: Bool = true,
+    preferButtonConfirm: Bool = false,
     onActivate: @escaping (Int) -> Void
   ) -> some View {
     modifier(
@@ -94,6 +101,7 @@ extension View {
         itemCount: itemCount,
         isActive: isActive,
         showsPhoneHUD: showsPhoneHUD,
+        preferButtonConfirm: preferButtonConfirm,
         onActivate: onActivate
       )
     )
@@ -104,6 +112,8 @@ extension View {
 
 /// Bottom overlay showing current Triki interaction status and hints.
 struct TrikiUIHUD: View {
+  var preferButtonConfirm: Bool = false
+
   @EnvironmentObject private var motion: MotionInputProvider
   @EnvironmentObject private var trikiUI: TrikiUINavigator
 
@@ -113,24 +123,32 @@ struct TrikiUIHUD: View {
       VStack(spacing: 6) {
         if motion.isTrikiControlAvailable {
           HStack(spacing: 8) {
-            Image(systemName: "arrow.left.and.right")
+            Image(systemName: preferButtonConfirm ? "button.programmable" : "arrow.left.and.right")
               .foregroundStyle(NeonTheme.neonCyan)
-            Text(trikiUI.focusIndex == nil ? "Wyprostuj Triki — wybór" : "Hold lub przycisk = OK")
+            Text(hudPrimaryHint)
               .font(.system(size: 10, weight: .bold, design: .monospaced))
             Spacer()
-            Text("pos \(String(format: "%+.2f", motion.liveInput.posX))")
-              .font(.system(size: 10, weight: .bold, design: .monospaced))
-              .foregroundStyle(NeonTheme.neonYellow)
-          }
-          GeometryReader { geo in
-            ZStack(alignment: .leading) {
-              Rectangle().fill(Color.white.opacity(0.12))
-              Rectangle()
-                .fill(NeonTheme.neonMagenta)
-                .frame(width: geo.size.width * trikiUI.holdProgress)
+            if trikiUI.focusIndex != nil {
+              Text("OK")
+                .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                .foregroundStyle(.black)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(NeonTheme.neonMagenta)
+                .clipShape(Capsule())
             }
           }
-          .frame(height: 4)
+          if !preferButtonConfirm {
+            GeometryReader { geo in
+              ZStack(alignment: .leading) {
+                Rectangle().fill(Color.white.opacity(0.12))
+                Rectangle()
+                  .fill(NeonTheme.neonMagenta)
+                  .frame(width: geo.size.width * trikiUI.holdProgress)
+              }
+            }
+            .frame(height: 4)
+          }
         } else {
           HStack(spacing: 8) {
             Image(systemName: "hand.tap.fill")
@@ -140,20 +158,29 @@ struct TrikiUIHUD: View {
             Spacer()
           }
         }
-        Group {
-          if motion.isTrikiControlAvailable {
-            Text("Obrót = wybór · hold lub przycisk = OK")
-          } else {
-            Text("Sterowanie dotykiem")
-          }
-        }
-        .font(.system(size: 9, weight: .semibold, design: .monospaced))
-        .foregroundStyle(.white.opacity(0.5))
+        Text(hudSecondaryHint)
+          .font(.system(size: 9, weight: .semibold, design: .monospaced))
+          .foregroundStyle(.white.opacity(0.5))
+          .frame(maxWidth: .infinity, alignment: .leading)
       }
       .padding(.horizontal, 14)
       .padding(.vertical, 10)
       .background(Color.black.opacity(0.88))
     }
+  }
+
+  private var hudPrimaryHint: String {
+    if trikiUI.focusIndex == nil {
+      return "Wyprostuj Triki — wybór"
+    }
+    return preferButtonConfirm ? "Przycisk Triki = potwierdź" : "Hold lub przycisk = OK"
+  }
+
+  private var hudSecondaryHint: String {
+    if !motion.isTrikiControlAvailable { return "Sterowanie dotykiem" }
+    return preferButtonConfirm
+      ? "Obrót = wybór · przycisk = OK · dotyk też działa"
+      : "Obrót = wybór · hold lub przycisk = OK"
   }
 }
 

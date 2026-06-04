@@ -1,14 +1,6 @@
 import Foundation
 import os
 
-/// Tryb wydajności notify firmware (wykrywany z odstępów między pakietami).
-public enum TrikiBLEMode: String, Sendable, Equatable, CaseIterable {
-  case fast
-  case normal
-  case lowPower
-  case unknown
-}
-
 /// Wynik aktualizacji monitora — opcjonalna zmiana trybu po debounce.
 public struct TrikiBLEModeTransition: Sendable, Equatable {
   public let previous: TrikiBLEMode

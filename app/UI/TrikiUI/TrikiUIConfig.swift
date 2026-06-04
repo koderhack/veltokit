@@ -14,15 +14,23 @@ enum TrikiUIConfig {
   /// Po zmianie fokusu — chwila bez narastania hold (anty-przypadkowe OK).
   static let focusSettleDuration: TimeInterval = 0.45
   /// Krótki debounce przy skoku o więcej niż 1 opcję.
-  static let focusSwitchDuration: TimeInterval = 0.14
-  /// Sąsiednia opcja (±1) — prawie od razu.
-  static let focusSwitchDurationAdjacent: TimeInterval = 0.06
+  static let focusSwitchDuration: TimeInterval = 0.32
+  /// Sąsiednia opcja (±1) — z krótkim oczekiwaniem (mniej „latania”).
+  static let focusSwitchDurationAdjacent: TimeInterval = 0.20
   /// |posX| poniżej progu = brak wyboru przy szukaniu opcji.
-  static let neutralEnterBand: Double = 0.24
+  static let neutralEnterBand: Double = 0.30
   /// Węższa strefa środka — fokus znika dopiero bliżej wyprostowania Triki.
-  static let neutralExitBand: Double = 0.10
+  static let neutralExitBand: Double = 0.14
   /// Krótki bufor zanim fokus zgaśnie po wejściu w strefę neutralną.
   static let focusLossGraceDuration: TimeInterval = 0.35
+
+  // Quiz — wolniejszy fokus, mniej „latania” między A–D
+  static let quizNeutralEnterBand: Double = 0.34
+  static let quizNeutralExitBand: Double = 0.18
+  static let quizPosXSmoothing: Double = 0.74
+  static let quizFocusSwitchAdjacent: TimeInterval = 0.28
+  static let quizFocusSwitchJump: TimeInterval = 0.42
+
   /// Dolny margines treści pod paskiem Triki (żeby nie ucinało wierszy).
   static let bottomContentInset: CGFloat = 88
 }

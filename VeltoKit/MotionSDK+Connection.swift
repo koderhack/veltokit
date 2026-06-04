@@ -8,8 +8,15 @@ extension MotionSDK {
   /// Skan BLE + auto-connect do jedynego urządzenia z „triki” w nazwie.
   public func connect() {
     ensureBLEPipeline()
-    bleManager?.autoConnectWhenSingleLikelyMatch = true
-    bleManager?.startScan(clearList: true)
+    trikiController?.ble.autoConnectWhenSingleLikelyMatch = true
+    trikiController?.connect()
+  }
+
+  /// Ponowne połączenie z ostatnim zapamiętanym urządzeniem (bez pełnego skanu).
+  public func connectLastDevice() {
+    ensureBLEPipeline()
+    trikiController?.ble.autoConnectWhenSingleLikelyMatch = false
+    trikiController?.ble.connectCachedPeripheralIfAvailable()
   }
 
   /// Zamyka połączenie BLE i czyści stan sesji.
@@ -35,21 +42,23 @@ extension MotionSDK {
     }
 
     let now = Date().timeIntervalSince1970
-    if now - lastPacketAt > 0.35, isReceiving { isReceiving = false }
+    let stale = trikiBLEMode.packetStaleSeconds
+    if now - lastPacketAt > stale, isReceiving { isReceiving = false }
+    syncTrikiPublishedState()
 
     if config.mode == .paddle {
       parser.refreshTiltSensors()
       parser.flushImpulsesOnly()
       let impulses = parser.consumeImpulses()
       let out = updateFrame(deltaTime: deltaTime)
-      var enriched = input
-      enriched.tiltY = parser.sensors.tiltY
-      enriched.tiltX = parser.sensors.tiltX
-      enriched.lateral = out.x
-      enriched.lateralSmooth = out.x
-      enriched.shake = impulses.shake || (trikiController?.gameInput.isShake ?? false)
-      enriched.sensors = parser.sensors
-      applyClickToSensors(&enriched)
+      var enriched = makeEnrichedGameInput(
+        output: out,
+        sdkInput: input,
+        parser: parser,
+        impulses: impulses
+      )
+      applyTrikiGamepadSignals(&enriched)
+      finalizeAdaptiveInput(&enriched)
       latestEnrichedInput = enriched
       publishLiveInputIfNeeded(now: now, input: enriched)
       return enriched
@@ -63,14 +72,17 @@ extension MotionSDK {
     )
     let out = updateFrame(deltaTime: deltaTime)
     let impulses = parser.consumeImpulses()
-    latestEnrichedInput = makeEnrichedGameInput(
+    var enriched = makeEnrichedGameInput(
       output: out,
       sdkInput: input,
       parser: parser,
       impulses: impulses
     )
-    publishLiveInputIfNeeded(now: now, input: latestEnrichedInput)
-    return latestEnrichedInput
+    applyTrikiGamepadSignals(&enriched)
+    finalizeAdaptiveInput(&enriched)
+    latestEnrichedInput = enriched
+    publishLiveInputIfNeeded(now: now, input: enriched)
+    return enriched
   }
 
   /// Pobiera ostatnią wzbogaconą ramkę wejścia bez aktualizacji stanu.
@@ -125,6 +137,17 @@ extension MotionSDK {
   /// Czyści bufor logów BLE.
   public func clearBLEDevLog() { bleManager?.devRawLog.removeAll() }
 
+  /// Czy zapisano UUID ostatniego urządzenia (szybkie ponowne połączenie).
+  public var hasCachedBLEDevice: Bool {
+    bleManager?.cachedPeripheralUUID != nil
+  }
+
+  /// Log monitora trybu BLE (Δt między pakietami).
+  public var debugBLEMonitorLogging: Bool {
+    get { trikiController?.debugBLEMonitorLogging ?? false }
+    set { trikiController?.debugBLEMonitorLogging = newValue }
+  }
+
   // MARK: - Private
 
   /// Handles `ensureBLEPipeline`.
@@ -145,7 +168,6 @@ extension MotionSDK {
         self.enqueueBLE(bytes)
         self.streamParser?.enqueue(data: bytes)
         self.lastPacketAt = Date().timeIntervalSince1970
-        if !self.isReceiving { self.isReceiving = true }
       }
       .store(in: &bleCancellables)
 
@@ -156,6 +178,32 @@ extension MotionSDK {
         if !connected { self?.resetConnectionState() }
       }
       .store(in: &bleCancellables)
+
+    triki.$bleMode
+      .removeDuplicates()
+      .sink { [weak self] mode in
+        self?.trikiBLEMode = mode
+      }
+      .store(in: &bleCancellables)
+
+    triki.$idleStatusMessage
+      .sink { [weak self] message in
+        self?.trikiIdleStatusMessage = message
+      }
+      .store(in: &bleCancellables)
+
+    triki.$isReceiving
+      .removeDuplicates()
+      .sink { [weak self] receiving in
+        self?.isReceiving = receiving
+      }
+      .store(in: &bleCancellables)
+  }
+
+  func syncTrikiPublishedState() {
+    guard let triki = trikiController else { return }
+    trikiBLEMode = triki.getBLEMode()
+    trikiIdleStatusMessage = triki.idleStatusMessage
   }
 
   /// Handles `resetConnectionState`.
@@ -166,7 +214,11 @@ extension MotionSDK {
     liveInput = GameInput()
     latestEnrichedInput = GameInput()
     isReceiving = false
+    trikiBLEMode = .unknown
+    trikiIdleStatusMessage = nil
     lastHudPublishAt = 0
+    lastFramePosX = nil
+    lastFramePosY = nil
   }
 
   /// Mapuje wyjście gamepada na silnik pozycji (bez surowych osi w API gry).
@@ -184,13 +236,16 @@ extension MotionSDK {
   /// Handles `refreshLiveInputFromEngine`.
   func refreshLiveInputFromEngine() {
     let out = output
-    latestEnrichedInput = makeEnrichedGameInput(
+    var enriched = makeEnrichedGameInput(
       output: out,
       sdkInput: input,
       parser: streamParser,
       impulses: (false, false)
     )
-    liveInput = latestEnrichedInput
+    applyTrikiGamepadSignals(&enriched)
+    finalizeAdaptiveInput(&enriched)
+    latestEnrichedInput = enriched
+    liveInput = enriched
     lastHudPublishAt = Date().timeIntervalSince1970
   }
 
@@ -203,6 +258,33 @@ extension MotionSDK {
     guard now - lastHudPublishAt >= motionHudPublishInterval else { return }
     lastHudPublishAt = now
     liveInput = input
+  }
+
+  /// Applies Triki gamepad velocity/tilt edges to `GameInput` (all tryby gier).
+  func applyTrikiGamepadSignals(_ input: inout GameInput) {
+    guard let pad = trikiController?.gameInput else { return }
+    input.tiltLeft = pad.isTiltLeft
+    input.tiltRight = pad.isTiltRight
+    let vel = Double(pad.velocity)
+    input.trikiVelocity = vel
+    input.isMoving = pad.isMoving
+    input.intensity = max(input.intensity, vel)
+    input.flick = input.flick || pad.isSwing
+    let dir = Double(pad.direction)
+    if dir != 0, vel > 0.5 {
+      input.deltaX = dir * vel * 0.012
+    }
+  }
+
+  /// Uzupełnia `bleMode`, Δpos i strategię adaptacyjną dla gier.
+  func finalizeAdaptiveInput(_ input: inout GameInput) {
+    input.bleMode = trikiBLEMode
+    let prevX = lastFramePosX ?? input.posX
+    let prevY = lastFramePosY ?? input.posY
+    input.frameDeltaX = input.posX - prevX
+    input.frameDeltaY = input.posY - prevY
+    lastFramePosX = input.posX
+    lastFramePosY = input.posY
   }
 
   /// Builds a UI/game-friendly input snapshot from raw engine output and parser state.
@@ -239,16 +321,19 @@ extension MotionSDK {
       enriched.sensors = parser.sensors
       enriched.pointerDirection = pointerDirection(posX: output.x, posY: output.y)
     }
-    applyClickToSensors(&enriched)
+    let buttonEdge = impulses.click || sdkInput.primaryAction
+    if config.mode == .paddle {
+      enriched.primaryAction = buttonEdge
+    } else if impulses.click {
+      enriched.primaryAction = true
+    }
+    applyClickToSensors(&enriched, clickEdge: buttonEdge)
     return enriched
   }
 
-  /// Handles `applyClickToSensors`.
-  ///
-  /// - Parameters:
-  ///   - input: Input used by this operation.
-  func applyClickToSensors(_ input: inout GameInput) {
-    guard input.primaryAction else { return }
+  /// Sets one-shot click flag on sensors when a BLE button edge was detected.
+  func applyClickToSensors(_ input: inout GameInput, clickEdge: Bool) {
+    guard clickEdge else { return }
     var sensors = input.sensors
     sensors.click = true
     input.sensors = sensors

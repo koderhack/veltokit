@@ -15,6 +15,7 @@ struct DevModeView: View {
   var body: some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 14) {
+        bleModeSection
         bleDebugSection
         motionSection
         configSection
@@ -31,6 +32,25 @@ struct DevModeView: View {
     .onAppear { refreshSnapshot() }
     .onReceive(Timer.publish(every: devModeRefreshInterval, on: .main, in: .common).autoconnect()) { _ in
       refreshSnapshot()
+    }
+  }
+
+  private var bleModeSection: some View {
+    let _ = uiTick
+    return devSection("BLE — TRYB ADAPTACYJNY") {
+      Toggle(
+        "Log Δt i przejść trybu",
+        isOn: Binding(
+          get: { motion.debugBLEMonitorLogging },
+          set: { motion.debugBLEMonitorLogging = $0 }
+        )
+      )
+      row("tryb", motion.bleMode.rawValue)
+      row("etykieta", motion.bleMode.statusLabel)
+      row("gameplay", motion.isTrikiGameplayActive ? "TAK" : "nie")
+      row("sterowanie", motion.isTrikiControlAvailable ? "TAK" : "nie")
+      row("idle", motion.idleStatusMessage ?? "—")
+      row("cached UUID", motion.hasCachedDevice ? "TAK" : "nie")
     }
   }
 
@@ -103,6 +123,10 @@ struct DevModeView: View {
     let dbg = motion.motionSDK.debug
     let input = inputSnapshot
     return devSection("MOTION SDK") {
+      row("BLE tryb", inputSnapshot.bleMode.rawValue)
+      row("strategia", inputSnapshot.bleMode.inputStrategy == .velocity ? "velocity" : (inputSnapshot.bleMode.inputStrategy == .hybrid ? "hybrid" : "threshold"))
+      row("Δpos", String(format: "%+.3f / %+.3f", inputSnapshot.frameDeltaX, inputSnapshot.frameDeltaY))
+      row("trikiVel", String(format: "%.1f", inputSnapshot.trikiVelocity))
       row("tryb", motion.config.mode.rawValue)
       row("rawX/Y", String(format: "%+.3f / %+.3f", dbg.rawX, dbg.rawY))
       row("smooth", String(format: "%+.3f / %+.3f", dbg.smoothX, dbg.smoothY))
@@ -177,6 +201,7 @@ struct DevModeView: View {
       }
       HStack {
         devButton("CONNECT") { motion.connect() }
+        devButton("LAST DEV") { motion.connectLastDevice() }
         devButton("RESET") { motion.resetInputState() }
         devButton("ZERO") { motion.calibrateCenter() }
       }

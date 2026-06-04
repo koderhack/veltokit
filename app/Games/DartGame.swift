@@ -238,6 +238,8 @@ final class DartGame: Game {
   private var feedbackTimer = 0.0
 
   private var throwController = DartThrowController()
+  private var pointerDriver = TrikiPointerDriver()
+  private var velocityInput = TrikiGameInputManager(mode: .dart)
   private var arenaAnimTick: UInt = 0
 
   private let boardRadius = DartBoardLayout.boardRadius
@@ -267,6 +269,8 @@ final class DartGame: Game {
     boardMarkers = []
     activeFlight = nil
     pendingShot = nil
+    pointerDriver.reset()
+    velocityInput.reset()
     startCountdownRemaining = 5
     lastCountdownTick = -1
 
@@ -367,7 +371,7 @@ final class DartGame: Game {
       }
       playZone.update(sensors: input.sensors)
       let aimZoneGain = playZone.band == .good ? 1.0 : (playZone.band == .far ? 1.12 : 0.95)
-      updateAim(input: input, zoneGain: aimZoneGain)
+      updateAim(input: input, zoneGain: aimZoneGain, deltaTime: deltaTime)
       publishHUD()
       return
     }
@@ -407,35 +411,43 @@ final class DartGame: Game {
     let aimZoneGain = playZone.band == .good ? 1.0 : (playZone.band == .far ? 1.12 : 0.95)
 
     if feedbackTimer <= 0, activeFlight == nil {
-      let tiltAxis = grip.throwTiltAxis(from: input.sensors, neutral: throwNeutralTilt)
-      let throwState = throwController.state
-      let adaptGyroBaseline = throwState == .idle || throwState == .throwing
-      let gyroForward = grip.throwGyroImpulse(
-        from: input.sensors,
-        baselineX: &gyroBaselineX,
-        baselineY: &gyroBaselineY,
-        baselineZ: &gyroBaselineZ,
-        adaptBaseline: adaptGyroBaseline
-      )
-      if let power = throwController.update(
-        tiltAxis: tiltAxis,
-        gyroForward: gyroForward,
-        deltaTime: deltaTime,
-        distanceFactor: zoneFactor
-      ) {
+      let velFrame = velocityInput.process(input: input, deltaTime: deltaTime)
+      if velFrame.dartThrowTriggered {
         if !shootHeld {
-          shoot(power: power)
+          shoot(power: max(0.4, velFrame.dartThrowPower))
         }
         shootHeld = true
       } else {
-        shootHeld = false
+        let tiltAxis = grip.throwTiltAxis(from: input.sensors, neutral: throwNeutralTilt)
+        let throwState = throwController.state
+        let adaptGyroBaseline = throwState == .idle || throwState == .throwing
+        let gyroForward = grip.throwGyroImpulse(
+          from: input.sensors,
+          baselineX: &gyroBaselineX,
+          baselineY: &gyroBaselineY,
+          baselineZ: &gyroBaselineZ,
+          adaptBaseline: adaptGyroBaseline
+        )
+        if let power = throwController.update(
+          tiltAxis: tiltAxis,
+          gyroForward: gyroForward,
+          deltaTime: deltaTime,
+          distanceFactor: zoneFactor
+        ) {
+          if !shootHeld {
+            shoot(power: power)
+          }
+          shootHeld = true
+        } else {
+          shootHeld = false
+        }
       }
     } else {
       shootHeld = false
     }
 
     if activeFlight == nil {
-      updateAim(input: input, zoneGain: aimZoneGain)
+      updateAim(input: input, zoneGain: aimZoneGain, deltaTime: deltaTime)
     }
 
     publishHUD()
@@ -523,11 +535,10 @@ final class DartGame: Game {
     return name.isEmpty ? DartPlayers.defaultName(index: activePlayerIndex) : name
   }
 
-  private func updateAim(input: GameInput, zoneGain: Double) {
+  private func updateAim(input: GameInput, zoneGain: Double, deltaTime: TimeInterval) {
     let reach = aimReach
     let aimSlow = throwController.isAimSlowed
     let aimGain = (aimSlow ? 0.38 : 0.88) * zoneGain
-    let follow = aimSlow ? 0.08 : 0.12
 
     let aim = grip.aimDelta(
       from: input,
@@ -539,8 +550,16 @@ final class DartGame: Game {
     let targetX = centerX + min(reach, max(-reach, aim.x * reach * aimGain))
     let targetY = centerY + min(reach, max(-reach, aim.y * reach * aimGain))
 
-    aimX = aimX * (1 - follow) + targetX * follow
-    aimY = aimY * (1 - follow) + targetY * follow
+    let stepped = pointerDriver.step(
+      aimX: aimX,
+      aimY: aimY,
+      input: input,
+      rawTargetX: targetX,
+      rawTargetY: targetY,
+      deltaTime: deltaTime
+    )
+    aimX = stepped.x
+    aimY = stepped.y
   }
 
   private func publishHUD() {

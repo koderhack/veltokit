@@ -65,9 +65,14 @@ struct QuizFlowView: View {
       }
     }
     .id(quizFlowTrikiIdentity)
+    .motionInputPolling(inputProvider, active: session.phase != .playing)
     .navigationTitle("Quiz")
     .navigationBarTitleDisplayMode(.inline)
-    .trikiUIScreen(itemCount: trikiItemCount, isActive: trikiNavigationActive) { index in
+    .trikiUIScreen(
+      itemCount: trikiItemCount,
+      isActive: trikiNavigationActive,
+      preferButtonConfirm: true
+    ) { index in
       handleTrikiActivate(index)
     }
     .task {
@@ -171,7 +176,7 @@ private struct QuizLobbyScreen: View {
           Text("QUIZ TRIKI")
             .font(.system(size: 26, weight: .heavy, design: .monospaced))
             .foregroundStyle(.white)
-          Text("Lobby: dotyk · Triki: kategorie i odpowiedzi")
+          Text("Lobby: dotyk · Triki: kategorie (obrót + przycisk)")
             .font(.system(size: 11, design: .monospaced))
             .foregroundStyle(.white.opacity(0.55))
         }
@@ -236,7 +241,7 @@ private struct QuizCategoryPickerScreen: View {
           .foregroundStyle(.white.opacity(0.7))
       }
 
-      Text("Triki: obrót + hold lub przycisk · dotyk też działa")
+      Text("Triki: obrót = wybór · przycisk = OK · dotyk też działa")
         .font(.system(size: 10, weight: .heavy, design: .monospaced))
         .foregroundStyle(NeonTheme.neonCyan.opacity(0.85))
         .multilineTextAlignment(.center)

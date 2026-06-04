@@ -32,7 +32,7 @@ enum MotionControls {
 
   /// Sterowanie drogą/autem po pikselach na sekundę.
   static func roadSteering(_ input: GameInput) -> Double {
-    input.lateralSmooth
+    lateral(input)
   }
 
   /// Sterowanie Box / paletka: bez prędkości, tylko pozycja -1...+1.
@@ -81,16 +81,14 @@ enum MotionControls {
     center + rotation * halfTravel
   }
 
-  /// Płynne podążanie za celem — tłumi szum BLE bez zmiany surowego `input.rotation`.
+  /// Płynne podążanie za celem — wyłączone (Triki filtruje); zwraca target.
   static func followHorizontal(
     current: Double,
     target: Double,
     deltaTime: TimeInterval,
     rate: Double = 16
   ) -> Double {
-/// Przechowuje wartosc `step`.
-    let step = min(1, max(0, rate * deltaTime))
-    return current + (target - current) * step
+    target
   }
 
   /// Mapowanie kursora Wii-pointer na oś X ekranu.
@@ -98,7 +96,7 @@ enum MotionControls {
     width / 2 + posX * width / 2
   }
 
-  /// Płynne podążanie paletki 60 FPS — szybkie, bez migotania pikseli.
+  /// Pozycja paletki 1:1 z `posX` (bez dodatkowego wygładzania).
   static func smoothPaddleX(
     current: Double,
     posX: Double,
@@ -108,9 +106,7 @@ enum MotionControls {
     deltaTime: TimeInterval,
     rate: Double = 48
   ) -> Double {
-/// Przechowuje wartosc `target`.
-    let target = min(maxX, max(minX, screenX(posX: posX, width: width)))
-    return followHorizontal(current: current, target: target, deltaTime: deltaTime, rate: rate)
+    min(maxX, max(minX, screenX(posX: posX, width: width)))
   }
 
   /// Mapowanie kursora na oś Y (góra = mniejsze Y).
@@ -153,14 +149,11 @@ enum MotionControls {
     current: Double,
     minX: Double,
     maxX: Double,
-    smooth: Double = 0.2
+    smooth: Double = 0
   ) -> Double {
-/// Przechowuje wartosc `normalized`.
     let normalized = (rotation + 1) / 2.0
-/// Przechowuje wartosc `target`.
     let target = minX + normalized * (maxX - minX)
-    guard smooth > 0 else { return target }
-    return current + (target - current) * smooth
+    return target
   }
 
 /// Wykonuje operacje `turnDirection`.
@@ -233,18 +226,14 @@ enum MotionControls {
   }
 }
 
-/// Wygładza sygnał boczny — wspólne dla wszystkich gier.
+/// Bez wygładzania — bezpośrednia prędkość z wejścia Triki.
 struct LateralSmoother {
-  private var smoothed = 0.0
   private var velocity = 0.0
 
-/// Wykonuje operacje `reset`.
   mutating func reset() {
-    smoothed = 0
     velocity = 0
   }
 
-/// Wykonuje operacje `step`.
   mutating func step(target: Double, tuning: GameTuning, deltaTime: TimeInterval) -> Double {
     step(
       target: target,
@@ -254,18 +243,13 @@ struct LateralSmoother {
     )
   }
 
-/// Wykonuje operacje `step`.
   mutating func step(
     target: Double,
     tuning: GameTuning,
     profile: GameInputProfile,
     deltaTime: TimeInterval
   ) -> Double {
-    smoothed = smoothed * 0.7 + target * 0.3
-
-/// Przechowuje wartosc `targetVel`.
-    let targetVel = smoothed * (profile.movementSpeed ?? tuning.movementSpeed)
-    velocity = targetVel
+    velocity = target * (profile.movementSpeed ?? tuning.movementSpeed)
     return velocity
   }
 }

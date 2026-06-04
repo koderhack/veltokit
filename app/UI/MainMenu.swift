@@ -68,14 +68,12 @@ struct MainMenu: View {
         ConnectView()
           .presentationDetents([.medium, .large])
       }
-      .fullScreenCover(isPresented: calibrationCoverBinding) {
-        TrikiCalibrationView()
-      }
     }
     .environmentObject(motion)
     .environmentObject(tuning)
     .environmentObject(trikiUI)
     .environmentObject(quizDisplay)
+    .motionInputPolling(motion)
   }
 
   @ViewBuilder
@@ -94,17 +92,6 @@ struct MainMenu: View {
     }
   }
 
-  private var calibrationCoverBinding: Binding<Bool> {
-    Binding(
-      get: { motion.showsCalibrationPrompt && path.isEmpty },
-      set: { newValue in
-        if !newValue, motion.showsCalibrationPrompt {
-          motion.skipCalibrationPrompt()
-        }
-      }
-    )
-  }
-
   private var header: some View {
     Text("Dotknij kartę — wybierz grę")
       .font(.system(size: 11, weight: .bold, design: .monospaced))
@@ -119,24 +106,29 @@ struct MainMenu: View {
         VStack(alignment: .leading, spacing: 2) {
           Text(motion.isConnected ? "Połączono" : "Nie połączono")
             .font(.system(size: 13, weight: .bold, design: .monospaced))
-          if motion.autoCalibrationState == .done {
-            Text("Triki: skalibrowano")
+          if motion.isConnected {
+            Text("BLE: \(motion.bleMode.statusLabel)")
+              .font(.system(size: 9, weight: .semibold, design: .monospaced))
+              .foregroundStyle(motion.bleMode.uiColor)
+          }
+          if let idle = motion.idleStatusMessage {
+            Text(idle)
+              .font(.system(size: 9, design: .monospaced))
+              .foregroundStyle(NeonTheme.neonOrange)
+          } else if motion.isTrikiGameplayActive {
+            Text("Gotowy do gry")
               .font(.system(size: 9, weight: .semibold, design: .monospaced))
               .foregroundStyle(NeonTheme.neonGreen)
-          } else if motion.showsCalibrationPrompt || motion.autoCalibrationState == .awaitingUser {
-            Text("Wymaga kalibracji")
-              .font(.system(size: 9, design: .monospaced))
-              .foregroundStyle(NeonTheme.neonYellow)
           }
         }
         Spacer()
         Circle()
-          .fill(motion.isReceiving ? NeonTheme.neonGreen : Color.red.opacity(0.8))
+          .fill(motion.linkIndicatorColor)
           .frame(width: 8, height: 8)
       }
       HStack(spacing: 6) {
         meter("posX", input.posX)
-        meter("BLE", motion.isReceiving ? 1 : 0)
+        meter("BLE", motion.isTrikiGameplayActive ? 1 : (motion.isReceiving ? 0.5 : 0))
       }
 
       Toggle(isOn: $backgroundMusicEnabled) {

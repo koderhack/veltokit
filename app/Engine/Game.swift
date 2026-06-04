@@ -40,28 +40,28 @@ struct GameInputProfile {
 /// Przechowuje wartosc `pong`.
   static let pong = GameInputProfile(
     lateralGain: 2.5, rotationWeight: 0, gyroWeight: 1, tiltWeight: 0,
-    lateralDeadzone: 0.03, lateralSmoothing: 0.2, movementSpeed: 220,
+    lateralDeadzone: 0.03, lateralSmoothing: 0, movementSpeed: 220,
     showsRotation: true, showsSteering: true, motionMode: .paddle
   )
 
 /// Przechowuje wartosc `dart`.
   static let dart = GameInputProfile(
     lateralGain: 2.5, rotationWeight: 0, gyroWeight: 1, tiltWeight: 0,
-    lateralDeadzone: 0.03, lateralSmoothing: 0.2, movementSpeed: 220,
+    lateralDeadzone: 0.03, lateralSmoothing: 0, movementSpeed: 220,
     showsSteering: true, motionMode: .pointer
   )
 
 /// Przechowuje wartosc `bowling`.
   static let bowling = GameInputProfile(
     lateralGain: 2.5, rotationWeight: 0, gyroWeight: 1, tiltWeight: 0,
-    lateralDeadzone: 0.03, lateralSmoothing: 0.2, movementSpeed: 220,
+    lateralDeadzone: 0.03, lateralSmoothing: 0, movementSpeed: 220,
     showsSteering: true, motionMode: .gesture
   )
 
 /// Przechowuje wartosc `quiz`.
   static let quiz = GameInputProfile(
     lateralGain: 2.5, rotationWeight: 0, gyroWeight: 1, tiltWeight: 0,
-    lateralDeadzone: 0.03, lateralSmoothing: 0.2, movementSpeed: 220,
+    lateralDeadzone: 0.03, lateralSmoothing: 0, movementSpeed: 220,
     showsRotation: true, showsSteering: true, motionMode: .paddle
   )
 }

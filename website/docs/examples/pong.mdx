@@ -1,6 +1,6 @@
 ---
 title: Pong
-description: Tilt left/right to move the paddle — .paddle mode, posX
+description: Tilt left/right to move the paddle — .paddle mode, posX mapping
 ---
 
 import GameDocHeader from '@site/src/components/GameDocHeader';
@@ -25,14 +25,15 @@ The homepage and [Demo](../demo) page show a live pixel preview of the same `pos
 | Setting | Value |
 |---------|--------|
 | `MotionMode` | `.paddle` |
-| Primary field | `posX` (normalized steering, center ≈ 0) |
-| Also useful | `lateral` / `lateralSmooth` (HUD in sample app) |
+| Primary field | `posX` (~0…1, center ≈ 0.5) |
+| Also useful | `lateral` (HUD in sample app) |
 | Button | Optional — not required for core Pong loop |
 
-In the sample, paddle X is derived from center + scaled `posX`:
+Paddle follows **absolute** horizontal position from the SDK:
 
-```text
-targetX = courtCenter + input.posX × paddleScreenScale
+```swift
+let targetX = centerX + input.posX * paddleScreenScale
+paddleX = clamp(targetX, minX...maxX)
 ```
 
 `GameManager` applies the `.paddle` preset when Pong starts (`GameInputProfile.pong` in `app/Engine/Game.swift`).
@@ -49,9 +50,9 @@ motion.connect()
 // Game loop (~60 Hz):
 func tick(dt: TimeInterval) {
   let input = motion.pollInput(deltaTime: dt)
-  let center = courtWidth / 2
-  let scale: CGFloat = 66   // tune to your court
-  paddle.center.x = center + CGFloat(input.posX) * scale
+  let centerX = courtWidth / 2
+  let scale = 66.0
+  paddle.center.x = centerX + CGFloat(input.posX) * scale
 }
 ```
 
@@ -73,8 +74,7 @@ let input = motion.input
 
 ## Tips
 
-- Calibrate on a **flat, neutral** pose so `posX` rests near zero when you aim straight.
-- If the paddle feels sluggish, raise `MotionConfig.paddlePositionFollow` or lower smoothing — see [Configuration](../sdk/configuration).
+- Calibrate on a **flat, neutral** pose so idle drift stays small.
 - Pong is the simplest reference for **one-axis tilt** before Dart or Bowling.
 
 [← Game examples](../category/examples) · [Dart →](dart) · [GameInput](../sdk/game-input) · [Gestures](../sdk/gestures)
