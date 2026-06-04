@@ -43,6 +43,7 @@ public final class TrikiGameController: ObservableObject {
   private var lastPollTime: TimeInterval?
   private var lastHudPublishAt: TimeInterval = 0
   private var lastWakeUpAttemptAt: TimeInterval = 0
+  private var pendingButtonEdge = false
 
   private var moveHandlers: [(Float) -> Void] = []
   private var shakeHandlers: [() -> Void] = []
@@ -103,6 +104,9 @@ public final class TrikiGameController: ObservableObject {
 
     let frames = parser.drainParsedFrames()
     if !frames.isEmpty {
+      if frames.contains(where: \.buttonEdge) {
+        pendingButtonEdge = true
+      }
       motion.ingest(parsed: frames, deltaTime: dt)
       publishGameInputIfNeeded(now: now)
       dispatchCallbacks()
@@ -112,6 +116,13 @@ public final class TrikiGameController: ObservableObject {
     }
 
     return gameInput
+  }
+
+  /// Jednorazowo zwraca impuls przycisku z parsera (preset v2 / legacy).
+  func consumeButtonEdge() -> Bool {
+    let edge = pendingButtonEdge
+    pendingButtonEdge = false
+    return edge
   }
 
   public func resetSession() {
@@ -125,6 +136,7 @@ public final class TrikiGameController: ObservableObject {
     lastPollTime = nil
     lastHudPublishAt = 0
     lastWakeUpAttemptAt = 0
+    pendingButtonEdge = false
   }
 
   // MARK: - Public API

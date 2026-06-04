@@ -88,6 +88,8 @@ struct DevModeView: View {
       row("ostatni pakiet", probe.lastPacketHex)
       row("kandydaci 0→1", candidateText)
       row("bytes[1]", "\(motion.debugBLEButtonB1)")
+      row("bleButtonClick", inputSnapshot.bleButtonClick ? "TAK" : "nie")
+      row("pending click", motion.motionSDK.hasPendingButtonClick ? "TAK" : "nie")
       row("parser click", motion.debugParserClick ? "TAK" : "nie")
       row("primaryAction", inputSnapshot.primaryAction ? "TAK" : "nie")
       row("input.sensors.click", inputSnapshot.sensors.click ? "TAK" : "nie")

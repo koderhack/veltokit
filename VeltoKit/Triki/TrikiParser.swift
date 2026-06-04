@@ -63,7 +63,7 @@ public final class TrikiParser: @unchecked Sendable {
 
     let result: ParsedMotionData
     if Self.isPresetV2(data) {
-      result = Self.parsePresetV2(data)
+      result = Self.parsePresetV2(data, lastButton: &lastButtonByte)
     } else if Self.isLegacyBlock8(data) {
       result = Self.parseLegacyBlock8(data, lastButton: &lastButtonByte)
     } else if Self.isLegacyFrame14(data) {
@@ -135,7 +135,7 @@ public final class TrikiParser: @unchecked Sendable {
     return true
   }
 
-  public static func parsePresetV2(_ data: Data) -> ParsedMotionData {
+  public static func parsePresetV2(_ data: Data, lastButton: inout UInt8) -> ParsedMotionData {
     guard data.count >= 8 else {
       return ParsedMotionData(isValid: false, presetID: "v2-short")
     }
@@ -143,13 +143,16 @@ public final class TrikiParser: @unchecked Sendable {
     let rawX = int16(data, 2)
     let rawY = int16(data, 4)
     let rawZ = int16(data, 6)
+    let header = [UInt8](data.prefix(min(8, data.count)))
+    let edge = BLEButtonDecoder.risingEdge(in: header, lastButton: &lastButton)
 
     return ParsedMotionData(
       x: Float(rawX) / 100.0,
       y: Float(rawY) / 100.0,
       z: Float(rawZ) / 100.0,
       isValid: true,
-      presetID: "v2"
+      presetID: "v2",
+      buttonEdge: edge
     )
   }
 

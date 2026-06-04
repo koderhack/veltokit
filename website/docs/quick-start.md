@@ -6,48 +6,42 @@ description: Connect and read GameInput — VeltoKit
 
 # Quick Start
 
-**Search docs:** use the **Search** box in the top navbar (`⌘K` / `Ctrl+K`).
-
-**AI skills (Cursor / Claude):** download on [For Cursor Claude](./for-cursor-claude) or [Introduction](./intro) (download cards at the top).
+**Start with [Integration recipes](sdk/recipes)** — four copy-paste patterns (Pong, UI, Dart, Bowling).
 
 Add VeltoKit via [SPM or CocoaPods](installation), then:
 
-## Simple flow (BLE built in)
+## Minimal loop
 
 ```swift
 import VeltoKit
 
 let motion = MotionSDK()
-motion.setMode(.paddle)   // or .pointer / .gesture
+motion.configureForPong()   // or .configureForMenu() / pointer / gesture — see recipes
+motion.connect()            // scan + auto-connect (physical iPhone)
 
-motion.connect()          // scan + auto-connect (physical iPhone)
-
-// Each frame (~60 Hz) in your game loop:
+// Each frame (~60 Hz):
 let input = motion.pollInput(deltaTime: dt)
-paddle.x = CGFloat(input.posX) * viewWidth
-if input.didShoot { serveBall() }
 ```
 
-Add to `Info.plist`: `NSBluetoothAlwaysUsageDescription` (and `NSBluetoothPeripheralUsageDescription` on older iOS if needed).
+Add to `Info.plist`: `NSBluetoothAlwaysUsageDescription`.
+
+## Pick a recipe
+
+| You build… | Call | Doc |
+|------------|------|-----|
+| Pong | `configureForPong()` + `TrikiSimplePong` | [Recipes §1](sdk/recipes#1-pong) |
+| Menu / Quiz | `configureForMenu()` + `TrikiUIPicker` | [Recipes §2](sdk/recipes#2-ui--quiz-menu) |
+| Dart | `configureForPointerGame()` | [Recipes §3](sdk/recipes#3-pointer-games-dart) |
+| Bowling | `configureForGestureGame()` | [Recipes §4](sdk/recipes#4-gesture-games-bowling) |
 
 ## Manual bytes (your own BLE stack)
 
-If you already have `CBCentralManager` notify callbacks:
-
 ```swift
-let sdk = MotionSDK()
-sdk.setMode(.paddle)
-sdk.enqueueBLE(bytes)
-sdk.updateFrame(deltaTime: dt)
-let input = sdk.input
+let motion = MotionSDK()
+motion.configureForPong()
+motion.enqueueBLE(bytes)
+motion.updateFrame(deltaTime: dt)
+let input = motion.input
 ```
 
-## Pick a mode
-
-| Game | `setMode` | Use |
-|------|-----------|-----|
-| Pong, Quiz | `.paddle` | `posX`, `primaryAction` |
-| Dart | `.pointer` | `posX`, `posY` |
-| Bowling | `.gesture` | `shotTriggered`, `throwPower` |
-
-[Game examples](examples/pong) · [GameInput](sdk/game-input) · [Installation](installation)
+[Recipes](sdk/recipes) · [GameInput](sdk/game-input) · [Installation](installation)

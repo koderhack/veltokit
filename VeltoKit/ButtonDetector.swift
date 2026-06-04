@@ -18,7 +18,13 @@ final class ButtonDetector {
     if data.count > BLEButtonDecoder.buttonIndex, data[0] == BLEButtonDecoder.packetHeader {
       lastSeenButtonByte = data[BLEButtonDecoder.buttonIndex]
     }
-    guard BLEButtonDecoder.risingEdge(in: data, lastButton: &lastButton) else { return }
+    if BLEButtonDecoder.risingEdgeAnywhere(in: data, lastButton: &lastButton) {
+      pendingClick = true
+    }
+  }
+
+  /// Ustawia oczekujący impuls (np. z TrikiParser preset v2).
+  func latchClick() {
     pendingClick = true
   }
 

@@ -118,7 +118,6 @@ struct BowlingGameView: View {
       uiTick &+= 1
       if uiTick % 6 == 0 {
         linkActive = inputProvider.isTrikiControlAvailable
-        _ = inputProvider.pollInput()
       }
       if bowlingOnTV || quizDisplay.isExternalScreenConnected {
         syncTV()

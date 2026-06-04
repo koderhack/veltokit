@@ -28,6 +28,8 @@ public struct GameInput {
   public var tiltRight: Bool = false
   /// Główna akcja wejścia (np. klik/strzał).
   public var primaryAction: Bool = false
+  /// Jednoklatkowy impuls fizycznego przycisku BLE (`bytes[1]`, zbocze 0→1).
+  public var bleButtonClick: Bool = false
   /// Opcjonalna akcja dodatkowa.
   public var secondaryAction: Bool? = nil
   /// Surowe sensory Triki przypisane do tej ramki.
@@ -94,6 +96,7 @@ public struct GameInput {
   ///   - tiltLeft: Sygnał przechyłu w lewo.
   ///   - tiltRight: Sygnał przechyłu w prawo.
   ///   - primaryAction: Główna akcja wejścia.
+  ///   - bleButtonClick: Impuls fizycznego przycisku BLE (jedna klatka).
   ///   - secondaryAction: Opcjonalna akcja dodatkowa.
   ///   - sensors: Zrzut surowych sensorów Triki.
   ///   - lateral: Oś boczna.
@@ -128,6 +131,7 @@ public struct GameInput {
     tiltLeft: Bool = false,
     tiltRight: Bool = false,
     primaryAction: Bool = false,
+    bleButtonClick: Bool = false,
     secondaryAction: Bool? = nil,
     sensors: TrikiSensors = TrikiSensors(),
     lateral: Double = 0,
@@ -162,6 +166,7 @@ public struct GameInput {
     self.tiltLeft = tiltLeft
     self.tiltRight = tiltRight
     self.primaryAction = primaryAction
+    self.bleButtonClick = bleButtonClick
     self.secondaryAction = secondaryAction
     self.sensors = sensors
     self.lateral = lateral

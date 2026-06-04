@@ -27,6 +27,7 @@ Unofficial / educational. Do not invent hardware brands or packet layouts not in
 ```text
 VeltoKit/
   MotionSDK.swift      # Public API — start here for SDK questions
+  Triki/TrikiRecipes.swift  # configureForPong/Menu + TrikiUIPicker, TrikiSimplePong
   MotionEngine.swift   # Per-frame processing, modes, calibration
   GameInput.swift      # Output contract — start here for game logic
   MotionConfig.swift   # Presets per MotionMode
@@ -106,7 +107,7 @@ Mode setup in app: `app/Engine/GameManager.swift`. Per-game docs: `website/docs/
 
 | Task | Read first |
 |------|------------|
-| Integrate SDK in a new app | `website/docs/quick-start.md`, `sdk/motion-sdk.md`, `sdk/game-input.md` |
+| Integrate SDK in a new app | `website/docs/sdk/recipes.md`, `quick-start.md`, `sdk/game-input.md` |
 | BLE packets / debugging | `sdk/ble-integration.md`, `VeltoKit/BLE/` |
 | Change gesture / throw | `sdk/gestures.md`, `VeltoKit/GestureDetector.swift` |
 | Triki menus / focus | `sdk/triki-ui.md`, `app/UI/TrikiUI/` |

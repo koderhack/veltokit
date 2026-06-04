@@ -21,6 +21,7 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         'sdk/overview',
+        'sdk/recipes',
         'sdk/architecture',
         'sdk/modules',
         'sdk/motion-sdk',

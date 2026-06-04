@@ -2,6 +2,7 @@ import Combine
 import Foundation
 
 private let motionHudPublishInterval: TimeInterval = 0.12
+private let buttonClickHighlightDuration: TimeInterval = 0.12
 
 /// Adds focused motion sdk helpers.
 extension MotionSDK {
@@ -36,12 +37,21 @@ extension MotionSDK {
     trikiController?.tick(deltaTime: deltaTime)
     applyTrikiGamepadToEngine()
 
+    let now = Date().timeIntervalSince1970
+
     guard let parser = streamParser else {
       updateFrame(deltaTime: deltaTime)
-      return input
+      let buttonClick = resolveButtonClick(impulses: (false, false), now: now)
+      var copy = input
+      copy.bleButtonClick = buttonClick
+      if config.mode == .paddle {
+        copy.primaryAction = buttonClick
+      } else if buttonClick {
+        copy.primaryAction = copy.primaryAction || buttonClick
+      }
+      latestEnrichedInput = copy
+      return copy
     }
-
-    let now = Date().timeIntervalSince1970
     let stale = trikiBLEMode.packetStaleSeconds
     if now - lastPacketAt > stale, isReceiving { isReceiving = false }
     syncTrikiPublishedState()
@@ -51,11 +61,13 @@ extension MotionSDK {
       parser.flushImpulsesOnly()
       let impulses = parser.consumeImpulses()
       let out = updateFrame(deltaTime: deltaTime)
+      let buttonClick = resolveButtonClick(impulses: impulses, now: now)
       var enriched = makeEnrichedGameInput(
         output: out,
         sdkInput: input,
         parser: parser,
-        impulses: impulses
+        impulses: impulses,
+        buttonClick: buttonClick
       )
       applyTrikiGamepadSignals(&enriched)
       finalizeAdaptiveInput(&enriched)
@@ -72,11 +84,13 @@ extension MotionSDK {
     )
     let out = updateFrame(deltaTime: deltaTime)
     let impulses = parser.consumeImpulses()
+    let buttonClick = resolveButtonClick(impulses: impulses, now: now)
     var enriched = makeEnrichedGameInput(
       output: out,
       sdkInput: input,
       parser: parser,
-      impulses: impulses
+      impulses: impulses,
+      buttonClick: buttonClick
     )
     applyTrikiGamepadSignals(&enriched)
     finalizeAdaptiveInput(&enriched)
@@ -287,6 +301,24 @@ extension MotionSDK {
     lastFramePosY = input.posY
   }
 
+  /// Jednorazowe zebranie impulsu przycisku BLE na końcu `pollInput` (nie w `publishInput`).
+  func resolveButtonClick(impulses: (click: Bool, shake: Bool), now: TimeInterval) -> Bool {
+    if trikiController?.consumeButtonEdge() == true {
+      button.latchClick()
+    }
+    let packetEdge = button.consumeClick()
+    let currentByte = button.lastSeenButtonByte
+    let levelEdge = BLEButtonDecoder.isPressed(currentByte)
+      && !BLEButtonDecoder.isPressed(lastSampledButtonByte)
+    lastSampledButtonByte = currentByte
+
+    let freshEdge = packetEdge || impulses.click || levelEdge
+    if freshEdge {
+      buttonClickHighlightUntil = now + buttonClickHighlightDuration
+    }
+    return freshEdge || now < buttonClickHighlightUntil
+  }
+
   /// Builds a UI/game-friendly input snapshot from raw engine output and parser state.
   ///
   /// - Parameters:
@@ -294,12 +326,14 @@ extension MotionSDK {
   ///   - sdkInput: Base input snapshot that will be enriched.
   ///   - parser: Optional parser containing latest sensor payload.
   ///   - impulses: Edge-triggered click/shake impulses for this frame.
+  ///   - buttonClick: Resolved BLE button edge for this poll (includes short HUD latch).
   /// - Returns: Enriched `GameInput` used by HUD and gameplay layers.
   func makeEnrichedGameInput(
     output: MotionOutput,
     sdkInput: GameInput,
     parser: MotionParser?,
-    impulses: (click: Bool, shake: Bool)
+    impulses: (click: Bool, shake: Bool),
+    buttonClick: Bool = false
   ) -> GameInput {
     let dbg = debug
     var enriched = sdkInput
@@ -321,13 +355,13 @@ extension MotionSDK {
       enriched.sensors = parser.sensors
       enriched.pointerDirection = pointerDirection(posX: output.x, posY: output.y)
     }
-    let buttonEdge = impulses.click || sdkInput.primaryAction
+    enriched.bleButtonClick = buttonClick
     if config.mode == .paddle {
-      enriched.primaryAction = buttonEdge
-    } else if impulses.click {
-      enriched.primaryAction = true
+      enriched.primaryAction = buttonClick
+    } else if buttonClick {
+      enriched.primaryAction = enriched.primaryAction || buttonClick
     }
-    applyClickToSensors(&enriched, clickEdge: buttonEdge)
+    applyClickToSensors(&enriched, clickEdge: buttonClick)
     return enriched
   }
 

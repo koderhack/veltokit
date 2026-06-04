@@ -17,6 +17,9 @@ public final class MotionSDK: ObservableObject {
   /// Ostatni bajt przycisku BLE (DEV).
   public var lastButtonByte: UInt8 { button.lastSeenButtonByte }
 
+  /// Czy oczekuje nieodebrany impuls przycisku (DEV).
+  public var hasPendingButtonClick: Bool { button.didClick }
+
   /// Ostatnia opublikowana ramka wejścia.
   public private(set) var input = GameInput()
 
@@ -73,6 +76,10 @@ public final class MotionSDK: ObservableObject {
   private var latestPaddleRaw: Double?
   var lastFramePosX: Double?
   var lastFramePosY: Double?
+  /// Ostatni `bytes[1]` przy ostatnim `pollInput` (zbocze między pollami).
+  var lastSampledButtonByte: UInt8 = 0
+  /// Dev Mode / HUD: trzyma `bleButtonClick` przez krótki czas po zboczu.
+  var buttonClickHighlightUntil: TimeInterval = 0
 
   /// Tworzy instancję SDK ruchu.
   public init() {
@@ -221,6 +228,8 @@ public final class MotionSDK: ObservableObject {
     latestPaddleRaw = nil
     lastFramePosX = nil
     lastFramePosY = nil
+    lastSampledButtonByte = 0
+    buttonClickHighlightUntil = 0
     button.reset()
     engine.resetState()
     input = GameInput()
@@ -228,18 +237,17 @@ public final class MotionSDK: ObservableObject {
 
   private func publishInput() {
     let out = engine.output
-    let click = button.consumeClick()
     let trikiAction = trikiController?.gameInput.isAction ?? false
     let throwShot = out.didShoot
     input.posX = out.x
     input.posY = out.y
     input.shotTriggered = throwShot
+    input.bleButtonClick = false
     switch engine.config.mode {
     case .paddle:
-      // Quiz / Pong / menu: only the physical BLE button — not velocity or throw.
-      input.primaryAction = click
+      input.primaryAction = false
     case .pointer, .gesture:
-      input.primaryAction = click || throwShot || trikiAction
+      input.primaryAction = throwShot || trikiAction
     }
     input.throwPower = throwShot ? engine.lastGestureThrowPower : 0
     input.gesturePrimed = engine.gesturePrimed

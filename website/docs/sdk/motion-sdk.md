@@ -6,11 +6,15 @@ title: MotionSDK API
 
 `@MainActor` facade — call every frame from your game loop.
 
+:::tip Start with [Integration recipes](./recipes)
+`configureForPong()` · `configureForMenu()` · `configureForPointerGame()` · `configureForGestureGame()`
+:::
+
 ## Connect + read (recommended)
 
 ```swift
 let motion = MotionSDK()
-motion.setMode(.paddle)
+motion.configureForPong()
 
 motion.connect()                      // BLE scan + auto-connect
 
@@ -63,4 +67,4 @@ motion.engine.resetPaddleMotion()
 | `enqueueBLE(_:)` | Raw notify payload |
 | `ingestTrikiFrame(gyroX:gyroY:gyroZ:rotation:)` | Already parsed floats |
 
-See [GameInput](./game-input) · [BLE](./ble-integration)
+See [GameInput](./game-input) · [Recipes](./recipes) · [BLE](./ble-integration)

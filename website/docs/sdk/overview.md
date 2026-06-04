@@ -26,13 +26,15 @@ Download Cursor / Claude prompt files on [For Cursor Claude](../for-cursor-claud
 
 ## Integrate (MotionSDK)
 
+**Start here:** [Integration recipes](./recipes) — Pong, UI menu, Dart, Bowling.
+
 **Simple path** — BLE scan + read each frame:
 
 ```swift
 import VeltoKit
 
 let motion = MotionSDK()
-motion.setMode(.paddle)
+motion.configureForPong()   // or configureForMenu / pointer / gesture
 motion.connect()
 
 let input = motion.pollInput(deltaTime: dt)
@@ -62,6 +64,7 @@ motion.config = MotionConfig.preset(for: .paddle)  // optional tuning
 
 ## Docs
 
+- [Integration recipes](./recipes) — **four copy-paste patterns**
 - [MotionSDK](./motion-sdk) — API
 - [GameInput](./game-input) — fields
 - [Triki UI navigation](./triki-ui) — `.trikiUIScreen`, focus, hold, activation lifecycle

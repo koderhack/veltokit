@@ -110,7 +110,11 @@ struct GameCalibrationView: View {
           ) { handleDartLobbyMenuSlot($0) }
       } else if gameType == .bowling {
         bowlingLobbyBody
-          .trikiUIScreen(itemCount: 3, isActive: bowlingTrikiNavigationActive) { slot in
+          .trikiUIScreen(
+            itemCount: 3,
+            isActive: bowlingTrikiNavigationActive,
+            preferButtonConfirm: true
+          ) { slot in
             handleBowlingLobbySlot(slot)
           }
       } else {
@@ -631,10 +635,11 @@ struct GameCalibrationView: View {
       .frame(maxWidth: .infinity, alignment: .leading)
     } else if gameType == .bowling {
       VStack(alignment: .leading, spacing: 6) {
-        Text("1. Pochyl Triki lewo/prawo — celuj kulą")
-        Text("2. Cofnij rękę → mocno do przodu — rzut")
-        Text("3. 10 frame’ów · strike / spare · do 4 graczy")
-        Text("4. Dotknij GRAJ")
+        Text("1. Obrót Triki — wybór w menu (GRAJ / tryb / wstecz)")
+        Text("2. Przycisk Triki (bytes[1]) — potwierdź wybór i start")
+        Text("3. W grze: pochyl lewo/prawo — cel · cofnij → rzuć")
+        Text("4. Przed rzutem: przycisk = start tury")
+        Text("5. 10 frame’ów · strike / spare · do 4 graczy")
       }
       .font(.system(size: 12, design: .monospaced))
       .foregroundStyle(.white.opacity(0.85))
@@ -921,7 +926,7 @@ struct GameCalibrationView: View {
         : "Podłącz Triki · kalibracja przed grą"
     } else {
       text = hasMotionSignal
-        ? "Triki gotowy — dotknij „GRAJ”"
+        ? "Triki gotowy — obrót = wybór · przycisk = OK"
         : "Bez BLE — możesz grać i używać UI"
     }
     let color: Color = hasMotionSignal ? NeonTheme.neonGreen : NeonTheme.neonOrange

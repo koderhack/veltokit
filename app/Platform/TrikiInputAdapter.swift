@@ -148,7 +148,7 @@ public final class TrikiInputAdapter: InputProvider, ObservableObject {
   public var bleDevLog: [String] { motionSDK.bleDevLog }
   public func resetBLEProbe() { motionSDK.resetBLEProbe() }
   public var bleByteProbe: BLEByteProbe { motionSDK.bleByteProbe }
-  public var debugParserClick: Bool { motionSDK.input.primaryAction }
+  public var debugParserClick: Bool { motionSDK.snapshotInput().bleButtonClick }
   public var debugBLEButtonB1: UInt8 { motionSDK.lastButtonByte }
   public func clearBLEDevLog() { motionSDK.clearBLEDevLog() }
 

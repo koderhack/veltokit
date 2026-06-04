@@ -4,7 +4,11 @@ title: GameInput
 
 # GameInput
 
-`GameInput` is the **only** type sample games use in `update(input:deltaTime:)`. Populate it via `MotionSDK.input` or `TrikiInputAdapter.pollInput()`.
+`GameInput` is the **only** type games use in `update(input:deltaTime:)`. Get it from `motion.pollInput(deltaTime:)`.
+
+:::tip Simple integration
+Use [Integration recipes](./recipes) first — helpers wrap the fields below (`TrikiSimplePong`, `TrikiUIPicker`, `TrikiGameActions`).
+:::
 
 ## Primary game fields
 
@@ -13,6 +17,7 @@ title: GameInput
 | `posX` | `Double` | Paddle / aim horizontal `0…1` (center ≈ 0.5) |
 | `posY` | `Double` | Vertical aim (pointer mode) |
 | `primaryAction` | `Bool` | **Mode-dependent** — see [Primary action by mode](#primary-action-by-mode) |
+| `bleButtonClick` | `Bool` | BLE button edge (`bytes[1]`, 0→1) — latched ~120 ms after `pollInput` for HUD/menus |
 | `shotTriggered` | `Bool` | Gesture throw edge (Dart/Bowling) |
 | `throwPower` | `Double` | `0…1` strength when `shotTriggered` |
 | `gesturePrimed` | `Bool` | Pull-back before throw (UI hint) |
@@ -62,16 +67,15 @@ var steerX: Double { lateral }
 In **`.paddle`** (Pong, Quiz, Triki menus), motion velocity must **not** confirm selection — only the physical cap button.
 
 :::tip Confirm pattern (Quiz / menus)
-Use a **rising-edge gate with cooldown** on `primaryAction`, not `sensors.click` (HUD flag can stay high ~250 ms). Sample app: `TrikiButtonConfirmGate` in `app/UI/TrikiUI/`.
+Use **`TrikiButtonGate`** or **`TrikiUIPicker`** from [Integration recipes](./recipes) — debounced edge on `bleButtonClick` (`bytes[1]`).
 :::
 
 ```swift
-var confirmGate = TrikiButtonConfirmGate()
+var button = TrikiButtonGate()
 
 func tick(dt: TimeInterval) {
   let input = motion.pollInput(deltaTime: dt)
-  // … update selection from posX …
-  if confirmGate.consume(input: input, deltaTime: dt) {
+  if button.consume(input: input, deltaTime: dt) {
     confirmSelection()
   }
 }
@@ -81,54 +85,9 @@ func tick(dt: TimeInterval) {
 
 `sensors: TrikiSensors` — raw-ish telemetry for HUD (tilt, gyro, click flag). Filled by **Platform** `MotionParser`, not core VeltoKit.
 
-Do **not** treat `sensors.click` as a one-shot confirm in game logic — prefer `primaryAction` (paddle) or `TrikiButtonConfirmGate`.
+Do **not** treat `sensors.click` as a one-shot confirm — use `bleButtonClick` via `TrikiButtonGate`.
 
-## Adaptive drivers (Triki BLE modes)
+## Advanced drivers
 
-`TrikiBLEMode.inputStrategy` → `.velocity` | `.hybrid` | `.threshold`.
-
-```swift
-var driver = TrikiPaddleDriver()
-paddleX = driver.steer(current: paddleX, input: input, deltaTime: dt, courtCenter: center)
-```
-
-See [BLE integration](./ble-integration) · `TrikiAdaptiveInput.swift` · `TrikiVelocityController.swift` · **`TrikiGameInputManager.swift`** (per-game: pong steps, quiz debounce, bowling peak, dart spike).
-
-## Example: Pong
-
-```swift
-private var paddle = TrikiPaddleDriver()
-
-func update(input: GameInput, deltaTime: TimeInterval) {
-  paddleX = paddle.steer(
-    current: paddleX,
-    input: input,
-    deltaTime: deltaTime,
-    courtCenter: courtWidth / 2
-  )
-}
-```
-
-## Example: Dart
-
-```swift
-private var pointer = TrikiPointerDriver()
-
-if input.gesturePrimed { showPullBackHint() }
-if input.shotTriggered { launch(power: input.throwPower) }
-```
-
-## Example: Quiz
-
-Tilt → slot A–D; **button edge** → submit. Sample: `QuizGame.swift` + `TrikiFocusGate` for stable slot changes.
-
-```swift
-var confirmGate = TrikiButtonConfirmGate()
-
-// posX → selected (smoothed, adjacent steps only)
-if confirmGate.consume(input: input, deltaTime: dt) {
-  confirmSelection(selected)
-}
-```
-
-[MotionSDK](./motion-sdk) · [Gestures](./gestures)
+For custom tuning beyond [recipes](./recipes): `TrikiPaddleDriver`, `TrikiMenuDriver`, `TrikiPointerDriver`, `TrikiLateralDriver` in `TrikiAdaptiveInput.swift`.
+See [BLE integration](./ble-integration) for adaptive BLE mode (`TrikiBLEMode`).

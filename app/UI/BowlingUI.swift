@@ -331,7 +331,7 @@ struct BowlingHUDOverlay: View {
             .font(.system(size: hud.setupSecondsLeft > 0 ? 26 : 22, weight: .heavy, design: .monospaced))
             .foregroundStyle(hud.setupSecondsLeft > 0 ? Color.orange : (hud.throwPhase == .ready ? NeonTheme.neonYellow : NeonTheme.neonCyan))
           if hud.setupSecondsLeft > 0 {
-            Text("Celuj lewo/prawo · rzut za chwilę")
+            Text("Stań spokojnie · rzut za chwilę")
               .font(.system(size: 11, weight: .semibold, design: .rounded))
               .foregroundStyle(.white.opacity(0.6))
           }

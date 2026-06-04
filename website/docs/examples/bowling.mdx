@@ -1,34 +1,33 @@
 ---
 title: Bowling
-description: Aim on the lane, roll with gesture — .gesture mode
+description: Roll with gesture — .gesture mode, no lateral Triki aim
 ---
 
 import GameDocHeader from '@site/src/components/GameDocHeader';
 
-<GameDocHeader id="bowling" title="Bowling" mode=".gesture" fields="posX, shotTriggered, throwPower, sensors" />
+<GameDocHeader id="bowling" title="Bowling" mode=".gesture" fields="shotTriggered, throwPower, sensors" />
 
-**Bowling** is a **3D lane** (SceneKit on iPhone) with ten pins. You **aim** by leaning left/right, then **roll** with the same pull-back → throw gesture as Dart, mapped to ball speed and spin.
+**Bowling** is a **3D lane** (SceneKit on iPhone) with ten pins. You **roll** with the same pull-back → throw gesture as Dart; the ball starts from the **center** of the lane (no left/right aim with Triki tilt).
 
 ## How you play
 
 1. Connect + calibrate in the sample app.
 2. Open **Bowling** — lobby supports player names, frames, optional TV.
-3. Between throws, **tilt** to move the ball left/right on the lane.
-4. **Pull back** on the cap, then **throw forward** to roll (one roll per successful gesture).
-5. **`throwPower`** (0…1) sets ball speed; lateral aim uses filtered tilt (`BowlingInputHandler`).
-6. Standard **10 frames**, two throws per frame (strike/spare logic in `BowlingGameLogic`).
-7. Multiplayer: press the cap button when the HUD says **Triki = start** for your turn.
-8. Short **setup countdown** and invisible calibration run at the start of a frame — stand still when asked.
+3. **Pull back** on the cap, then **throw forward** to roll (one roll per successful gesture).
+4. **`throwPower`** (0…1) sets ball speed; spin comes from release dynamics in `BowlingGameScene`.
+5. Standard **10 frames**, two throws per frame (strike/spare logic in `BowlingGameLogic`).
+6. Multiplayer: press the cap button when the HUD says **Triki = start** for your turn.
+7. Short **setup countdown** and invisible calibration run at the start of a frame — stand still when asked.
 
-HUD phases: *Celuj · Triki* → *COFNIJ rękę* → *Rzuć!* → ball rolling → pin result.
+HUD phases: *Gotowy · Triki* → *COFNIJ rękę* → *Rzuć!* → ball rolling → pin result.
 
 ## VeltoKit mapping
 
 | Setting | Value |
 |---------|--------|
 | `MotionMode` | `.gesture` |
-| Aim | `tiltY` / lateral → smoothed lane position (`posX` path via handler) |
-| Throw | Gesture via `BowlingInputHandler` → `ThrowEvent(power, lateralPosX, spin…)` |
+| Aim | Fixed center (`lateralPosX = 0`) — no Triki tilt steering |
+| Throw | Gesture via `BowlingInputHandler` → `ThrowEvent(power, …)` |
 | Turn start | `sensors.click` (physical button only in sample) |
 | SDK fields | `shotTriggered`, `throwPower` when using raw gesture output |
 
@@ -44,22 +43,20 @@ motion.connect()
 func tick(dt: TimeInterval) {
   let input = motion.pollInput(deltaTime: dt)
 
-  lanePosition = filterAim(from: input)   // see sample handler
-
   if input.shotTriggered {
-    rollBall(power: input.throwPower, lateral: lanePosition)
+    rollBall(power: input.throwPower)   // center lane in sample
   }
 }
 ```
 
-The sample does **not** call `shotTriggered` directly in `BowlingGame` — it routes through **`BowlingInputHandler`** + **`DartThrowController`** for consistent throw feel. Copy that handler if you want matching UX.
+The sample routes throws through **`BowlingInputHandler`** + **`DartThrowController`** for consistent throw feel. Copy that handler if you want matching UX.
 
 ## Sample app source
 
 | File | Role |
 |------|------|
 | `app/Games/BowlingGame.swift` | Round phases, scoring, SceneKit bridge |
-| `app/Games/Bowling/BowlingInputHandler.swift` | Aim + throw FSM |
+| `app/Games/Bowling/BowlingInputHandler.swift` | Throw FSM (no lateral aim) |
 | `app/Games/Bowling/BowlingGameLogic.swift` | Frames, players, pins |
 | `app/Games/Bowling/BowlingGameScene.swift` | 3D lane, ball, pins |
 | `app/Games/Bowling/BowlingInvisibleCalibrator.swift` | Auto neutral during setup |
@@ -68,8 +65,7 @@ The sample does **not** call `shotTriggered` directly in `BowlingGame` — it ro
 
 ## Tips
 
-- Stand **still** during the invisible calibration window or aim will bias.
-- Toggle **invert lateral** in-game if your grip feels reversed.
+- Stand **still** during the invisible calibration window before each throw.
 - Read [Gestures](../sdk/gestures) for BACK → FORWARD timing shared with Dart.
 
 [← Dart](dart) · [Quiz →](quiz) · [Configuration](../sdk/configuration) · [Getting started](../getting-started)

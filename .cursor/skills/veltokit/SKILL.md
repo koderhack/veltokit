@@ -19,11 +19,15 @@ description: VeltoKit BLE motion SDK and gametriki sample app. Use when editing 
 
 ## Frame pipeline
 
-`BLE → MotionSDK.enqueueBLE / connect() → MotionEngine.updateFrame → GameInput → game.update(input:)`
+`BLE → MotionSDK.connect() → pollInput → GameInput → your game`
 
 ```swift
-let input = motion.pollInput(deltaTime: dt)  // after connect()
+motion.configureForPong()  // or Menu / PointerGame / GestureGame
+let input = motion.pollInput(deltaTime: dt)
 ```
+
+Helpers: `TrikiRecipes.swift` — `TrikiSimplePong`, `TrikiUIPicker`, `TrikiGameActions`, `TrikiButtonGate`.
+Docs: `website/docs/sdk/recipes.md`.
 
 ## MotionMode → games
 

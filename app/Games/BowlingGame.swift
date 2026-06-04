@@ -63,6 +63,7 @@ final class BowlingGame: Game {
   private var calibrationAppliedThisSetup = false
   private var requestMotionCalibration = false
   private var scoreboardSplashRemaining: TimeInterval = 0
+  private var turnStartConfirmGate = TrikiButtonConfirmGate()
 
   private static let setupDuration: TimeInterval = 3.5
   private static let scoreboardSplashDuration: TimeInterval = 2.8
@@ -107,7 +108,7 @@ final class BowlingGame: Game {
 
   private var currentThrowLabel: String {
     if awaitingTurnStart {
-      return "Celuj · Triki = start"
+      return "Celuj · przycisk = start"
     }
     if setupCountdown > 0 {
       let sec = max(1, Int(setupCountdown.rounded(.up)))
@@ -139,6 +140,7 @@ final class BowlingGame: Game {
     _ = scene
     resetRound(fullPins: true)
     inputHandler.reset()
+    turnStartConfirmGate.reset()
   }
 
   /// Wykonuje operację `update` w bieżącym kontekście gry/UI.
@@ -157,8 +159,8 @@ final class BowlingGame: Game {
     switch roundPhase {
     case .aiming:
       if awaitingTurnStart {
-        // Tylko fizyczny przycisk BLE — gest nie uruchamia tury.
-        if input.sensors.click {
+        // Fizyczny przycisk BLE (bytes[1]) — gest nie uruchamia tury.
+        if turnStartConfirmGate.consume(input: input, deltaTime: deltaTime) {
           confirmTurnStart()
         }
         _ = inputHandler.update(input: input, deltaTime: deltaTime, aimEnabled: true, throwsEnabled: false)
@@ -355,6 +357,7 @@ final class BowlingGame: Game {
     roundPhase = .aiming
     scene.ensureStandingPins(standingPinCount)
     inputHandler.prepareForTurnGate()
+    turnStartConfirmGate.reset()
     awaitingTurnStart = true
     setupCountdown = 0
     turnAnnouncement = logic.currentPlayer.name

@@ -34,6 +34,7 @@ final class MotionParser: ObservableObject {
   private var rxBuffer: [UInt8] = []
   /// Ostatnio widziany `bytes[1]` (podgląd DEV).
   public private(set) var lastSeenButtonByte: UInt8 = 0
+  private var lastIngressButtonByte: UInt8 = 0
 
   private var smoothTiltX = 0.0
   private var smoothTiltY = 0.0
@@ -131,6 +132,7 @@ final class MotionParser: ObservableObject {
     sensors = TrikiSensors()
     recentFrames.removeAll()
     lastSeenButtonByte = 0
+    lastIngressButtonByte = 0
   }
 
   /// Czy klik był niedawno (DEV / HUD — impuls trwa ~1 klatkę).
@@ -139,8 +141,11 @@ final class MotionParser: ObservableObject {
     return sensors.click || (now - lastClickAt) < 0.25
   }
 
-  /// Podgląd `bytes[1]` — klik obsługuje `ButtonDetector` w MotionSDK.
+  /// Podgląd `bytes[1]` + impuls kliknięcia do `consumeImpulses()`.
   private func ingestBLEButtonEdges(from data: [UInt8]) {
+    if BLEButtonDecoder.risingEdgeAnywhere(in: data, lastButton: &lastIngressButtonByte) {
+      registerClickImpulse()
+    }
     if data.count > BLEButtonDecoder.buttonIndex, data[0] == BLEButtonDecoder.packetHeader {
       lastSeenButtonByte = data[BLEButtonDecoder.buttonIndex]
     }

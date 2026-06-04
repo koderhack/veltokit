@@ -4,7 +4,7 @@ title: BLE integration
 
 # BLE integration
 
-VeltoKit accepts **bytes** and optional **rawX**. You can let **`MotionSDK`** scan and connect, feed bytes yourself, or use the sample **`TrikiInputAdapter`** for calibration UI.
+VeltoKit accepts **bytes** and optional **rawX**. For app code, start with [Integration recipes](./recipes); open this page when debugging packets or BLE modes.
 
 ## Gamepad pipeline (`TrikiGameController`)
 
