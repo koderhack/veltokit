@@ -32,6 +32,7 @@ VeltoKit/
   MotionConfig.swift   # Presets per MotionMode
   BLE/BLEManager.swift # Stub → TrikiBLEManager
   Triki/TrikiBLEManager.swift      # Scan, connect, reconnect, notify
+  Triki/TrikiBLEMonitor.swift      # fast/normal/lowPower from packet Δt
   Triki/TrikiParser.swift          # Format-detecting int16 decode
   Triki/TrikiMotionEngine.swift    # Velocity / shake / tilt / swing
   Triki/TrikiGameController.swift  # Gamepad API (TrikiGameInput)

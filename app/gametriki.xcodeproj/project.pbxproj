@@ -114,6 +114,7 @@
 		TRIKI0032FC6EB2E00CDBB01 /* TrikiParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = TRIKI0212FC6EB2E00CDBB01 /* TrikiParser.swift */; };
 		TRIKI0052FC6EB2E00CDBB01 /* TrikiMotionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = TRIKI0312FC6EB2E00CDBB01 /* TrikiMotionEngine.swift */; };
 		TRIKI0072FC6EB2E00CDBB01 /* TrikiGameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = TRIKI0412FC6EB2E00CDBB01 /* TrikiGameController.swift */; };
+		TRIKI0092FC6EB2E00CDBB01 /* TrikiBLEMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = TRIKI0512FC6EB2E00CDBB01 /* TrikiBLEMonitor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -248,7 +249,8 @@
 		TRIKI0212FC6EB2E00CDBB01 /* TrikiParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiParser.swift; sourceTree = "<group>"; };
 		TRIKI0312FC6EB2E00CDBB01 /* TrikiMotionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiMotionEngine.swift; sourceTree = "<group>"; };
 		TRIKI0412FC6EB2E00CDBB01 /* TrikiGameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiGameController.swift; sourceTree = "<group>"; };
-		TRIKI0912FC6EB2E00CDBB01 /* Triki */ = {isa = PBXGroup; children = (TRIKI0112FC6EB2E00CDBB01 /* TrikiBLEManager.swift */, TRIKI0212FC6EB2E00CDBB01 /* TrikiParser.swift */, TRIKI0312FC6EB2E00CDBB01 /* TrikiMotionEngine.swift */, TRIKI0412FC6EB2E00CDBB01 /* TrikiGameController.swift */); path = Triki; sourceTree = "<group>"; };
+		TRIKI0512FC6EB2E00CDBB01 /* TrikiBLEMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrikiBLEMonitor.swift; sourceTree = "<group>"; };
+		TRIKI0912FC6EB2E00CDBB01 /* Triki */ = {isa = PBXGroup; children = (TRIKI0112FC6EB2E00CDBB01 /* TrikiBLEManager.swift */, TRIKI0512FC6EB2E00CDBB01 /* TrikiBLEMonitor.swift */, TRIKI0212FC6EB2E00CDBB01 /* TrikiParser.swift */, TRIKI0312FC6EB2E00CDBB01 /* TrikiMotionEngine.swift */, TRIKI0412FC6EB2E00CDBB01 /* TrikiGameController.swift */); path = Triki; sourceTree = "<group>"; };
 		A10000372FC6EB2E00CDBB83 /* MotionPaddleLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionPaddleLog.swift; sourceTree = "<group>"; };
 		A10000392FC6EB2E00CDBB83 /* BLEButtonDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEButtonDecoder.swift; sourceTree = "<group>"; };
 		A10000412FC6EB2E00CDBB83 /* MotionProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionProcessor.swift; sourceTree = "<group>"; };
@@ -826,6 +828,7 @@
 				TRIKI0032FC6EB2E00CDBB01 /* TrikiParser.swift in Sources */,
 				TRIKI0052FC6EB2E00CDBB01 /* TrikiMotionEngine.swift in Sources */,
 				TRIKI0072FC6EB2E00CDBB01 /* TrikiGameController.swift in Sources */,
+				TRIKI0092FC6EB2E00CDBB01 /* TrikiBLEMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -32,6 +32,28 @@ let pad = triki.tick(deltaTime: dt)
 
 `MotionSDK.connect()` uses this pipeline internally and still publishes **`GameInput`** for existing games.
 
+### Adaptive BLE mode (`TrikiBLEMonitor`)
+
+The stack measures **Δt between notify packets** and debounces mode changes (3 consecutive samples):
+
+| Mode | Typical Δt | Motion behavior |
+|------|------------|-----------------|
+| `fast` | &lt; 30 ms | Velocity + swing, full gameplay |
+| `normal` | 30 ms – 200 ms | Direction + light smoothing |
+| `lowPower` | &gt; 200 ms | Tilt / shake only, reduced HUD rate, idle message |
+
+```swift
+triki.onModeChanged { mode in
+  switch mode {
+  case .fast: /* full UI */
+  case .lowPower: /* show triki.idleStatusMessage */
+  default: break
+  }
+}
+let mode = triki.getBLEMode()           // or motion.trikiBLEMode
+triki.debugBLEMonitorLogging = true     // Δt + transitions in console
+```
+
 ## Simple connection (built into MotionSDK)
 
 ```swift

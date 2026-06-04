@@ -26,6 +26,10 @@ public final class MotionSDK: ObservableObject {
   @Published public internal(set) var isConnected = false
   /// Informuje, czy napływają pakiety BLE.
   @Published public internal(set) var isReceiving = false
+  /// Wykryty tryb częstotliwości notify (fast / normal / low power).
+  public var trikiBLEMode: TrikiBLEMode {
+    trikiController?.getBLEMode() ?? .unknown
+  }
   /// Ostatnia ramka wejścia publikowana do HUD.
   @Published public internal(set) var liveInput = GameInput()
 
