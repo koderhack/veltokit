@@ -386,6 +386,7 @@ final class BowlingGameScene: SCNScene {
       if rollElapsed >= 0.35, ballTravelDistance >= minTravelBeforeScore {
         processKnockedPinsDuringRoll()
       }
+      dampBallAtLaneEnd()
       updateCamera(toBall: ballNode.presentation.position, immediate: false)
       decayCameraShake(deltaTime: deltaTime)
       if isBallStopped() {
@@ -549,24 +550,52 @@ final class BowlingGameScene: SCNScene {
   func shouldEndThrow() -> Bool {
     guard rollElapsed >= 0.65 else { return false }
 
-    let slow = currentBallSpeed() < 0.42
+    let speed = currentBallSpeed()
     let stopped = isBallStopped()
     let ballZ = ballNode.presentation.position.z
     let pastPins = ballZ < pinsZ + 2.2
+    let atLaneEnd = ballZ <= pinsZ - 2.5 || ballTravelDistance >= laneLength * 0.82
     let traveled = ballTravelDistance >= 1.5
     let knocked = pinsHiddenThisThrow
+    let slow = speed < 0.42
+    let crawling = speed < 0.55 || (atLaneEnd && speed < 0.7)
+
+    // Twardy limit — unikaj zawieszenia w `.rolling` przy mikro-drganiach przy ścianie.
+    if rollElapsed >= 4.5 { return true }
 
     if knocked > 0 {
-      if rollElapsed >= 0.85, slow { return true }
-      if pastPins, rollElapsed >= 1.0 { return true }
+      if rollElapsed >= 0.85, slow || crawling { return true }
+      if pastPins || atLaneEnd, rollElapsed >= 0.95 { return true }
     }
 
     // Pudło / gutter — kula się zatrzymała albo minęła strefę kręgli.
     if traveled, rollElapsed >= 1.0, stopped, stoppedFor >= 0.2 { return true }
-    if pastPins, rollElapsed >= 1.1, slow { return true }
-    if rollElapsed >= 2.2, stopped { return true }
+    if (pastPins || atLaneEnd), rollElapsed >= 1.0, crawling { return true }
+    if atLaneEnd, rollElapsed >= 1.2 { return true }
+    if rollElapsed >= 2.2, stopped || crawling { return true }
 
-    return stoppedFor >= 0.45 && stopped && rollElapsed >= 1.4
+    return stoppedFor >= 0.35 && (stopped || crawling) && rollElapsed >= 1.25
+  }
+
+  /// Zatrzymuje „drżącą” kulkę przy tylnej bandzie toru (inaczej `isBallStopped` nigdy nie pada).
+  private func dampBallAtLaneEnd() {
+    guard let body = ballNode.physicsBody else { return }
+    let z = ballNode.presentation.position.z
+    guard z <= pinsZ - 2.6 else { return }
+    let speed = currentBallSpeed()
+    guard speed < 1.4 else { return }
+
+    var v = body.velocity
+    v.x *= 0.88
+    v.z *= 0.88
+    body.velocity = SCNVector3(v.x, 0, v.z)
+    let av = body.angularVelocity
+    body.angularVelocity = SCNVector4(av.x * 0.88, av.y * 0.88, av.z * 0.88, 1)
+
+    if speed < 0.22 {
+      body.velocity = SCNVector3Zero
+      body.angularVelocity = SCNVector4Zero
+    }
   }
 
   /// Zaznacza kręgle przewrócone fizyką (również po zderzeniu z innym kręglem), żeby wynik = animacja.
@@ -655,7 +684,13 @@ final class BowlingGameScene: SCNScene {
       body.velocity = SCNVector3(v.x, 0, min(v.z, 0))
     }
     if pos.z < pinsZ - 3.2 {
-      body.velocity = SCNVector3(v.x, 0, max(v.z, 0))
+      ballNode.position.z = pinsZ - 3.2
+      let speed = sqrt(v.x * v.x + v.z * v.z)
+      if speed < 0.55 {
+        body.velocity = SCNVector3(v.x * 0.35, 0, 0)
+      } else {
+        body.velocity = SCNVector3(v.x, 0, max(v.z, 0))
+      }
     }
   }
 

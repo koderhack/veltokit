@@ -74,10 +74,6 @@ struct GameCalibrationView: View {
     gameType == .dart && !startGame && !startDartCalibration
   }
 
-  private var bowlingTrikiNavigationActive: Bool {
-    gameType == .bowling && !startGame
-  }
-
   private var lobbyKeepsScreenAwake: Bool {
     (gameType == .dart || gameType == .bowling)
       && keepScreenOnDuringPlay
@@ -110,13 +106,6 @@ struct GameCalibrationView: View {
           ) { handleDartLobbyMenuSlot($0) }
       } else if gameType == .bowling {
         bowlingLobbyBody
-          .trikiUIScreen(
-            itemCount: 3,
-            isActive: bowlingTrikiNavigationActive,
-            preferButtonConfirm: true
-          ) { slot in
-            handleBowlingLobbySlot(slot)
-          }
       } else {
         legacyCalibrationBody
       }
@@ -330,10 +319,10 @@ struct GameCalibrationView: View {
           DartPhoneTVCompanion(
             inputProvider: inputProvider,
             tvConnected: quizDisplay.isExternalScreenConnected,
-            title: quizDisplay.isExternalScreenConnected ? "BOWLING NA TELEWIZORZE" : "BOWLING · TRIKI",
+            title: quizDisplay.isExternalScreenConnected ? "BOWLING NA TELEWIZORZE" : "BOWLING 3D",
             subtitle: quizDisplay.isExternalScreenConnected
-              ? "Tor 3D na TV · telefon = pilot Triki"
-              : "Pełny tor 3D na telefonie · TV opcjonalnie (AirPlay)"
+              ? "Tor na TV · ustawienia i GRAJ na telefonie"
+              : "Impreza 1–20 graczy · dotyk w menu · Triki tylko w grze"
           )
 
           Text("Bowling 3D")
@@ -343,13 +332,7 @@ struct GameCalibrationView: View {
           bowlingLobbySection
           bowlingTVSection
           backgroundMusicToggle
-          pointerMeter
-          presetReadout
-          debugReadout
-          statusLine
-          TrikiFocusRow(index: 0, title: "GRAJ", subtitle: "Start rozgrywki", accent: Color.orange, icon: "play.fill")
-          TrikiFocusRow(index: 1, title: "ZMIEŃ TRYB", subtitle: nextBowlingModeLabel, accent: NeonTheme.neonMagenta, icon: "person.2.fill")
-          TrikiFocusRow(index: 2, title: "WSTECZ", subtitle: "Menu główne", accent: .white.opacity(0.7), icon: "arrow.left")
+          bowlingLobbyStatusLine
           ArcadeUI.primaryButton("GRAJ", icon: "play.fill") { beginGameAfterCalibration() }
           ArcadeUI.secondaryButton("WSTECZ", tint: .white.opacity(0.7)) { dismiss() }
 
@@ -388,31 +371,20 @@ struct GameCalibrationView: View {
     }
   }
 
-  private func handleBowlingLobbySlot(_ slot: Int) {
-    guard let bowlingSession = sessions.bowling else { return }
-    switch slot {
-    case 0: beginGameAfterCalibration()
-    case 1: bowlingSession.cycleMode()
-    case 2: dismiss()
-    default: break
-    }
-  }
-
   @ViewBuilder
   private var bowlingLobbySection: some View {
     if let bowlingSession = sessions.bowling {
-      BowlingLobbySectionView(session: bowlingSession, nextModeLabel: nextBowlingModeLabel)
+      BowlingLobbySectionView(session: bowlingSession)
     }
   }
 
-  private var nextBowlingModeLabel: String {
-    guard let mode = sessions.bowling?.mode else { return "—" }
-    switch mode {
-    case .solo: return "2 graczy"
-    case .duo: return "3 graczy"
-    case .trio: return "4 graczy"
-    case .quad: return "1 gracz"
-    }
+  private var bowlingLobbyStatusLine: some View {
+    let count = sessions.bowling?.playerCount ?? 1
+    return Text("Menu dotykiem · Triki włącza się po starcie · \(count) graczy na liście")
+      .font(.system(size: 11, weight: .bold, design: .monospaced))
+      .foregroundStyle(NeonTheme.neonCyan.opacity(0.85))
+      .multilineTextAlignment(.center)
+      .frame(maxWidth: .infinity)
   }
 
   private var bowlingLobby: some View {
@@ -635,11 +607,11 @@ struct GameCalibrationView: View {
       .frame(maxWidth: .infinity, alignment: .leading)
     } else if gameType == .bowling {
       VStack(alignment: .leading, spacing: 6) {
-        Text("1. Obrót Triki — wybór w menu (GRAJ / tryb / wstecz)")
-        Text("2. Przycisk Triki (bytes[1]) — potwierdź wybór i start")
+        Text("1. Ustaw liczbę graczy (1–20) i nicki — dotyk")
+        Text("2. GRAJ — Triki działa dopiero na torze")
         Text("3. W grze: pochyl lewo/prawo — cel · cofnij → rzuć")
-        Text("4. Przed rzutem: przycisk = start tury")
-        Text("5. 10 frame’ów · strike / spare · do 4 graczy")
+        Text("4. Przed rzutem: przycisk BLE = start tury")
+        Text("5. Strike / spare — wielki pixelowy komunikat + tabela imprezy")
       }
       .font(.system(size: 12, design: .monospaced))
       .foregroundStyle(.white.opacity(0.85))
@@ -828,7 +800,7 @@ struct GameCalibrationView: View {
         quizDisplay.setBowlingLobbyActive(true)
       }
       quizDisplay.updateBowlingLobby(
-        modeTitle: sessions.bowling?.mode.title ?? "Bowling",
+        modeTitle: sessions.bowling?.partySummary ?? "Bowling",
         playerNames: sessions.bowling?.playerNames ?? []
       )
     } else {
@@ -939,46 +911,58 @@ struct GameCalibrationView: View {
 
 private struct BowlingLobbySectionView: View {
   @ObservedObject var session: BowlingSession
-  /// Przechowuje wartość `nextModeLabel` wykorzystywaną przez dany komponent.
-  let nextModeLabel: String
 
-  /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     VStack(spacing: 10) {
       ArcadeUI.panel {
-        VStack(alignment: .leading, spacing: 8) {
-          ArcadeUI.sectionLabel("TRYB · \(session.mode.title)")
-          Text("Na zmianę · 10 frame’ów · strike / spare")
+        VStack(alignment: .leading, spacing: 10) {
+          ArcadeUI.sectionLabel("IMPREZA · \(session.partySummary)")
+          Text("Na zmianę · 10 frame’ów · tabela i podium na TV")
             .font(.system(size: 10, design: .monospaced))
             .foregroundStyle(.white.opacity(0.5))
+
+          HStack(spacing: 12) {
+            ArcadeUI.secondaryButton("−", tint: .white.opacity(0.75)) {
+              session.decrementPlayers()
+            }
+            .disabled(session.playerCount <= BowlingRoster.minPlayers)
+
+            Text("\(session.playerCount)")
+              .font(.system(size: 28, weight: .black, design: .rounded))
+              .foregroundStyle(Color.orange)
+              .frame(minWidth: 44)
+
+            ArcadeUI.secondaryButton("+", tint: NeonTheme.neonMagenta) {
+              session.incrementPlayers()
+            }
+            .disabled(session.playerCount >= BowlingRoster.maxPlayers)
+          }
+
+          Text("\(BowlingRoster.minPlayers)–\(BowlingRoster.maxPlayers) graczy")
+            .font(.system(size: 10, weight: .semibold, design: .monospaced))
+            .foregroundStyle(.white.opacity(0.45))
         }
       }
 
       ArcadeUI.panel {
-        VStack(alignment: .leading, spacing: 10) {
-          ArcadeUI.sectionLabel("GRACZE")
-          TextField("Gracz 1", text: $session.player1Name)
-            .textFieldStyle(.roundedBorder)
-          if session.mode == .duo || session.mode == .trio || session.mode == .quad {
-            TextField("Gracz 2", text: $session.player2Name)
-              .textFieldStyle(.roundedBorder)
+        VStack(alignment: .leading, spacing: 8) {
+          ArcadeUI.sectionLabel("NICKI")
+          ScrollView(showsIndicators: true) {
+            VStack(spacing: 8) {
+              ForEach(0..<session.playerCount, id: \.self) { index in
+                HStack(spacing: 8) {
+                  Text(String(format: "%2d", index + 1))
+                    .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                    .foregroundStyle(NeonTheme.neonCyan.opacity(0.7))
+                    .frame(width: 22, alignment: .trailing)
+                  TextField("Gracz \(index + 1)", text: session.bindingName(at: index))
+                    .textFieldStyle(.roundedBorder)
+                }
+              }
+            }
           }
-          if session.mode == .trio || session.mode == .quad {
-            TextField("Gracz 3", text: $session.player3Name)
-              .textFieldStyle(.roundedBorder)
-          }
-          if session.mode == .quad {
-            TextField("Gracz 4", text: $session.player4Name)
-              .textFieldStyle(.roundedBorder)
-          }
+          .frame(maxHeight: min(320, CGFloat(session.playerCount) * 44 + 8))
         }
-      }
-
-      ArcadeUI.secondaryButton(
-        "ZMIEŃ TRYB · \(nextModeLabel)",
-        tint: NeonTheme.neonMagenta
-      ) {
-        session.cycleMode()
       }
     }
   }

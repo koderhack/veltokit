@@ -182,7 +182,7 @@ struct BowlingGameView: View {
           .font(.system(size: 10, weight: .heavy, design: .monospaced))
           .foregroundStyle(NeonTheme.neonCyan)
         if let hud = engine.bowlingHUD {
-          Text("\(session.mode.title) · frame \(hud.currentFrame)")
+          Text("\(session.partySummary) · frame \(hud.currentFrame)")
             .font(.system(size: 10, weight: .heavy, design: .monospaced))
             .foregroundStyle(NeonTheme.neonMagenta)
         }

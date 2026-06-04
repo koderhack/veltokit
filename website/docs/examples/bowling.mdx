@@ -12,14 +12,14 @@ import GameDocHeader from '@site/src/components/GameDocHeader';
 ## How you play
 
 1. Connect + calibrate in the sample app.
-2. Open **Bowling** — lobby supports player names, frames, optional TV.
+2. Open **Bowling** — lobby is **touch-only** (1–20 players, nicknames); Triki starts on the lane after **GRAJ**. Optional TV scoreboard.
 3. **Pull back** on the cap, then **throw forward** to roll (one roll per successful gesture).
 4. **`throwPower`** (0…1) sets ball speed; spin comes from release dynamics in `BowlingGameScene`.
 5. Standard **10 frames**, two throws per frame (strike/spare logic in `BowlingGameLogic`).
 6. Multiplayer: press the cap button when the HUD says **Triki = start** for your turn.
 7. Short **setup countdown** and invisible calibration run at the start of a frame — stand still when asked.
 
-HUD phases: *Gotowy · Triki* → *COFNIJ rękę* → *Rzuć!* → ball rolling → pin result.
+HUD phases: *Gotowy · Triki* → *COFNIJ rękę* → *Rzuć!* → ball rolling → **pixel celebration** (strike / spare / pin count) → party scoreboard between turns.
 
 ## VeltoKit mapping
 

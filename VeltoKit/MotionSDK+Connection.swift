@@ -102,6 +102,14 @@ extension MotionSDK {
   /// Pobiera ostatnią wzbogaconą ramkę wejścia bez aktualizacji stanu.
   public func snapshotInput() -> GameInput { latestEnrichedInput }
 
+  /// Czyści impuls przycisku BLE po wejściu w menu (unika fałszywego „WSTECZ” / OK).
+  public func discardStaleButtonInput() {
+    _ = button.consumeClick()
+    buttonClickHighlightUntil = 0
+    lastSampledButtonByte = button.lastSeenButtonByte
+    streamParser?.discardPendingImpulses()
+  }
+
   /// Kalibruje neutralną pozycję na podstawie bieżących danych.
   public func calibrateNeutralPose() {
     _ = pollInput()

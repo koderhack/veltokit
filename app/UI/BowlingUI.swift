@@ -1,5 +1,6 @@
 import SceneKit
 import SwiftUI
+import UIKit
 
 /// Opisuje struct `BowlingScoreboardView` używany przez warstwę UI i logikę gry.
 struct BowlingScoreboardView: View {
@@ -81,9 +82,19 @@ struct BowlingScoreboardView: View {
     )
   }
 
+  private var isPartyLayout: Bool { players.count > 6 }
+
   /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
     let m = metrics
+    if isPartyLayout {
+      partyScoreboard(metrics: m)
+    } else {
+      classicScoreboard(metrics: m)
+    }
+  }
+
+  private func classicScoreboard(metrics m: Metrics) -> some View {
     ScrollView(.horizontal, showsIndicators: true) {
       VStack(alignment: .leading, spacing: m.stackSpacing) {
         ForEach(Array(players.enumerated()), id: \.offset) { index, player in
@@ -93,6 +104,80 @@ struct BowlingScoreboardView: View {
       .padding(.horizontal, 6 * scale)
     }
     .frame(maxHeight: m.maxHeight)
+  }
+
+  private func partyScoreboard(metrics m: Metrics) -> some View {
+    let ranked = Array(players.enumerated()).sorted { $0.element.displayTotal > $1.element.displayTotal }
+    return ScrollView(.vertical, showsIndicators: true) {
+      VStack(alignment: .leading, spacing: m.rowSpacing) {
+        ForEach(Array(ranked.enumerated()), id: \.element.offset) { rank, item in
+          partyPlayerRow(
+            player: item.element,
+            index: item.offset,
+            rank: rank + 1,
+            metrics: m
+          )
+        }
+      }
+      .padding(.horizontal, 6 * scale)
+    }
+    .frame(maxHeight: min(m.maxHeight * 1.35, 520 * scale))
+  }
+
+  private func partyPlayerRow(
+    player: BowlingGameLogic.Player,
+    index: Int,
+    rank: Int,
+    metrics m: Metrics
+  ) -> some View {
+    let active = index == currentPlayerIndex
+    return VStack(alignment: .leading, spacing: 6 * scale) {
+      HStack(spacing: 8 * scale) {
+        Text("#\(rank)")
+          .font(.system(size: m.numSize, weight: .heavy, design: .monospaced))
+          .foregroundStyle(rank <= 3 ? NeonTheme.neonYellow : .white.opacity(0.45))
+          .frame(width: 28 * scale, alignment: .leading)
+        Text(player.name.uppercased())
+          .font(.system(size: m.nameSize * 0.92, weight: .heavy, design: .monospaced))
+          .foregroundStyle(active ? NeonTheme.neonYellow : .white.opacity(0.8))
+          .lineLimit(1)
+        Spacer(minLength: 4)
+        Text("\(player.displayTotal)")
+          .font(.system(size: m.totalSize, weight: .black, design: .rounded))
+          .foregroundStyle(NeonTheme.neonCyan)
+      }
+      if active {
+        ScrollView(.horizontal, showsIndicators: false) {
+          HStack(spacing: m.frameSpacing) {
+            ForEach(0..<10, id: \.self) { frameIndex in
+              frameCell(
+                frame: player.frames[frameIndex],
+                frameIndex: frameIndex,
+                active: frameIndex + 1 == currentFrame,
+                metrics: m
+              )
+            }
+          }
+        }
+      } else {
+        Text(partyRollsSummary(player))
+          .font(.system(size: m.rollSize, weight: .semibold, design: .monospaced))
+          .foregroundStyle(.white.opacity(0.5))
+      }
+    }
+    .padding(m.rowPadding * 0.85)
+    .background(Color.white.opacity(active ? 0.14 : 0.05))
+    .overlay(
+      RoundedRectangle(cornerRadius: 4)
+        .stroke(active ? NeonTheme.neonYellow.opacity(0.7) : Color.white.opacity(0.1), lineWidth: 1)
+    )
+  }
+
+  private func partyRollsSummary(_ player: BowlingGameLogic.Player) -> String {
+    let rolls = player.frames.flatMap(\.rolls)
+    guard !rolls.isEmpty else { return "Jeszcze nie rzucał" }
+    let last = rolls.suffix(4).map(String.init).joined(separator: " · ")
+    return "Ostatnie: \(last)"
   }
 
   private func playerRow(player: BowlingGameLogic.Player, index: Int, metrics m: Metrics) -> some View {
@@ -184,34 +269,70 @@ struct BowlingCompactScoreStrip: View {
 
   /// Przechowuje wartość `body` wykorzystywaną przez dany komponent.
   var body: some View {
+    if hud.players.count > 6 {
+      partyStrip
+    } else {
+      classicStrip
+    }
+  }
+
+  private var classicStrip: some View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(spacing: 8) {
         ForEach(Array(hud.players.enumerated()), id: \.offset) { index, player in
-          let active = index == hud.currentPlayerIndex
-          VStack(alignment: .leading, spacing: 2) {
-            Text(player.name.uppercased())
-              .font(.system(size: 10, weight: .heavy, design: .monospaced))
-              .foregroundStyle(active ? NeonTheme.neonYellow : .white.opacity(0.55))
-              .lineLimit(1)
-            Text("\(player.displayTotal)")
-              .font(.system(size: 18, weight: .black, design: .rounded))
-              .foregroundStyle(active ? NeonTheme.neonCyan : .white.opacity(0.85))
-          }
-          .padding(.horizontal, 10)
-          .padding(.vertical, 6)
-          .background(
-            RoundedRectangle(cornerRadius: 6)
-              .fill(Color.black.opacity(active ? 0.55 : 0.35))
-              .overlay(
-                RoundedRectangle(cornerRadius: 6)
-                  .stroke(active ? NeonTheme.neonYellow.opacity(0.5) : Color.white.opacity(0.12), lineWidth: 1)
-              )
-          )
+          compactChip(player: player, index: index, active: index == hud.currentPlayerIndex)
         }
       }
       .padding(.horizontal, 4)
     }
     .frame(maxHeight: 52)
+  }
+
+  private var partyStrip: some View {
+    let current = hud.players[hud.currentPlayerIndex]
+    let others = Array(hud.players.enumerated())
+      .filter { $0.offset != hud.currentPlayerIndex }
+      .sorted { $0.element.displayTotal > $1.element.displayTotal }
+      .prefix(8)
+    return HStack(spacing: 8) {
+      compactChip(player: current, index: hud.currentPlayerIndex, active: true, enlarged: true)
+      ScrollView(.horizontal, showsIndicators: false) {
+        HStack(spacing: 6) {
+          ForEach(Array(others.enumerated()), id: \.element.offset) { _, item in
+            compactChip(player: item.element, index: item.offset, active: false, enlarged: false)
+          }
+        }
+      }
+    }
+    .padding(.horizontal, 4)
+    .frame(maxHeight: 58)
+  }
+
+  private func compactChip(
+    player: BowlingGameLogic.Player,
+    index: Int,
+    active: Bool,
+    enlarged: Bool = false
+  ) -> some View {
+    VStack(alignment: .leading, spacing: 2) {
+      Text(player.name.uppercased())
+        .font(.system(size: enlarged ? 11 : 9, weight: .heavy, design: .monospaced))
+        .foregroundStyle(active ? NeonTheme.neonYellow : .white.opacity(0.55))
+        .lineLimit(1)
+      Text("\(player.displayTotal)")
+        .font(.system(size: enlarged ? 20 : 15, weight: .black, design: .rounded))
+        .foregroundStyle(active ? NeonTheme.neonCyan : .white.opacity(0.85))
+    }
+    .padding(.horizontal, enlarged ? 12 : 8)
+    .padding(.vertical, enlarged ? 7 : 5)
+    .background(
+      RoundedRectangle(cornerRadius: 6)
+        .fill(Color.black.opacity(active ? 0.58 : 0.32))
+        .overlay(
+          RoundedRectangle(cornerRadius: 6)
+            .stroke(active ? NeonTheme.neonYellow.opacity(0.55) : Color.white.opacity(0.1), lineWidth: 1)
+        )
+    )
   }
 }
 
@@ -232,12 +353,7 @@ struct BowlingFullscreenScoreboardOverlay: View {
 
         VStack(spacing: 14) {
           if hud.gameOver, let winner = hud.winnerName {
-            Text("KONIEC GRY")
-              .font(.system(size: 22, weight: .heavy, design: .monospaced))
-              .foregroundStyle(NeonTheme.neonYellow)
-            Text("Zwycięzca: \(winner)")
-              .font(.system(size: 26, weight: .heavy, design: .monospaced))
-              .foregroundStyle(.white)
+            BowlingPodiumHeader(players: hud.players, winnerName: winner, scale: fitScale)
           } else if let announcement = hud.turnAnnouncement {
             Text("NASTĘPNA TURA")
               .font(.system(size: 12, weight: .heavy, design: .monospaced))
@@ -335,11 +451,6 @@ struct BowlingHUDOverlay: View {
               .font(.system(size: 11, weight: .semibold, design: .rounded))
               .foregroundStyle(.white.opacity(0.6))
           }
-          if !hud.lastThrowLabel.isEmpty {
-            Text(hud.lastThrowLabel)
-              .font(.system(size: 13, weight: .bold, design: .monospaced))
-              .foregroundStyle(NeonTheme.neonGreen)
-          }
           Text("Frame \(hud.currentFrame) · \(currentPlayerName(hud))")
             .font(.system(size: 11, weight: .semibold, design: .monospaced))
             .foregroundStyle(.white.opacity(0.65))
@@ -354,8 +465,15 @@ struct BowlingHUDOverlay: View {
       if hud.showScoreboardInterstitial {
         BowlingFullscreenScoreboardOverlay(hud: hud, onConfirmTurnStart: onConfirmTurnStart)
       }
+
+      if let celebration = hud.throwCelebration {
+        BowlingPixelCelebrationOverlay(celebration: celebration)
+          .transition(.opacity.combined(with: .scale(scale: 1.08)))
+          .zIndex(30)
+      }
     }
     .animation(.easeInOut(duration: 0.28), value: hud.showScoreboardInterstitial)
+    .animation(.spring(response: 0.38, dampingFraction: 0.72), value: hud.throwCelebration)
   }
 
   private func currentPlayerName(_ hud: BowlingGame.HUD) -> String {
@@ -577,10 +695,6 @@ struct BowlingTVView: View {
                 Text("CELuj TRZONKIEM · RZUT ZA \(hud.setupSecondsLeft)s")
                   .font(.system(size: 16 * scale, weight: .heavy, design: .monospaced))
                   .foregroundStyle(NeonTheme.neonYellow.opacity(0.85))
-              } else if !hud.lastThrowLabel.isEmpty {
-                Text(hud.lastThrowLabel)
-                  .font(.system(size: 26 * scale, weight: .bold, design: .monospaced))
-                  .foregroundStyle(NeonTheme.neonGreen)
               }
               Text("COFNIJ → DO PRZODU = RZUT")
                 .font(.system(size: 16 * scale, weight: .heavy, design: .monospaced))
@@ -600,8 +714,15 @@ struct BowlingTVView: View {
               .frame(width: size.width, height: size.height)
               .transition(.opacity)
           }
+
+          if let celebration = hud.throwCelebration {
+            BowlingPixelCelebrationOverlay(celebration: celebration, scale: scale * 1.15)
+              .frame(width: size.width, height: size.height)
+              .zIndex(40)
+          }
         }
         .animation(.easeInOut(duration: 0.28), value: hud.showScoreboardInterstitial)
+        .animation(.spring(response: 0.38, dampingFraction: 0.72), value: hud.throwCelebration)
       }
     }
   }
@@ -622,12 +743,7 @@ struct BowlingTVFullscreenScoreboardOverlay: View {
 
       VStack(spacing: 16 * scale) {
         if hud.gameOver, let winner = hud.winnerName {
-          Text("KONIEC GRY")
-            .font(.system(size: 32 * scale, weight: .heavy, design: .monospaced))
-            .foregroundStyle(NeonTheme.neonYellow)
-          Text("Zwycięzca: \(winner)")
-            .font(.system(size: 40 * scale, weight: .heavy, design: .monospaced))
-            .foregroundStyle(.white)
+          BowlingPodiumHeader(players: hud.players, winnerName: winner, scale: scale)
         } else if let announcement = hud.turnAnnouncement {
           Text("NASTĘPNA TURA · \(announcement.uppercased())")
             .font(.system(size: 28 * scale, weight: .heavy, design: .monospaced))
@@ -697,6 +813,204 @@ private func bowlingTVBackdrop() -> some View {
     )
   }
   .ignoresSafeArea()
+}
+
+// MARK: - Pixel celebrations (Kinect Sports style)
+
+/// Wielki komunikat po rzucie — strike, spare, liczba kręgli (8-bit look).
+struct BowlingPixelCelebrationOverlay: View {
+  let celebration: BowlingThrowCelebration
+  var scale: CGFloat = 1
+
+  @State private var pop = false
+  @State private var shake = false
+  @State private var pinPulse = false
+
+  private var accent: Color {
+    Color(
+      red: Double((celebration.accentHex >> 16) & 0xFF) / 255,
+      green: Double((celebration.accentHex >> 8) & 0xFF) / 255,
+      blue: Double(celebration.accentHex & 0xFF) / 255
+    )
+  }
+
+  var body: some View {
+    ZStack {
+      Color.black.opacity(celebration.kind == .gutter ? 0.55 : 0.42)
+        .ignoresSafeArea()
+
+      pixelBurst
+
+      VStack(spacing: 18 * scale) {
+        Text(celebration.playerName.uppercased())
+          .font(.system(size: 14 * scale, weight: .heavy, design: .monospaced))
+          .foregroundStyle(.white.opacity(0.65))
+
+        Text(celebration.displayHeadline)
+          .font(.system(size: headlineSize, weight: .black, design: .monospaced))
+          .tracking(celebrationTracking)
+          .foregroundStyle(accent)
+          .shadow(color: accent.opacity(0.85), radius: 0, x: 3, y: 3)
+          .shadow(color: .black, radius: 0, x: 5, y: 5)
+          .scaleEffect(pop ? 1 : 0.35)
+          .offset(x: shake ? 6 : 0)
+
+        if showsPinCount {
+          HStack(alignment: .lastTextBaseline, spacing: 10 * scale) {
+            Text("\(celebration.pinsDown)")
+              .font(.system(size: 72 * scale, weight: .black, design: .rounded))
+              .foregroundStyle(.white)
+              .scaleEffect(pinPulse ? 1.06 : 0.94)
+            VStack(alignment: .leading, spacing: 4 * scale) {
+              Text("KRĘGLI")
+                .font(.system(size: 22 * scale, weight: .heavy, design: .monospaced))
+                .foregroundStyle(accent)
+              Text("STRĄCONO")
+                .font(.system(size: 12 * scale, weight: .bold, design: .monospaced))
+                .foregroundStyle(.white.opacity(0.55))
+            }
+          }
+        }
+
+        Text(celebration.subtitle)
+          .font(.system(size: 15 * scale, weight: .semibold, design: .monospaced))
+          .foregroundStyle(.white.opacity(0.8))
+          .multilineTextAlignment(.center)
+          .padding(.horizontal, 24 * scale)
+      }
+      .padding(28 * scale)
+      .background(
+        RoundedRectangle(cornerRadius: 8 * scale)
+          .fill(Color.black.opacity(0.72))
+          .overlay(
+            RoundedRectangle(cornerRadius: 8 * scale)
+              .stroke(accent.opacity(0.65), lineWidth: 3)
+          )
+      )
+      .padding(.horizontal, 20 * scale)
+    }
+    .allowsHitTesting(false)
+    .onAppear {
+      withAnimation(.spring(response: 0.32, dampingFraction: 0.58)) { pop = true }
+      if celebration.kind == .strike || celebration.kind == .spare {
+        withAnimation(.easeInOut(duration: 0.08).repeatCount(8, autoreverses: true)) { shake = true }
+      }
+      if showsPinCount {
+        withAnimation(.easeInOut(duration: 0.45).repeatForever(autoreverses: true)) { pinPulse = true }
+      }
+      UIAccessibility.post(notification: .announcement, argument: celebration.displayHeadline)
+    }
+  }
+
+  private var celebrationTracking: CGFloat {
+    switch celebration.kind {
+    case .strike: return 6 * scale
+    case .spare: return 5 * scale
+    default: return 1 * scale
+    }
+  }
+
+  private var headlineSize: CGFloat {
+    switch celebration.kind {
+    case .strike, .spare: return 52 * scale
+    case .nine: return 36 * scale
+    case .gutter: return 32 * scale
+    default: return 38 * scale
+    }
+  }
+
+  private var showsPinCount: Bool {
+    switch celebration.kind {
+    case .strike, .spare, .gutter: return false
+    default: return celebration.pinsDown > 0
+    }
+  }
+
+  private var pixelBurst: some View {
+    GeometryReader { geo in
+      let cols = 14
+      let rows = 8
+      ForEach(0..<(cols * rows), id: \.self) { i in
+        let col = i % cols
+        let row = i / cols
+        let x = geo.size.width * (CGFloat(col) + 0.5) / CGFloat(cols)
+        let y = geo.size.height * (CGFloat(row) + 0.35) / CGFloat(rows)
+        Rectangle()
+          .fill(accent.opacity(pixelAlpha(col: col, row: row)))
+          .frame(width: 10 * scale, height: 10 * scale)
+          .position(x: x, y: y)
+          .opacity(pop ? 1 : 0)
+      }
+    }
+    .allowsHitTesting(false)
+  }
+
+  private func pixelAlpha(col: Int, row: Int) -> Double {
+    let wave = sin(Double(col) * 0.9 + Double(row) * 0.7)
+    return 0.08 + (wave + 1) * 0.06
+  }
+}
+
+/// Podium TOP 3 przy końcu imprezy.
+struct BowlingPodiumHeader: View {
+  let players: [BowlingGameLogic.Player]
+  let winnerName: String
+  var scale: CGFloat = 1
+
+  private var topThree: [(name: String, score: Int)] {
+    players
+      .map { ($0.name, $0.displayTotal) }
+      .sorted { $0.1 > $1.1 }
+      .prefix(3)
+      .map { ($0.0, $0.1) }
+  }
+
+  var body: some View {
+    VStack(spacing: 12 * scale) {
+      Text("KONIEC IMPREZY")
+        .font(.system(size: 18 * scale, weight: .heavy, design: .monospaced))
+        .foregroundStyle(NeonTheme.neonYellow)
+      Text("🏆 \(winnerName.uppercased())")
+        .font(.system(size: 28 * scale, weight: .black, design: .monospaced))
+        .foregroundStyle(.white)
+      HStack(alignment: .bottom, spacing: 10 * scale) {
+        podiumSlot(rank: 2, tint: Color.white.opacity(0.55))
+        podiumSlot(rank: 1, tint: NeonTheme.neonYellow)
+        podiumSlot(rank: 3, tint: NeonTheme.neonMagenta.opacity(0.85))
+      }
+      .frame(maxWidth: 420 * scale)
+    }
+  }
+
+  @ViewBuilder
+  private func podiumSlot(rank: Int, tint: Color) -> some View {
+    let entry = topThree.indices.contains(rank - 1) ? topThree[rank - 1] : nil
+    let height: CGFloat = rank == 1 ? 72 : (rank == 2 ? 52 : 44)
+    VStack(spacing: 4 * scale) {
+      if let entry {
+        Text(entry.name.uppercased())
+          .font(.system(size: 10 * scale, weight: .heavy, design: .monospaced))
+          .foregroundStyle(tint)
+          .lineLimit(1)
+        Text("\(entry.score)")
+          .font(.system(size: rank == 1 ? 22 : 16, weight: .black, design: .rounded))
+          .foregroundStyle(.white)
+      } else {
+        Text("—")
+          .font(.system(size: 12 * scale, weight: .bold, design: .monospaced))
+          .foregroundStyle(.white.opacity(0.3))
+      }
+      RoundedRectangle(cornerRadius: 3)
+        .fill(tint.opacity(0.35))
+        .frame(width: rank == 1 ? 88 : 64, height: height * scale)
+        .overlay(
+          Text("\(rank)")
+            .font(.system(size: 14 * scale, weight: .heavy, design: .monospaced))
+            .foregroundStyle(tint)
+        )
+    }
+    .frame(maxWidth: .infinity)
+  }
 }
 
 private func bowlingTVWaiting(title: String, subtitle: String, footnote: String) -> some View {

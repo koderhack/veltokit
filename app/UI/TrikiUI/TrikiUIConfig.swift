@@ -13,6 +13,8 @@ enum TrikiUIConfig {
   static let quizHoldDuration: TimeInterval = 2.0
   /// Po zmianie fokusu — chwila bez narastania hold (anty-przypadkowe OK).
   static let focusSettleDuration: TimeInterval = 0.45
+  /// Po wejściu na ekran z `preferButtonConfirm` — ignoruj przycisk BLE (stary impuls / latch).
+  static let menuConfirmArmDuration: TimeInterval = 1.0
   /// Krótki debounce przy skoku o więcej niż 1 opcję.
   static let focusSwitchDuration: TimeInterval = 0.32
   /// Sąsiednia opcja (±1) — z krótkim oczekiwaniem (mniej „latania”).

@@ -64,6 +64,11 @@ public struct TrikiButtonGate: Sendable {
     cooldown = 0
   }
 
+  /// Po wejściu na ekran — ustaw na bieżący stan przycisku (bez zbocza).
+  public mutating func syncPressedState(_ pressed: Bool) {
+    lastRaw = pressed
+  }
+
   /// `true` on the first frame of a physical button press after cooldown.
   public mutating func consume(input: GameInput, deltaTime: TimeInterval) -> Bool {
     cooldown = max(0, cooldown - deltaTime)

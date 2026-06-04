@@ -63,6 +63,7 @@ struct TrikiUIScreenModifier: ViewModifier {
   /// Re-initializes Triki navigation for the current screen context.
   private func activateScreen() {
     GameManager.applyUIMode(to: motion)
+    motion.motionSDK.discardStaleButtonInput()
     trikiUI.isSuspended = false
     trikiUI.resetClock()
     trikiUI.configure(

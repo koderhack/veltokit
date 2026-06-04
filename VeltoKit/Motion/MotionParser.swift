@@ -111,6 +111,13 @@ final class MotionParser: ObservableObject {
     refreshClickSensorFlag()
   }
 
+  /// Odrzuca oczekujące impulsy bez zgłaszania kliknięcia (np. przy wejściu w menu).
+  func discardPendingImpulses() {
+    pendingClick = false
+    pendingShake = false
+    refreshClickSensorFlag()
+  }
+
   /// Zwraca i czyści oczekujące impulsy klik/shake.
   func consumeImpulses() -> (click: Bool, shake: Bool) {
     let impulses = (click: pendingClick, shake: pendingShake)

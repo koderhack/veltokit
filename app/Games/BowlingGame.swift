@@ -27,6 +27,8 @@ final class BowlingGame: Game {
     /// Pełnoekranowa tabela — zmiana gracza, przerwa między graczami, koniec gry.
     var showScoreboardInterstitial: Bool
     var invertLateral: Bool
+    /// Kinect-style pixel splash po rzucie (strike / spare / liczba kręgli).
+    var throwCelebration: BowlingThrowCelebration?
   }
 
   /// Opisuje enum `RoundPhase` używany przez warstwę UI i logikę gry.
@@ -64,10 +66,17 @@ final class BowlingGame: Game {
   private var requestMotionCalibration = false
   private var scoreboardSplashRemaining: TimeInterval = 0
   private var turnStartConfirmGate = TrikiButtonConfirmGate()
+  private var throwCelebration: BowlingThrowCelebration?
+  private var celebrationTimer: TimeInterval = 0
+  private var resultPhaseDuration: TimeInterval = 2.0
 
   private static let setupDuration: TimeInterval = 3.5
   private static let scoreboardSplashDuration: TimeInterval = 2.8
   private static let scoreboardSplashGameOverDuration: TimeInterval = 5.0
+  /// Liczba kręgli (np. 8) — krótki flash, znika przed kolejnym rzutem.
+  private static let celebrationPinsDuration: TimeInterval = 1.5
+  /// Strike / spare — dłużej, wyraźny napis.
+  private static let celebrationSpecialDuration: TimeInterval = 2.6
 
   /// Przechowuje wartość `currentHUD` wykorzystywaną przez dany komponent.
   var currentHUD: HUD {
@@ -77,7 +86,7 @@ final class BowlingGame: Game {
       currentFrame: logic.currentFrameNumber,
       throwPhase: inputHandler.phase,
       throwLabel: currentThrowLabel,
-      lastThrowLabel: logic.lastThrowLabel,
+      lastThrowLabel: "",
       lastThrowPins: logic.lastThrowPins,
       gameOver: logic.gameOver,
       winnerName: logic.winnerName,
@@ -87,8 +96,20 @@ final class BowlingGame: Game {
       turnAnnouncement: turnAnnouncement,
       awaitingTurnStart: awaitingTurnStart,
       showScoreboardInterstitial: showScoreboardInterstitial,
-      invertLateral: inputHandler.invertLateral
+      invertLateral: inputHandler.invertLateral,
+      throwCelebration: throwCelebration
     )
+  }
+
+  private var isPartyMode: Bool {
+    logic.players.count > 6
+  }
+
+  private var scoreboardSplashDuration: TimeInterval {
+    let base = Self.scoreboardSplashDuration
+    if logic.gameOver { return Self.scoreboardSplashGameOverDuration }
+    if isPartyMode { return base + min(2.0, Double(logic.players.count) * 0.12) }
+    return base
   }
 
   private var showScoreboardInterstitial: Bool {
@@ -158,6 +179,7 @@ final class BowlingGame: Game {
 
     switch roundPhase {
     case .aiming:
+      tickCelebrationTimer(deltaTime: deltaTime)
       if awaitingTurnStart {
         // Fizyczny przycisk BLE (bytes[1]) — gest nie uruchamia tury.
         if turnStartConfirmGate.consume(input: input, deltaTime: deltaTime) {
@@ -191,13 +213,19 @@ final class BowlingGame: Game {
     case .rolling:
       if scene.shouldEndThrow() {
         finishThrow()
+      } else if scene.isReadyToScore() {
+        settleTimer += deltaTime
+        if settleTimer >= 0.25 {
+          finishThrow()
+        }
       } else {
         settleTimer = 0
       }
 
     case .showingResult:
       resultTimer += deltaTime
-      if resultTimer >= 2.0 {
+      tickCelebrationTimer(deltaTime: deltaTime)
+      if resultTimer >= resultPhaseDuration {
         advanceAfterResult()
       }
 
@@ -216,6 +244,7 @@ final class BowlingGame: Game {
 
   private func beginThrow(event: BowlingInputHandler.ThrowEvent) {
     guard roundPhase == .aiming else { return }
+    clearThrowCelebration()
     scene.ensureStandingPins(standingPinCount)
     pinsAtThrowStart = standingPinCount
     scene.throwBall(
@@ -239,8 +268,30 @@ final class BowlingGame: Game {
     }
 
     let previousPlayer = logic.currentPlayerIndex
+    let wasFirstRoll = logic.currentFrame.rolls.isEmpty
+    let priorFirstRoll = logic.currentFrame.rolls.first
+    let frameIndex = logic.currentFrameIndex
+    let throwerName = logic.currentPlayer.name
     let wasGameOver = logic.gameOver
     logic.addThrow(pins: pinsDown)
+    let frameAfter = logic.players[previousPlayer].frames[frameIndex]
+
+    let isStrike = pinsDown == 10 && wasFirstRoll
+    let isSpare = !wasFirstRoll
+      && pinsDown > 0
+      && (frameAfter.isSpare || (priorFirstRoll ?? 0) + pinsDown == 10)
+
+    throwCelebration = BowlingThrowCelebration.make(
+      pinsDown: pinsDown,
+      pinsAtThrowStart: pinsAtThrowStart,
+      wasFirstRollInFrame: wasFirstRoll,
+      frameIndex: frameIndex,
+      playerName: throwerName,
+      frameAfterThrow: frameAfter,
+      isStrike: isStrike,
+      isSpare: isSpare
+    )
+    applyCelebrationTiming(for: throwCelebration?.kind)
     if logic.gameOver, !wasGameOver {
       ArcadeAudio.bowlingWin()
       beginScoreboardSplash(duration: 5.0)
@@ -258,9 +309,9 @@ final class BowlingGame: Game {
 
     // Kula zostaje na torze do końca ekranu wyniku — reset dopiero przed następnym rzutem.
 
-    if logic.lastThrowPins == 10, logic.currentFrame.rolls.count == 1, logic.currentFrameIndex < 9 {
+    if isStrike {
       ArcadeAudio.bowlingStrike()
-    } else if logic.currentFrame.isSpare {
+    } else if isSpare {
       ArcadeAudio.bowlingSpare()
     } else {
       ArcadeAudio.bowlingCrowdCheer(pinsDown: pinsDown)
@@ -272,6 +323,7 @@ final class BowlingGame: Game {
   }
 
   private func advanceAfterResult() {
+    clearThrowCelebration()
     guard !logic.gameOver else {
       scene.resetBall()
       roundPhase = .aiming
@@ -311,8 +363,9 @@ final class BowlingGame: Game {
     }
   }
 
-  private func beginScoreboardSplash(duration: TimeInterval = 2.8) {
-    scoreboardSplashRemaining = max(scoreboardSplashRemaining, duration)
+  private func beginScoreboardSplash(duration: TimeInterval? = nil) {
+    let d = duration ?? scoreboardSplashDuration
+    scoreboardSplashRemaining = max(scoreboardSplashRemaining, d)
   }
 
   private func confirmTurnStart() {
@@ -353,7 +406,37 @@ final class BowlingGame: Game {
     enterAimingPhase()
   }
 
+  private func clearThrowCelebration() {
+    throwCelebration = nil
+    celebrationTimer = 0
+  }
+
+  private func applyCelebrationTiming(for kind: BowlingThrowCelebration.Kind?) {
+    guard let kind else {
+      celebrationTimer = 0
+      resultPhaseDuration = 1.6
+      return
+    }
+    switch kind {
+    case .strike, .spare:
+      celebrationTimer = Self.celebrationSpecialDuration
+      resultPhaseDuration = Self.celebrationSpecialDuration + 0.35
+    default:
+      celebrationTimer = Self.celebrationPinsDuration
+      resultPhaseDuration = max(2.0, Self.celebrationPinsDuration + 0.5)
+    }
+  }
+
+  private func tickCelebrationTimer(deltaTime: TimeInterval) {
+    guard celebrationTimer > 0 else { return }
+    celebrationTimer = max(0, celebrationTimer - deltaTime)
+    if celebrationTimer == 0 {
+      clearThrowCelebration()
+    }
+  }
+
   private func enterAimingPhase() {
+    clearThrowCelebration()
     roundPhase = .aiming
     scene.ensureStandingPins(standingPinCount)
     inputHandler.prepareForTurnGate()
@@ -361,5 +444,97 @@ final class BowlingGame: Game {
     awaitingTurnStart = true
     setupCountdown = 0
     turnAnnouncement = logic.currentPlayer.name
+  }
+}
+
+// MARK: - Throw celebration (HUD / pixel overlay)
+
+/// Kinect Sports–style throw feedback (pixel UI reads this from HUD).
+struct BowlingThrowCelebration: Equatable {
+  enum Kind: Equatable {
+    case strike
+    case spare
+    case nine
+    case multiPin(Int)
+    case fewPins(Int)
+    case gutter
+  }
+
+  let kind: Kind
+  let playerName: String
+  let pinsDown: Int
+  let pinsStanding: Int
+
+  /// Duży napis na overlay (Kinect Sports).
+  var displayHeadline: String {
+    switch kind {
+    case .strike: return "STRIKE!"
+    case .spare: return "SPARE!"
+    default: return headline
+    }
+  }
+
+  var headline: String {
+    switch kind {
+    case .strike: return "STRIKE!"
+    case .spare: return "SPARE!"
+    case .nine: return "9 KRĘGLI!"
+    case .multiPin(let n): return "\(n) KRĘGLI!"
+    case .fewPins(let n): return n == 1 ? "1 KRĘGEL!" : "\(n) KRĘGLE!"
+    case .gutter: return "PUDŁO"
+    }
+  }
+
+  var accentHex: UInt32 {
+    switch kind {
+    case .strike: return 0xFFE600
+    case .spare: return 0x00F5FF
+    case .nine: return 0xFF4FD8
+    case .multiPin: return 0x7CFF6B
+    case .fewPins: return 0xFFB347
+    case .gutter: return 0x888899
+    }
+  }
+
+  var subtitle: String {
+    switch kind {
+    case .strike: return "Wszystkie przewrócone!"
+    case .spare: return "Domknięcie frame'a"
+    case .gutter: return "Następna szansa"
+    case .nine: return "Prawie cud!"
+    case .multiPin, .fewPins:
+      return pinsStanding > 0 ? "Zostało \(pinsStanding) na torze" : "Czysty tor"
+    }
+  }
+
+  static func make(
+    pinsDown: Int,
+    pinsAtThrowStart: Int,
+    wasFirstRollInFrame: Bool,
+    frameIndex: Int = 0,
+    playerName: String,
+    frameAfterThrow: BowlingGameLogic.Frame,
+    isStrike: Bool,
+    isSpare: Bool
+  ) -> BowlingThrowCelebration? {
+    _ = frameIndex
+    let standing = max(0, pinsAtThrowStart - pinsDown)
+
+    if isStrike {
+      return BowlingThrowCelebration(kind: .strike, playerName: playerName, pinsDown: pinsDown, pinsStanding: standing)
+    }
+    if isSpare {
+      return BowlingThrowCelebration(kind: .spare, playerName: playerName, pinsDown: pinsDown, pinsStanding: standing)
+    }
+    if pinsDown == 0 {
+      return BowlingThrowCelebration(kind: .gutter, playerName: playerName, pinsDown: 0, pinsStanding: standing)
+    }
+    if pinsDown >= 9 {
+      return BowlingThrowCelebration(kind: .nine, playerName: playerName, pinsDown: pinsDown, pinsStanding: standing)
+    }
+    if pinsDown >= 5 {
+      return BowlingThrowCelebration(kind: .multiPin(pinsDown), playerName: playerName, pinsDown: pinsDown, pinsStanding: standing)
+    }
+    return BowlingThrowCelebration(kind: .fewPins(pinsDown), playerName: playerName, pinsDown: pinsDown, pinsStanding: standing)
   }
 }

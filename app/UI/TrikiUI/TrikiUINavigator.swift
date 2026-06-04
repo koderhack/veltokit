@@ -31,6 +31,7 @@ final class TrikiUINavigator: ObservableObject {
   private var preferButtonConfirm = false
   private var focusSettleRemaining: TimeInterval = 0
   private var neutralGraceRemaining: TimeInterval = 0
+  private var confirmArmRemaining: TimeInterval = 0
   private var lastTimestamp: TimeInterval?
 
   /// Configures the navigator for a screen with a fixed item count.
@@ -56,6 +57,7 @@ final class TrikiUINavigator: ObservableObject {
     confirmGate.reset()
     focusSettleRemaining = 0
     neutralGraceRemaining = 0
+    confirmArmRemaining = preferButtonConfirm ? TrikiUIConfig.menuConfirmArmDuration : 0
     holdProgress = 0
   }
 
@@ -71,6 +73,7 @@ final class TrikiUINavigator: ObservableObject {
     preferButtonConfirm = false
     focusSettleRemaining = 0
     neutralGraceRemaining = 0
+    confirmArmRemaining = 0
     holdProgress = 0
   }
 
@@ -167,6 +170,13 @@ final class TrikiUINavigator: ObservableObject {
 
     focusSettleRemaining = max(0, focusSettleRemaining - deltaTime)
     guard focusSettleRemaining <= 0 else {
+      holdProgress = 0
+      return
+    }
+
+    if confirmArmRemaining > 0 {
+      confirmArmRemaining = max(0, confirmArmRemaining - deltaTime)
+      confirmGate.syncPressedState(input.bleButtonClick)
       holdProgress = 0
       return
     }
