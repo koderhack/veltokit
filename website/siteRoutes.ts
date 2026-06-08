@@ -20,6 +20,7 @@ export const DOC_PATHS = {
   sdkConfiguration: '/docs/sdk/configuration',
   sdkGestures: '/docs/sdk/gestures',
   sdkBle: '/docs/sdk/ble-integration',
+  godot: '/docs/godot',
   examplePong: '/docs/examples/pong',
   exampleDart: '/docs/examples/dart',
   exampleBowling: '/docs/examples/bowling',
@@ -95,6 +96,7 @@ export const navbarItems = [
       {to: d.sdkGameInput, label: 'GameInput'},
       {to: d.sdkTrikiUi, label: 'Triki UI'},
       {to: d.sdkBle, label: 'BLE'},
+      {to: d.godot, label: 'Godot'},
     ],
   },
   {
@@ -144,6 +146,7 @@ export const footerLinks = [
       {label: 'Triki UI navigation', to: d.sdkTrikiUi},
       {label: 'Configuration', to: d.sdkConfiguration},
       {label: 'BLE Integration', to: d.sdkBle},
+      {label: 'Godot plugin', to: d.godot},
     ],
   },
   {

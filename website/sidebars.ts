@@ -30,6 +30,7 @@ const sidebars: SidebarsConfig = {
         'sdk/configuration',
         'sdk/gestures',
         'sdk/ble-integration',
+        'godot',
       ],
     },
     {

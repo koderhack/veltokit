@@ -69,6 +69,7 @@ motion.config = MotionConfig.preset(for: .paddle)  // optional tuning
 - [GameInput](./game-input) — fields
 - [Triki UI navigation](./triki-ui) — `.trikiUIScreen`, focus, hold, activation lifecycle
 - [BLE](./ble-integration) — packets
+- [Godot plugin](../godot) — GDScript gyro API, desktop simulator, Android stub (`godot/`)
 - [Examples](../examples/pong) — copy-paste per game
 
 [Quick start](../quick-start)

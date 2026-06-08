@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://noul2eh28v8x"]
+
+[ext_resource type="Script" uid="uid://b8ffjwd45v0cd" path="res://demos/gyro_cube/gyro_cube.gd" id="1_gyro"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_cube"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cube"]
+albedo_color = Color(0.2, 0.55, 0.95, 1)
+
+[node name="GyroCubeDemo" type="Node3D" unique_id=1619881973]
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1027773891]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 1.2, 2.8)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=305086743]
+transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 2, 0)
+
+[node name="Cube" type="MeshInstance3D" parent="." unique_id=222895849]
+mesh = SubResource("BoxMesh_cube")
+surface_material_override/0 = SubResource("StandardMaterial3D_cube")
+script = ExtResource("1_gyro")
+
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=295523819]
+transform = Transform3D(4, 0, 0, 0, 1, 0, 0, 0, 4, 0, -0.6, 0)
+mesh = SubResource("BoxMesh_cube")
